@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Storage</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: hsla(81, 100%, 49%, 0.858);
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+        ul li {
+            margin: 10px 0;
+            animation: slideIn 1s ease-in-out;
+        }
+        ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+        ul li a:hover {
+            color: hsla(81, 100%, 49%, 0.858);
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: hsla(81, 100%, 49%, 0.858);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: hsla(81, 100%, 49%, 0.6);
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Storage</h1>
+    <ul>
+      {% for file in files %}
+        <li><a href="/Storage/{{ file }}">{{ file }}</a></li>
+      {% endfor %}
+    </ul>
+    <a href="/" class="button">Go back to Home</a>
+</body>
+</html>

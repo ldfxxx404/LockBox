@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home LX NAS</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: hsla(81, 100%, 49%, 0.858);
+            text-align: center;
+            margin-top: 20px;
+        }
+        p {
+            margin: 20px 0;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: hsla(81, 100%, 49%, 0.858);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: hsla(81, 100%, 49%, 0.6);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .file-input {
+            display: none;
+        }
+        .fake-file-input {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: hsla(81, 100%, 49%, 0.858);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .fake-file-input:hover {
+            background-color: hsla(81, 100%, 49%, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <h1>Home LX NAS</h1>
+
+    <p><a href="/Storage" class="button">Storage</a></p>
+
+    <form id="uploadForm" action="/success" method="post" enctype="multipart/form-data">
+        <div class="file-input-wrapper">
+            <input type="file" name="file" class="file-input" id="file-input" />
+            <button type="button" id="fileButton" class="fake-file-input" onclick="handleFileUpload()">Browse and Upload</button>
+        </div>
+    </form>
+
+    <script>
+        let fileSelected = false;
+        const fileInput = document.getElementById('file-input');
+        const fileButton = document.getElementById('fileButton');
+        const uploadForm = document.getElementById('uploadForm');
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                fileSelected = true;
+                fileButton.textContent = 'Upload';
+            }
+        });
+
+        function handleFileUpload() {
+            if (!fileSelected) {
+                fileInput.click();
+            } else {
+                uploadForm.submit();
+            }
+        }
+    </script>
+</body>
+</html>
