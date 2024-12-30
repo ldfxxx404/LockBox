@@ -27,14 +27,14 @@ def success():
     file = request.files['file']
     
     if file.filename == '':
-        return "File not selected", 400
+        return render_template('warning.html'), 400
     
     if file and allowed_file(file.filename):
         filepath = f"{UPLOAD_FOLDER}/{file.filename}"
         file.save(filepath)
-        return f"File successfully uploaded: {filepath}", 200  
+        return render_template('success.html'), 200  
     
-    return "Invalid file type", 400
+    return render_template('error.html'), 400
 
 # Загрузка файлов
 @app.route('/Storage')
