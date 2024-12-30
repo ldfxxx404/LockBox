@@ -32,6 +32,7 @@
             border-radius: 5px;
             text-decoration: none;
             transition: background-color 0.3s ease;
+            margin: 10px;
         }
         a:hover {
             background-color: hsla(81, 100%, 49%, 0.6);
@@ -67,7 +68,11 @@
 <body>
     <h1>Home LX NAS</h1>
 
-    <p><a href="/Storage" class="button">Storage</a></p>
+    <!-- Buttons for Login and Profile -->
+    <p><a href="/login">Login</a></p>
+    <p><a href="/profile">Profile</a></p>
+    <p><a href="/signup">signup</a>
+    <p><a href="/storage" class="button">Storage</a></p>
 
     <form id="uploadForm" action="/success" method="post" enctype="multipart/form-data">
         <div class="file-input-wrapper">

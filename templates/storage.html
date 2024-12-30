@@ -75,7 +75,7 @@
     <h1>Storage</h1>
     <ul>
       {% for file in files %}
-        <li><a href="/Storage/{{ file }}">{{ file }}</a></li>
+      <li><a href="{{ url_for('main.download_file', filename=file) }}">{{ file }}</a></li>
       {% endfor %}
     </ul>
     <a href="/" class="button">Go back to Home</a>

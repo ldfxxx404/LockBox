@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Home LX NAS</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+        }
+        h1 {
+            color: hsla(81, 100%, 49%, 0.9);
+            text-align: center;
+            margin-top: 20px;
+            font-size: 36px;
+        }
+        .box {
+            background-color: #222222;
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .field {
+            margin-bottom: 20px;
+        }
+        .input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #333;
+            color: #fff;
+        }
+        .input:focus {
+            border-color: hsla(81, 100%, 49%, 0.9);
+            outline: none;
+        }
+        .checkbox {
+            margin-top: 10px;
+            color: #fff;
+        }
+        .checkbox input {
+            margin-right: 5px;
+        }
+        .button {
+            padding: 12px 30px;
+            font-size: 16px;
+            color: #fff;
+            background-color: hsla(81, 100%, 49%, 0.9);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        .button:hover {
+            background-color: hsla(81, 100%, 49%, 0.7);
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Home LX NAS</h1>
+
+    <div class="box">
+        <h3 class="title">Login</h3>
+        <form method="POST" action="/login">
+            <div class="field">
+                <input class="input" type="email" name="email" placeholder="Your Email" required autofocus>
+            </div>
+            <div class="field">
+                <input class="input" type="password" name="password" placeholder="Your Password" required>
+            </div>
+            <div class="field">
+                <label class="checkbox">
+                    <input type="checkbox" name="remember"> Remember me
+                </label>
+            </div>
+            <button class="button">Login</button>
+        </form>
+
+        <!-- If there's an error, show this message -->
+        <div class="error-message">
+            <!-- Error message will be rendered here if login fails -->
+        </div>
+    </div>
+
+</body>
+</html>
