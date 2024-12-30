@@ -1,7 +1,4 @@
 #!/usr/bin/env bash 
-<<<<<<< HEAD
 source venv/bin/activate 
 python3 src/server.py 
-=======
-~/main_server/home_server/.venv/bin/python3 src/server.py 
->>>>>>> 5fc6a3b (minor fixes)
+
