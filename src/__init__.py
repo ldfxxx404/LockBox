@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql.roles import AllowsLambdaRole
 from .config import Config
 import os
 
@@ -12,6 +13,7 @@ def create_app():
     app.secret_key = Config.SECRET_KEY 
     db.init_app(app)
 
+    app.config['ALLOWED_EXTENSIONS'] = Config.ALLOWED_EXTENSIONS
     from .auth import auth as auth_blueprint
     from .main import main as main_blueprint
     app.register_blueprint(auth_blueprint)
