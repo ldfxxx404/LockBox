@@ -7,8 +7,8 @@ import os
 db = SQLAlchemy()
 
 def create_app():
-    app = Flask(__name__, instance_relative_config=True, template_folder='../templates')  # Укажите путь к шаблонам
-    
+    app = Flask(__name__, instance_relative_config=True, template_folder='../templates')  
+        
     app.config.from_object(Config)  
     app.secret_key = Config.SECRET_KEY 
     db.init_app(app)
