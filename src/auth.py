@@ -1,8 +1,8 @@
 import os
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User  # Импортируем модель User
-from . import db  # Импортируем объект db
+from .models import User  
+from . import db 
 
 auth = Blueprint('auth', __name__)
 
