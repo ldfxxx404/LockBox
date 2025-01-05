@@ -3,13 +3,13 @@ from flask import Blueprint, render_template, request, send_from_directory, abor
 from werkzeug.utils import secure_filename
 from urllib.parse import unquote
 
-from .config import *
+from .config import Config
 
 main = Blueprint('main', __name__)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_EXTENSIONS
-    
+
 @main.route('/')
 def home():
     return render_template('index.html')

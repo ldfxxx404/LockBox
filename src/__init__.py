@@ -1,16 +1,15 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql.roles import AllowsLambdaRole
 from .config import Config
 import os
 
 db = SQLAlchemy()
 
 def create_app():
-    app = Flask(__name__, instance_relative_config=True, template_folder='../templates')  
-        
-    app.config.from_object(Config)  
-    app.secret_key = Config.SECRET_KEY 
+    app = Flask(__name__, instance_relative_config=True, template_folder='../templates')
+
+    app.config.from_object(Config)
+    app.secret_key = Config.SECRET_KEY
     db.init_app(app)
 
     app.config['ALLOWED_EXTENSIONS'] = Config.ALLOWED_EXTENSIONS
@@ -23,5 +22,5 @@ def create_app():
         os.makedirs(app.config['UPLOAD_FOLDER'])
 
     with app.app_context():
-        db.create_all()  
+        db.create_all()
     return app
