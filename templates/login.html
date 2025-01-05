@@ -1,27 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
-    <form method="POST" action="/login">
-        <div>
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
-        </div>
-        <div>
-            <button type="submit">Login</button>
-        </div>
-        {% if error %}
-            <p style="color: red;">{{ error }}</p>
-        {% endif %}
-    </form>
-    <p>Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign up</a></p>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Login</title>
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                font-family: Arial, sans-serif;
+                background-color: #121212; /* Темный фон */
+                color: #ffffff; /* Белый цвет текста */
+            }
+            h1 {
+                color: #ffffff; /* Цвет заголовка */
+            }
+            form {
+                background-color: #1e1e1e; /* Темный фон для формы */
+                padding: 20px; /* Отступы внутри формы */
+                border-radius: 8px; /* Скругление углов формы */
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Тень для формы */
+            }
+            label {
+                display: block; /* Блоковое отображение для меток */
+                margin-bottom: 5px; /* Отступ снизу */
+                color: #ffffff; /* Цвет меток */
+            }
+            input[type="email"],
+            input[type="password"] {
+                width: calc(
+                    100% - 20px
+                ); /* Ширина поля ввода с учетом отступов */
+                padding: 10px; /* Отступы внутри полей ввода */
+                margin-bottom: 15px; /* Отступ снизу полей ввода */
+                border-radius: 4px; /* Скругление углов полей ввода */
+                border: 1px solid #444; /* Цвет рамки полей ввода */
+                background-color: #333333; /* Темный фон для полей ввода */
+                color: #ffffff; /* Цвет текста в полях ввода */
+            }
+            button[type="submit"] {
+                width: 100%; /* Ширина кнопки с учетом отступов */
+                padding: 10px; /* Отступы внутри кнопки */
+                background-color: hsla(
+                    81,
+                    100%,
+                    49%,
+                    0.858
+                ); /* Цвет фона кнопки */
+                color: white; /* Цвет текста кнопки */
+                border-radius: 5px; /* Скругление углов кнопки */
+                border: none; /* Убираем рамку у кнопки */
+                cursor: pointer; /* Курсор в виде указателя при наведении на кнопку */
+                transition: background-color 0.3s ease; /* Плавный переход цвета фона кнопки при наведении*/
+            }
+            button[type="submit"]:hover {
+                background-color: hsl(
+                    81,
+                    100%,
+                    49%,
+                    0.6
+                ); /* Цвет фона кнопки при наведении*/
+            }
+            p {
+                margin-top: 15px; /* Отступ сверху для параграфа*/
+                color: #ffffff; /* Белый цвет текста параграфа */
+            }
+            .error-message {
+                color: red; /* Цвет сообщения об ошибке*/
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Login</h1>
+        <form method="POST" action="/login">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" required />
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" required />
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
+            {% if error %}
+            <p class="error-message">{{ error }}</p>
+            <!-- Класс для сообщения об ошибке -->
+            {% endif %}
+        </form>
+        <p>
+            Don't have an account?
+            <a href="{{ url_for('auth.signup') }}" style="color: #81c784"
+                >Sign up</a
+            >
+        </p>
+        <!-- Ссылка на регистрацию -->
+    </body>
 </html>
