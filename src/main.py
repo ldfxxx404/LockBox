@@ -24,10 +24,11 @@ def success():
         return "No selected file", 400
 
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
-        return render_template('success.html', filename=filename), 200
+        if file.filename is not None:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            return render_template('success.html', filename=filename), 200
 
     return render_template('error.html'), 400
 

@@ -1,4 +1,3 @@
-# import os
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User
@@ -13,9 +12,10 @@ def login():
         password = request.form.get('password')
 
         user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password, password):
-            session['user'] = user.email
-            return redirect(url_for('main.home'))
+        if password is not None:
+            if user and check_password_hash(user.password, password):
+                session['user'] = user.email
+                return redirect(url_for('main.home'))
         else:
             flash('Invalid email or password', 'error')
             return render_template('login.html')
