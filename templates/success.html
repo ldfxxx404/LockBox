@@ -21,7 +21,7 @@
         }
         p {
             font-size: 18px;
-            color: #333;
+            color: #fff;
             margin-bottom: 20px;
         }
         .button {
@@ -41,7 +41,9 @@
 </head>
 <body>
     <h1>Upload Successful</h1>
-    <p>Your file has been successfully uploaded to the server.</p>
+    {% if filename %}
+    <p>Your file {{ filename }} has been successfully uploaded to the server.</p>
+    {% endif %}
     <a href="/" class="button">Go back to Home</a>
 </body>
 </html>

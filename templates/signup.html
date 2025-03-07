@@ -1,100 +1,100 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>Sign Up - Home LX NAS</title>
-        <style>
-            body {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 100vh;
-                margin: 0;
-                font-family: Arial, sans-serif;
-                background-color: #000000;
-            }
-            h3 {
-                color: hsla(81, 100%, 49%, 0.9);
-                text-align: center;
-                margin-top: 20px;
-            }
-            .box {
-                background-color: #222222;
-                padding: 30px;
-                border-radius: 10px;
-                width: 100%;
-                max-width: 400px;
-            }
-            .field {
-                margin-bottom: 20px;
-            }
-            .control input {
-                width: 100%;
-                padding: 5px;
-                font-size: 18px;
-                border-radius: 5px;
-                border: 1px solid #ddd;
-                background-color: #333;
-                color: #fff;
-            }
-            .button {
-                display: block;
-                width: 103%;
-                padding: 12px;
-                font-size: 16px;
-                color: #fff;
-                background-color: hsla(81, 100%, 49%, 0.858);
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-            }
-            .button:hover {
-                background-color: hsla(81, 100%, 49%, 0.6);
-            }
-        </style>
-    </head>
-    <body>
-        <h3>Sign Up</h3>
-        <div class="box">
-            <form method="POST" action="/signup">
-                <div class="field">
-                    <div class="control">
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            required
-                            autofocus
-                        />
-                    </div>
+<head>
+    <meta charset="utf-8" />
+    <title>Sign Up - Home LX NAS</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+        }
+        h3 {
+            color: hsla(81, 100%, 49%, 0.9);
+            text-align: center;
+            margin-top: 20px;
+        }
+        .box {
+            background-color: #222222;
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .field {
+            margin-bottom: 20px;
+        }
+        .control input {
+            width: 100%;
+            padding: 5px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #333;
+            color: #fff;
+        }
+        .button {
+            display: block;
+            width: 103%;
+            padding: 12px;
+            font-size: 16px;
+            color: #fff;
+            background-color: hsla(81, 100%, 49%, 0.858);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: hsla(81, 100%, 49%, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <h3>Sign Up</h3>
+    <div class="box">
+        <form method="POST" action="{{ url_for('auth.signup') }}">
+            <div class="field">
+                <div class="control">
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        required
+                        autofocus
+                    />
                 </div>
+            </div>
 
-                <div class="field">
-                    <div class="control">
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Name"
-                            required
-                        />
-                    </div>
+            <div class="field">
+                <div class="control">
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        required
+                    />
                 </div>
+            </div>
 
-                <div class="field">
-                    <div class="control">
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            required
-                        />
-                    </div>
+            <div class="field">
+                <div class="control">
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        required
+                    />
                 </div>
+            </div>
 
-                <button type="submit" class="button">Sign Up</button>
-            </form>
-        </div>
-    </body>
+            <button type="submit" class="button">Sign Up</button>
+        </form>
+    </div>
+</body>
 </html>

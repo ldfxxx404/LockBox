@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Home LX NAS</title>
+    <meta charset="UTF-8">
+    <title>Home</title>
     <style>
         body {
             display: flex;
@@ -12,95 +12,48 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #000000;
+            background-color: #000;
+            color: #0f0;
         }
         h1 {
-            color: hsla(81, 100%, 49%, 0.858);
-            text-align: center;
+            color: #0f0;
+        }
+        nav {
             margin-top: 20px;
         }
-        p {
-            margin: 20px 0;
+        ul {
+            list-style: none;
+            padding: 0;
         }
-        a {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: hsla(81, 100%, 49%, 0.858);
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            margin: 10px;
-        }
-        a:hover {
-            background-color: hsla(81, 100%, 49%, 0.6);
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .file-input-wrapper {
-            position: relative;
-            display: inline-block;
+        li {
             margin-bottom: 10px;
         }
-        .file-input {
-            display: none;
+        a {
+            color: #0f0;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
         }
-        .fake-file-input {
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: hsla(81, 100%, 49%, 0.858);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .fake-file-input:hover {
-            background-color: hsla(81, 100%, 49%, 0.6);
+        a:hover {
+            color: #0c0;
         }
     </style>
 </head>
 <body>
-    <h1>Home LX NAS</h1>
-
-    <!-- Buttons for Login and Profile -->
-    <p><a href="/login">Login</a></p>
-    <p><a href="/profile">Profile</a></p>
-    <p><a href="/signup">signup</a>
-    <p><a href="/storage" class="button">Storage</a></p>
-
-    <form id="uploadForm" action="/success" method="post" enctype="multipart/form-data">
-        <div class="file-input-wrapper">
-            <input type="file" name="file" class="file-input" id="file-input" />
-            <button type="button" id="fileButton" class="fake-file-input" onclick="handleFileUpload()">Browse and Upload</button>
-        </div>
-    </form>
-
-    <script>
-        let fileSelected = false;
-        const fileInput = document.getElementById('file-input');
-        const fileButton = document.getElementById('fileButton');
-        const uploadForm = document.getElementById('uploadForm');
-
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files.length > 0) {
-                fileSelected = true;
-                fileButton.textContent = 'Upload';
-            }
-        });
-
-        function handleFileUpload() {
-            if (!fileSelected) {
-                fileInput.click();
-            } else {
-                uploadForm.submit();
-            }
-        }
-    </script>
+    <h1>Welcome to the Home Page</h1>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('main.home') }}">Home</a></li>
+            <li><a href="{{ url_for('main.storage') }}">Storage</a></li>
+            <li><a href="{{ url_for('main.profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('main.upload_file') }}">Upload</a></li>
+            {% if session.user %}
+                <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                <li><a href="{{ url_for('auth.signup') }}">Signup</a></li>
+            {% endif %}
+        </ul>
+    </nav>
 </body>
 </html>

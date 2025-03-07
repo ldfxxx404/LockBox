@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r req.txt
 
 EXPOSE 1337
 
-CMD ["python", "server_start.py"]
+CMD ["python", "main.py"]
