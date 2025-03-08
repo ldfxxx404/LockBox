@@ -1,5 +1,4 @@
 import os
-import sqlite3
 import logging
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session, send_from_directory, abort, current_app
 from werkzeug.utils import secure_filename
@@ -7,20 +6,44 @@ from src.services.auth_service import AuthService
 from functools import wraps
 from urllib.parse import unquote
 
-main_blueprint = Blueprint('main', __name__)
-auth_blueprint = Blueprint('auth', __name__, url_prefix='/auth')
-
 def allowed_file(filename: str) -> bool:
+    """Проверяет, разрешено ли загружать данный файл."""
     allowed = current_app.config.get('ALLOWED_EXTENSIONS', set())
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed
 
 def login_required(f):
+    """Декоратор для проверки авторизации пользователя."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user' not in session:
             return redirect(url_for('auth.login', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
+
+def get_user_directory(user_id: int) -> str:
+    """Возвращает путь к директории пользователя."""
+    user_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user_id))
+    os.makedirs(user_dir, exist_ok=True)
+    return user_dir
+
+def save_uploaded_file(file, user_id: int):
+    """Сохраняет загруженный файл в директорию пользователя."""
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(get_user_directory(user_id), filename)
+    file.save(filepath)
+    logging.info(f'File saved to {filepath}')
+    return filename
+
+def get_user_files(user_id: int):
+    """Возвращает список файлов пользователя."""
+    user_dir = get_user_directory(user_id)
+    try:
+        return os.listdir(user_dir)
+    except OSError:
+        return []
+
+main_blueprint = Blueprint('main', __name__)
+auth_blueprint = Blueprint('auth', __name__, url_prefix='/auth')
 
 # Authentication Routes
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
@@ -44,9 +67,7 @@ def signup():
         name = request.form.get('name')
         user = AuthService.register(email, password, name)
         if user:
-            # Create user directory
-            user_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user['id']))
-            os.makedirs(user_dir, exist_ok=True)
+            get_user_directory(user['id'])
             flash('Registration successful! You can now log in.', 'success')
             return redirect(url_for('auth.login'))
         flash('Email address already exists. Please choose a different one.', 'error')
@@ -59,11 +80,11 @@ def logout():
     return redirect(url_for('auth.login'))
 
 # Main Routes
-@main_blueprint.route("/", methods=['GET'])
+@main_blueprint.route("/")
 def home():
     return render_template('index.html')
 
-@main_blueprint.route("/success", methods=['GET', 'POST'])
+@main_blueprint.route("/success")
 def success():
     return render_template("success.html")
 
@@ -71,21 +92,12 @@ def success():
 @login_required
 def upload_file():
     if request.method == 'POST':
-        if 'file' not in request.files:
-            return "No file part in the request", 400
-
-        file = request.files['file']
+        file = request.files.get('file')
         if not file or file.filename == '':
             return "No selected file", 400
 
         if allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            user_id = session['user_id']
-            user_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user_id))
-            os.makedirs(user_dir, exist_ok=True)  # Ensure the directory exists
-            filepath = os.path.join(user_dir, filename)
-            file.save(filepath)
-            logging.info(f'File saved to {filepath}')
+            filename = save_uploaded_file(file, session['user_id'])
             return render_template('success.html', filename=filename), 200
 
         return render_template('error.html'), 400
@@ -94,24 +106,17 @@ def upload_file():
 @main_blueprint.route('/storage')
 @login_required
 def storage():
-    user_id = session['user_id']
-    user_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user_id))
-    try:
-        files = os.listdir(user_dir)
-    except OSError:
-        files = []
+    files = get_user_files(session['user_id'])
     return render_template('storage.html', files=files)
 
 @main_blueprint.route('/storage/<path:filename>')
 @login_required
 def download_file(filename: str):
     user_id = session['user_id']
-    decoded_filename = unquote(filename)
-    safe_filename = secure_filename(decoded_filename)
-    user_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], str(user_id))
-    file_path = os.path.join(user_dir, safe_filename)
+    safe_filename = secure_filename(unquote(filename))
+    file_path = os.path.join(get_user_directory(user_id), safe_filename)
     if os.path.exists(file_path):
-        return send_from_directory(user_dir, safe_filename, as_attachment=True)
+        return send_from_directory(get_user_directory(user_id), safe_filename, as_attachment=True)
     abort(404)
 
 @main_blueprint.route('/profile')
