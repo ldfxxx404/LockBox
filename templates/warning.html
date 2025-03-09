@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>File Selection Required</title>
+    <title>Upload Error</title>
     <style>
         body {
             display: flex;
@@ -11,37 +11,39 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #000000;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
         }
         h1 {
-            color: hsla(340, 100%, 49%, 0.858); /* Цвет для предупреждения */
+            color: #d32f2f;
+            font-size: 36px;
             text-align: center;
             margin-bottom: 20px;
         }
         p {
             font-size: 18px;
-            color: #333;
-            margin-bottom: 20px;
+            color: #757575;
+            margin-bottom: 30px;
+            text-align: center;
         }
         .button {
-            padding: 10px 20px;
+            padding: 12px 30px;
             font-size: 16px;
             color: #fff;
-            background-color: hsla(340, 100%, 49%, 0.858); /* Цвет для предупреждения */
+            background-color: #d32f2f;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             text-decoration: none;
             transition: background-color 0.3s ease;
         }
         .button:hover {
-            background-color: hsla(340, 100%, 49%, 0.6); /* Цвет для предупреждения */
+            background-color: #b71c1c;
         }
     </style>
 </head>
 <body>
-    <h1>File Selection Required</h1>
-    <p>Please select a file to upload before proceeding.</p>
+    <h1>Upload Error</h1>
+    <p>The file type you are trying to upload is not allowed. Please try again with a different file type.</p>
     <a href="/" class="button">Go back to Home</a>
 </body>
 </html>

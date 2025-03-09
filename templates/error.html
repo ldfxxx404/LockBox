@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Error</title>
     <style>
         body {
@@ -9,33 +10,47 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #000000;
+            color: #cccccc;
+            padding: 20px; /* Add padding for small screens */
+            box-sizing: border-box; /* Include padding in width/height */
         }
+
         h1 {
-            color: hsla(0, 100%, 49%, 0.858); /* Цвет для ошибки */
+            color: hsla(0, 100%, 49%, 0.858);
             text-align: center;
             margin-bottom: 20px;
         }
+
         p {
             font-size: 18px;
-            color: #cccccc;
             margin-bottom: 20px;
+            text-align: center;
         }
+
         .button {
             padding: 10px 20px;
             font-size: 16px;
             color: #fff;
-            background-color: hsla(0, 100%, 49%, 0.858); /* Цвет для ошибки */
+            background-color: hsla(0, 100%, 49%, 0.858);
             border: none;
             border-radius: 5px;
             text-decoration: none;
             transition: background-color 0.3s ease;
         }
+
         .button:hover {
-            background-color: hsla(0, 100%, 49%, 0.6); /* Цвет для ошибки */
+            background-color: hsla(0, 100%, 49%, 0.6);
+        }
+
+        /* Media query for larger screens */
+        @media (min-width: 768px) {
+            body {
+                padding: 0; /* Remove padding on larger screens */
+            }
         }
     </style>
 </head>

@@ -11,11 +11,12 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #000000;
+            font-family: 'Roboto', sans-serif;
+            background-color: #1e1e1e;
+            color: #00FF00;
         }
         h1 {
-            color: hsla(81, 100%, 49%, 0.858);
+            color: #00FF00;
             text-align: center;
             margin-top: 20px;
             animation: fadeIn 2s ease-in-out;
@@ -31,27 +32,56 @@
         }
         ul li a {
             text-decoration: none;
-            color: #333;
+            color: #00FF00;
             font-size: 18px;
             transition: color 0.3s ease;
         }
         ul li a:hover {
-            color: hsla(81, 100%, 49%, 0.858);
+            color: #32CD32;
         }
         .button {
             display: inline-block;
             padding: 10px 20px;
             margin-top: 20px;
             font-size: 16px;
-            color: #fff;
-            background-color: hsla(81, 100%, 49%, 0.858);
+            color: black;
+            background-color: #00FF00;
             border: none;
             border-radius: 5px;
             text-decoration: none;
             transition: background-color 0.3s ease;
         }
         .button:hover {
-            background-color: hsla(81, 100%, 49%, 0.6);
+            background-color: #32CD32;
+        }
+        .storage-info {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .progress {
+            width: 50%;
+            height: 20px;
+            background-color: #333;
+            border-radius: 5px;
+            margin: 10px auto;
+        }
+        .progress-bar {
+            background-color: #00FF00;
+            height: 100%;
+            border-radius: 5px;
+        }
+        .btn-danger {
+            background-color: #FF6347;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-danger:hover {
+            background-color: #D9534F;
         }
         @keyframes fadeIn {
             from {
@@ -73,9 +103,21 @@
 </head>
 <body>
     <h1>Storage</h1>
+    <div class="storage-info">
+        <h3>Использовано места: {{ "%.2f"|format(storage.current_usage / 1024 / 1024) }} MB / {{ "%.2f"|format(storage.max_storage / 1024 / 1024) }} MB</h3>
+        <div class="progress">
+            <div class="progress-bar" style="width: {{ used_percent }}%"></div>
+        </div>
+        <p>Файлов: {{ storage.file_count }}</p>
+    </div>
     <ul>
       {% for file in files %}
-      <li><a href="{{ url_for('main.download_file', filename=file) }}">{{ file }}</a></li>
+      <li>
+        <a href="{{ url_for('main.download_file', filename=file) }}">{{ file }}</a>
+        <form action="{{ url_for('main.delete_file', filename=file) }}" method="post" style="display:inline;">
+          <button type="submit" class="btn-danger">Удалить</button>
+        </form>
+      </li>
       {% endfor %}
     </ul>
     <a href="/" class="button">Go back to Home</a>

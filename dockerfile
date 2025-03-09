@@ -6,6 +6,6 @@ COPY . .
 
 RUN pip install --no-cache-dir -r req.txt
 
-EXPOSE 1337
+EXPOSE 5000
 
 CMD ["python", "main.py"]

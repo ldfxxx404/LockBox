@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <style>
         body {
@@ -9,38 +10,90 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #0f0;
+            background-color: #1e1e1e;
+            color: #00FF00;
+            padding: 20px; /* Added padding for small screens */
+            box-sizing: border-box; /* Include padding in width/height */
         }
+
         h1 {
-            color: #0f0;
+            font-size: 2.5rem;
+            color: #00FF00;
+            margin-bottom: 20px;
+            text-align: center;
         }
+
         nav {
             margin-top: 20px;
         }
+
         ul {
             list-style: none;
             padding: 0;
+            display: flex;
+            flex-direction: column; /* Stack items vertically on small screens */
+            align-items: center; /* Center items horizontally */
+            gap: 20px;
+            font-size: 1.2rem;
         }
-        li {
-            margin-bottom: 10px;
-        }
-        a {
-            color: #0f0;
+
+        li a {
+            color: #00FF00;
             text-decoration: none;
-            font-size: 18px;
             transition: color 0.3s ease;
+            display: block; /* Make links fill the list item width */
+            width: 100%;
+            text-align: center; /* Center the text */
         }
-        a:hover {
-            color: #0c0;
+
+        li a:hover {
+            color: #32CD32;
+        }
+
+        .button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #00FF00;
+            color: black;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .button:hover {
+            background-color: #32CD32;
+        }
+
+        /* Media query for larger screens */
+        @media (min-width: 768px) {
+            body {
+                align-items: center;
+                padding: 0;
+            }
+
+            ul {
+                flex-direction: row; /* Lay items out in a row on larger screens */
+            }
+
+            li a {
+                width: auto; /* Allow links to shrink to fit content */
+            }
+
+            .button {
+                width: auto;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to the Home Page</h1>
+    <h1>Welcome to home_server</h1>
     <nav>
         <ul>
             <li><a href="{{ url_for('main.home') }}">Home</a></li>
@@ -49,9 +102,12 @@
             <li><a href="{{ url_for('main.upload_file') }}">Upload</a></li>
             {% if session.user %}
                 <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                {% if is_admin %}
+                    <li><a href="{{ url_for('main.admin_panel') }}" class="button">Admin</a></li>
+                {% endif %}
             {% else %}
                 <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                <li><a href="{{ url_for('auth.signup') }}">Signup</a></li>
+                <li><a href="{{ url_for('auth.signup') }}">Sign Up</a></li>
             {% endif %}
         </ul>
     </nav>

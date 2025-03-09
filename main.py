@@ -2,9 +2,9 @@ import os
 import logging
 from flask import Flask
 from src.blueprints.routes import main_blueprint, auth_blueprint
-from config import DevelopmentConfig
+from config import ProductionConfig
 
-def create_app(config_object=DevelopmentConfig):
+def create_app(config_object=ProductionConfig):
     app = Flask(__name__)
     app.config.from_object(config_object)
     
