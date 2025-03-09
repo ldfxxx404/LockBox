@@ -231,10 +231,8 @@ def edit_user(user_id: int):
         try:
             UserRepository.update_user(user_id, email, name, password, is_admin)
             UserRepository.increase_storage_limit(user_id, max_storage) #Обновляем лимит
-            flash('Пользователь обновлен', 'success')
             return redirect(url_for('main.admin_panel'))
         except Exception as e:
-            flash(f'Ошибка при обновлении: {e}', 'error')
             return render_template('edit_user.html', user_info=user_info, error=str(e))
 
 
@@ -245,12 +243,10 @@ def edit_user(user_id: int):
 @admin_required
 def make_admin(user_id: int):
     UserRepository.make_admin(user_id)
-    flash('Пользователь назначен администратором', 'success')
     return redirect(url_for('main.admin_panel'))
 
 @main_blueprint.route('/admin/revoke_admin/<int:user_id>')
 @admin_required
 def revoke_admin(user_id: int):
     UserRepository.revoke_admin(user_id)
-    flash('Права администратора отозваны', 'success')
     return redirect(url_for('main.admin_panel'))
