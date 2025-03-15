@@ -1,4 +1,4 @@
-// TODO: add /home, /login, /storage, /profile, /upload, /login /sgin in button's
+// TODO: add /upload,  /sgin in button's
 import Link from 'next/link';
 
 export default function Home() {
@@ -13,8 +13,19 @@ export default function Home() {
         <button style={styles.button}>Home</button>
       </Link>
 
-      <Link href="/storage" passHref> 
+      <Link href="/storage" passHref>
         <button style={styles.button}>Storage</button>
+      </Link>
+      <Link href="/profile" passHref>
+        <button style={styles.button}>Profile</button>
+      </Link>
+
+      <Link href="/upload" passHref>
+        <button style={styles.button}>Upload file</button>
+      </Link>
+
+      <Link href="/sign_up" passHref>
+        <button style={styles.button}>Sign Up</button>
       </Link>
     </div>
   );
@@ -35,5 +46,6 @@ const styles = {
     backgroundColor: '#007bff',
     color: '#fff',
     transition: 'background-color 0.3s ease',
+    margin: '10px',
   } as React.CSSProperties,
 };
