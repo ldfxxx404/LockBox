@@ -1,10 +1,9 @@
-// TODO: add /upload,  /sgin in button's
 import Link from 'next/link';
 
-export default function Home() {
+export default function API() {
   return (
     <div style={styles.container}>
-      <h1>Home Server Frontend v1.1</h1>
+      <h1>Welcome to LockBox</h1>
       <Link href="/login" passHref>
         <button style={styles.button}>Login</button>
 
@@ -43,9 +42,9 @@ const styles = {
     cursor: 'pointer',
     border: 'none',
     borderRadius: '5px',
-    backgroundColor: '#007bff',
+    backgroundColor: '#5fbf22',
     color: '#fff',
     transition: 'background-color 0.3s ease',
-    margin: '10px',
+    margin: '5px',
   } as React.CSSProperties,
 };
