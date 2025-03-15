@@ -6,10 +6,6 @@ export default function API() {
       <h1>Welcome to LockBox</h1>
       <Link href="/login" passHref>
         <button style={styles.button}>Login</button>
-
-      </Link>
-      <Link href="/home" passHref>
-        <button style={styles.button}>Home</button>
       </Link>
 
       <Link href="/storage" passHref>
