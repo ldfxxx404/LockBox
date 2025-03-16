@@ -1,6 +1,6 @@
 'use client';
 import { useState, FormEvent, ChangeEvent } from 'react';
-import styles from '../Profile.module.css';
+import styles from '@/styles/Profile.module.css';
 
 interface User {
   username: string;
@@ -30,7 +30,7 @@ export default function Profile() {
   };
 
   // Обработчик отправки формы
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const { username, email } = formData;
@@ -40,12 +40,27 @@ export default function Profile() {
       return;
     }
 
-    // Имитация отправки данных на сервер
-    setTimeout(() => {
-      setUser(formData);  // Обновление данных пользователя
+    try {
+      // Отправка данных на сервер
+      const response = await fetch('/api/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      const updatedUser = await response.json();
+      setUser(updatedUser); // Обновление данных пользователя
       setError('');
       alert('Profile updated successfully!');
-    }, 1000);
+    } catch (err) {
+      setError('An error occurred while updating the profile.');
+    }
   };
 
   return (
