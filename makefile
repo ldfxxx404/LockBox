@@ -1,4 +1,4 @@
-PROJECT_NAME=home_server
+PROJECT_NAME=home_server-app
 SERVICE_NAME=app
 
 up:

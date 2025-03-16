@@ -1,11 +1,13 @@
-version: "3.8"
-
 services:
   app:
-    image: home_server 
-    build: .
+    container_name: home_server
+    build:
+      context: .
+      dockerfile: back/dockerfile
     ports:
       - "5000:5000"
+    volumes:
+      - ./back/storage:/root/storage
     environment:
-      - PYTHONUNBUFFERED=1
-    restart: unless-stopped
+      - SERVER_PORT=0.0.0.0:5000
+      - JWT_SECRET=supersecretkey
