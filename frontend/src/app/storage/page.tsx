@@ -19,25 +19,6 @@ export default function Storage() {
     return `${(size / 1048576).toFixed(2)} MB`;
   };
 
-  // Загрузка данных о файлах с сервера
-  useEffect(() => {
-    const fetchFiles = async () => {
-      try {
-        const response = await fetch('/api/storage');
-        if (!response.ok) {
-          throw new Error('Failed to fetch files');
-        }
-        const data = await response.json();
-        setFiles(data.files);
-        setTotalSize(data.totalSize);
-      } catch (err) {
-        setError('An error occurred while fetching files.');
-      }
-    };
-
-    fetchFiles();
-  }, []);
-
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Storage</h1>
