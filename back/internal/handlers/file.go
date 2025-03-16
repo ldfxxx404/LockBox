@@ -15,7 +15,6 @@ func NewFileHandler(fileServ *services.FileService) *FileHandler {
 	return &FileHandler{FileServ: fileServ}
 }
 
-// POST /api/upload
 func (h *FileHandler) Upload(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	fileHeader, err := c.FormFile("file")
@@ -29,7 +28,6 @@ func (h *FileHandler) Upload(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "File uploaded", "filename": fileHeader.Filename})
 }
 
-// GET /api/storage
 func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	files, err := h.FileServ.ListFiles(userID)
@@ -44,14 +42,12 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	for _, file := range files {
 		filenames = append(filenames, file.Filename)
 	}
-	// Для лимита можно брать значение из профиля, здесь по умолчанию 10000
 	return c.JSON(fiber.Map{
 		"files":   filenames,
 		"storage": fiber.Map{"used": usage, "limit": 10000},
 	})
 }
 
-// GET /api/storage/:filename
 func (h *FileHandler) Download(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	filename := c.Params("filename")
@@ -62,7 +58,6 @@ func (h *FileHandler) Download(c *fiber.Ctx) error {
 	return c.SendFile(filePath, false)
 }
 
-// DELETE /api/delete/:filename
 func (h *FileHandler) Delete(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	filename := c.Params("filename")

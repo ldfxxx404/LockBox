@@ -15,7 +15,6 @@ func NewProfileHandler(profileServ *services.ProfileService) *ProfileHandler {
 	return &ProfileHandler{ProfileServ: profileServ}
 }
 
-// GET /api/profile
 func (h *ProfileHandler) GetProfile(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	user, used, err := h.ProfileServ.GetProfile(userID)

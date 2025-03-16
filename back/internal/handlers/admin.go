@@ -15,7 +15,6 @@ func NewAdminHandler(adminServ *services.AdminService) *AdminHandler {
 	return &AdminHandler{AdminServ: adminServ}
 }
 
-// GET /api/admin/users
 func (h *AdminHandler) GetAllUsers(c *fiber.Ctx) error {
 	users, err := h.AdminServ.GetAllUsers()
 	if err != nil {
@@ -24,7 +23,6 @@ func (h *AdminHandler) GetAllUsers(c *fiber.Ctx) error {
 	return c.JSON(users)
 }
 
-// POST /api/admin/update_limit
 func (h *AdminHandler) UpdateStorageLimit(c *fiber.Ctx) error {
 	var req struct {
 		UserID   int `json:"user_id"`
@@ -40,7 +38,6 @@ func (h *AdminHandler) UpdateStorageLimit(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "Storage limit updated"})
 }
 
-// POST /api/admin/make_admin/:user_id
 func (h *AdminHandler) MakeAdmin(c *fiber.Ctx) error {
 	userID, err := strconv.Atoi(c.Params("user_id"))
 	if err != nil {
@@ -53,7 +50,6 @@ func (h *AdminHandler) MakeAdmin(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "User is now an admin"})
 }
 
-// POST /api/admin/revoke_admin/:user_id
 func (h *AdminHandler) RevokeAdmin(c *fiber.Ctx) error {
 	userID, err := strconv.Atoi(c.Params("user_id"))
 	if err != nil {

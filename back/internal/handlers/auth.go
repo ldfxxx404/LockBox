@@ -15,7 +15,6 @@ func NewAuthHandler(authServ *services.AuthService) *AuthHandler {
 	return &AuthHandler{AuthServ: authServ}
 }
 
-// POST /api/register
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var dto models.UserDTO
 	if err := c.BodyParser(&dto); err != nil {
@@ -34,7 +33,6 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	})
 }
 
-// POST /api/login
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var dto models.LoginDTO
 	if err := c.BodyParser(&dto); err != nil {
@@ -54,7 +52,6 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	})
 }
 
-// POST /api/logout
 func (h *AuthHandler) Logout(c *fiber.Ctx) error {
 	// Для JWT logout осуществляется на клиентской стороне
 	return c.JSON(fiber.Map{
