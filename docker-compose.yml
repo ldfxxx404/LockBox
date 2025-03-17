@@ -11,3 +11,15 @@ services:
     environment:
       - SERVER_PORT=0.0.0.0:5000
       - JWT_SECRET=supersecretkey
+
+  frontend:
+    container_name: home_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://app:5000
+    depends_on:
+      - app

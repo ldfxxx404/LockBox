@@ -35,7 +35,7 @@ func (r *UserRepo) GetByID(id int) (*models.User, error) {
 
 func (r *UserRepo) GetAll() ([]models.User, error) {
 	var users []models.User
-	query := `SELECT id, email, name, is_admin FROM users`
+	query := `SELECT id, email, name, is_admin, storage_limit FROM users`
 	err := r.DB.Select(&users, query)
 	return users, err
 }

@@ -1,4 +1,4 @@
-PROJECT_NAME=home_server-app
+PROJECT_NAME=home_server
 SERVICE_NAME=app
 
 up:
@@ -9,7 +9,7 @@ down:
 
 down_force:
 	docker-compose down --volumes --remove-orphans
-	docker rmi $(PROJECT_NAME)
+	docker rmi -f $$(docker images -q $(PROJECT_NAME))
 
 init:
 	docker-compose down --volumes --remove-orphans
