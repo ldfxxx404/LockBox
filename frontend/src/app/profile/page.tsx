@@ -1,6 +1,6 @@
 'use client';
 import { useState, FormEvent, ChangeEvent } from 'react';
-import styles from '../Profile.module.css';
+import styles from '@/styles/Profile.module.css';
 
 interface User {
   username: string;
@@ -8,45 +8,6 @@ interface User {
 }
 
 export default function Profile() {
-  // Начальные данные пользователя
-  const [user, setUser] = useState<User>({
-    username: 'John Doe',
-    email: 'johndoe@example.com',
-  });
-
-  // Данные для редактирования профиля
-  const [formData, setFormData] = useState<User>({
-    username: user.username,
-    email: user.email,
-  });
-
-  // Ошибка
-  const [error, setError] = useState<string>('');
-
-  // Обработчик изменения данных
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // Обработчик отправки формы
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-
-    const { username, email } = formData;
-
-    if (!username || !email) {
-      setError('All fields are required');
-      return;
-    }
-
-    // Имитация отправки данных на сервер
-    setTimeout(() => {
-      setUser(formData);  // Обновление данных пользователя
-      setError('');
-      alert('Profile updated successfully!');
-    }, 1000);
-  };
 
   return (
     <div className={styles.container}>
@@ -55,27 +16,22 @@ export default function Profile() {
       {/* Информация о пользователе */}
       <div className={styles.profileInfo}>
         <h2>Your Information</h2>
-        <p><strong>Username:</strong> {user.username}</p>
-        <p><strong>Email:</strong> {user.email}</p>
+        <p><strong>Username:</strong> { }</p>
+        <p><strong>Email:</strong> { }</p>
       </div>
 
       {/* Форма редактирования */}
       <h2>Edit Profile</h2>
-      {error && <div className={styles.error}>{error}</div>}
-      <form onSubmit={handleSubmit}>
+      <form>
         <input
           type="text"
           name="username"
-          value={formData.username}
-          onChange={handleInputChange}
           placeholder="Username"
           className={styles.input}
         />
         <input
           type="email"
           name="email"
-          value={formData.email}
-          onChange={handleInputChange}
           placeholder="Email"
           className={styles.input}
         />

@@ -1,11 +1,17 @@
 'use client';
-import styles from '@/styles/Login.module.css';
+import styles from '@/styles/Signup.module.css';
 
-export default function Login() {
+export default function Signup() {
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Login</h1>
+      <h1 className={styles.title}>Sign Up</h1>
       <form>
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          className={styles.input}
+        />
         <input
           type="email"
           name="email"
@@ -19,12 +25,9 @@ export default function Login() {
           className={styles.input}
         />
         <button type="submit" className={styles.button}>
-          Log In
+          Register
         </button>
       </form>
-      <a href="/register" className={styles.link}>
-        Don't have an account? Register
-      </a>
     </div>
   );
 }

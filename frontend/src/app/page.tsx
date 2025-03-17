@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function API() {
+export default function HomePage() {
   return (
     <div style={styles.container}>
       <h1>Welcome to LockBox</h1>
@@ -19,7 +19,7 @@ export default function API() {
         <button style={styles.button}>Upload file</button>
       </Link>
 
-      <Link href="/sign_up" passHref>
+      <Link href="/register" passHref>
         <button style={styles.button}>Sign Up</button>
       </Link>
     </div>
