@@ -17,7 +17,7 @@ func NewProfileHandler(profileServ *services.ProfileService) *ProfileHandler {
 
 func (h *ProfileHandler) GetProfile(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
-	user, used, err := h.ProfileServ.GetProfile(userID)
+	user, usedMB, limitMB, err := h.ProfileServ.GetProfile(userID)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -28,8 +28,8 @@ func (h *ProfileHandler) GetProfile(c *fiber.Ctx) error {
 			"name":  user.Name,
 		},
 		"storage": fiber.Map{
-			"used":  used,
-			"limit": user.StorageLimit,
+			"used":  usedMB,
+			"limit": limitMB,
 		},
 	})
 }

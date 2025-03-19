@@ -1,6 +1,7 @@
 package services
 
 import (
+	"back/config"
 	"back/internal/models"
 	"back/internal/repositories"
 	"back/internal/utils"
@@ -25,7 +26,7 @@ func (s *AuthService) Register(dto models.UserDTO) (*models.User, error) {
 		Name:         dto.Name,
 		Password:     hashedPassword,
 		IsAdmin:      false,
-		StorageLimit: utils.StorageLimitMB(),
+		StorageLimit: config.StorageLimit,
 	}
 	err = s.UserRepo.Create(user)
 	if err != nil {

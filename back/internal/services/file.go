@@ -74,10 +74,10 @@ func (s *FileService) DeleteFile(userID int, filename string) error {
 	return s.FileRepo.DeleteFile(userID, filename)
 }
 
-func (s *FileService) GetStorageInfo(userID int) (int64, error) {
+func (s *FileService) GetStorageInfo(userID int) (usedMB int64, limitMB int, err error) {
 	userDir := fmt.Sprintf("%s/%d", config.StorageDir, userID)
 	var totalSize int64
-	err := filepath.Walk(userDir, func(_ string, info os.FileInfo, err error) error {
+	err = filepath.Walk(userDir, func(_ string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -87,7 +87,9 @@ func (s *FileService) GetStorageInfo(userID int) (int64, error) {
 		return nil
 	})
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
-	return totalSize, nil
+	usedMB = totalSize / (1024 * 1024)
+	limitMB = config.StorageLimit
+	return usedMB, limitMB, nil
 }
