@@ -39,3 +39,14 @@ func ParseToken(tokenString string) (jwt.MapClaims, error) {
 
 	return nil, err
 }
+
+func StorageLimitMB() int64 {
+	return bitsToMB(config.StorageLimit)
+}
+
+func bitsToMB(bits int64) int64 {
+	bytes := bits / 8
+	kilobytes := bytes / 1024
+	megabytes := kilobytes / 1024
+	return megabytes
+}

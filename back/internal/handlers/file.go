@@ -44,7 +44,7 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	}
 	return c.JSON(fiber.Map{
 		"files":   filenames,
-		"storage": fiber.Map{"used": usage, "limit": 10000},
+		"storage": fiber.Map{"used": usage, "limit": utils.StorageLimitMB()},
 	})
 }
 

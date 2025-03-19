@@ -19,7 +19,7 @@ func InitDB() *sqlx.DB {
 			name TEXT NOT NULL,
 			password TEXT NOT NULL,
 			is_admin BOOLEAN NOT NULL DEFAULT 0,
-			storage_limit INTEGER NOT NULL DEFAULT 10000
+			storage_limit INTEGER NOT NULL DEFAULT 10485760
 		);`,
 		`CREATE TABLE IF NOT EXISTS sessions (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
