@@ -14,14 +14,14 @@ func NewProfileService(userRepo *repositories.UserRepo, fileServ *FileService) *
 	return &ProfileService{UserRepo: userRepo, FileServ: fileServ}
 }
 
-func (s *ProfileService) GetProfile(userID int) (*models.User, int64, error) {
+func (s *ProfileService) GetProfile(userID int) (*models.User, int64, int, error) {
 	user, err := s.UserRepo.GetByID(userID)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
-	used, err := s.FileServ.GetStorageInfo(userID)
+	usedMB, limitMB, err := s.FileServ.GetStorageInfo(userID)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
-	return user, used, nil
+	return user, usedMB, limitMB, nil
 }

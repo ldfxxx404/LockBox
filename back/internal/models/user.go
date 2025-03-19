@@ -6,7 +6,7 @@ type User struct {
 	Name         string `db:"name" json:"name"`
 	Password     string `db:"password" json:"-"`
 	IsAdmin      bool   `db:"is_admin" json:"is_admin"`
-	StorageLimit int64  `db:"storage_limit" json:"storage_limit"`
+	StorageLimit int    `db:"storage_limit" json:"storage_limit"`
 }
 
 type UserDTO struct {

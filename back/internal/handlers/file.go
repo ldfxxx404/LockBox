@@ -34,7 +34,7 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
-	usage, err := h.FileServ.GetStorageInfo(userID)
+	usedMB, limitMB, err := h.FileServ.GetStorageInfo(userID)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -44,7 +44,7 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	}
 	return c.JSON(fiber.Map{
 		"files":   filenames,
-		"storage": fiber.Map{"used": usage, "limit": utils.StorageLimitMB()},
+		"storage": fiber.Map{"used": usedMB, "limit": limitMB},
 	})
 }
 
