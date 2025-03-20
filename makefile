@@ -1,4 +1,5 @@
-PROJECT_NAME=home_server
+PROJECT_NAME=home_server-app
+POSTGRES_NAME=postgres
 SERVICE_NAME=app
 
 up:
@@ -9,6 +10,7 @@ down:
 
 down_force:
 	docker-compose down --volumes --remove-orphans
+	docker rmi -f $$(docker images -q $(PROJECT_NAME))
 	docker rmi -f $$(docker images -q $(PROJECT_NAME))
 
 init:
