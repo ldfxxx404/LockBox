@@ -2,6 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 import styles from "@/styles/Signup.module.css";
+import { redirect } from "next/navigation";
 
 export default function Signup() {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
@@ -31,6 +32,7 @@ export default function Signup() {
       }
     } finally {
       setLoading(false);
+      redirect("/login");
     }
   };
 
