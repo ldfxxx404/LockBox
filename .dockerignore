@@ -1,5 +1,5 @@
 .vscode
 *__pycache__
 venv
-instance/app.db
+backend/app.db
 /storage

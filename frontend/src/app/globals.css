@@ -1,0 +1,79 @@
+/* globals.css */
+
+/* Сброс стандартных стилей браузера */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Шрифты и базовая стилизация */
+body {
+  font-family: 'Arial', sans-serif; /* Можно заменить на любой шрифт */
+  line-height: 1.6;
+  background-color: #fafafa;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+/* Стилизация ссылок */
+a {
+  text-decoration: none;
+  color: inherit; /* Убирает стандартный синий цвет у ссылок */
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #0070f3; /* Цвет для ховера */
+}
+
+/* Стилизация кнопок */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #005bb5;
+}
+
+/* Основной контейнер */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Стили для фона и теней */
+.card {
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Устанавливаем стандартные отступы для абзацев */
+p {
+  margin-bottom: 1.5rem;
+}
