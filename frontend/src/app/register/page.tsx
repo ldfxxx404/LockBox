@@ -2,16 +2,18 @@
 import { useState } from "react";
 import axios from "axios";
 import styles from "@/styles/Signup.module.css";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation"; // ✅ Для Next.js 13+
 
 export default function Signup() {
+  const router = useRouter(); // ✅ Вызов useRouter внутри компонента
+
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,56 +25,61 @@ export default function Signup() {
     try {
       const response = await axios.post("/api/register", formData);
       console.log("User registered:", response.data);
+
       setSuccess(true);
+      router.push("/login"); // ✅ Редирект только при успешной регистрации
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || "Registration failed");
+        if (err.response?.status === 400) {
+          setError("Invalid input. Please check your data and try again."); // ✅ Обработка ошибки 400
+        } else {
+          setError(err.response?.data?.message || "Registration failed");
+        }
       } else {
         setError("An unexpected error occurred");
       }
     } finally {
       setLoading(false);
-      redirect("/login");
     }
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Sign Up</h1>
-      {error && <p className={styles.error}>{error}</p>}
-      {success && <p className={styles.success}>Registration successful!</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Username"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className={styles.input}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className={styles.input}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          className={styles.input}
-        />
-        <button type="submit" className={styles.button} disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </button>
-      </form>
-    </div>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Sign Up</h1>
+        {error && <p className={styles.error}>{error}</p>}
+        {success && <p className={styles.success}>Registration successful!</p>}
+        <form onSubmit={handleSubmit}>
+          <input
+              type="text"
+              name="name"
+              placeholder="Username"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className={styles.input}
+          />
+          <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className={styles.input}
+          />
+          <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className={styles.input}
+          />
+          <button type="submit" className={styles.button} disabled={loading}>
+            {loading ? "Registering..." : "Register"}
+          </button>
+        </form>
+      </div>
   );
 }
