@@ -35,6 +35,12 @@ export default function Profile() {
           placeholder="Email"
           className={styles.input}
         />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          className={styles.input}
+        />
         <button type="submit" className={styles.button}>Update Profile</button>
       </form>
     </div>
