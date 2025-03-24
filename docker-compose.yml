@@ -9,7 +9,6 @@
 #      - NEXT_PUBLIC_API_URL=http://app:5000
 #    depends_on:
 #      - app
-#fjfjfjfjfjfjf аоаоаоаоаооахахахахахазазаза
 
   services:
     postgres:
