@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import axios, { AxiosError } from 'axios';
+import { API_REGISTER_URL } from '@/app/api/constants';
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     const formData = await request.json();
     
     const response = await axios.post(
-      "http://localhost:5000/api/register",
+      API_REGISTER_URL,
       formData,
       { headers: { "Content-Type": "application/json" } }
     );
