@@ -2,10 +2,10 @@
 import { useState } from "react";
 import axios from "axios";
 import styles from "@/styles/Signup.module.css";
-import { useRouter } from "next/navigation"; // ✅ Для Next.js 13+
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
-  const router = useRouter(); // ✅ Вызов useRouter внутри компонента
+  const router = useRouter(); 
 
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
@@ -23,11 +23,12 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/register", formData);
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+      const response = await axios.post(`${API_URL}/api/register`, formData);
       console.log("User registered:", response.data);
 
       setSuccess(true);
-      router.push("/login"); // ✅ Редирект только при успешной регистрации
+      router.push("/login"); 
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 400) {
