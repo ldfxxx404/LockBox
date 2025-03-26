@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -9,6 +10,7 @@ export default function Login() {
   const router = useRouter();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
+
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,6 +20,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
     setLoading(true);
 
     try {
@@ -31,6 +34,7 @@ export default function Login() {
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.message || "Login failed");
+
       } else {
         setError("An unexpected error occurred");
       }
@@ -39,10 +43,12 @@ export default function Login() {
     }
   };
 
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Login</h1>
       {error && <p className={styles.error}>{error}</p>}
+
       <form onSubmit={handleSubmit}>
         <input
           type="email"
@@ -51,7 +57,9 @@ export default function Login() {
           value={formData.email}
           onChange={handleChange}
           required
+
           className={styles.input}
+          required
         />
         <input
           type="password"
@@ -60,10 +68,13 @@ export default function Login() {
           value={formData.password}
           onChange={handleChange}
           required
+
           className={styles.input}
+          required
         />
         <button type="submit" className={styles.button} disabled={loading}>
           {loading ? 'Logging in...' : 'Login'}
+
         </button>
       </form>
       <a href="/register" className={styles.link}>Don't have an account? Sign Up</a>
