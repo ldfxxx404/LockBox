@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import React from 'react';
 
 export default function HomePage() {
   return (
@@ -26,12 +27,11 @@ export default function HomePage() {
   );
 }
 
-// Пример стилей для компонента
 const styles = {
   container: {
-    textAlign: 'center' as 'center',  // Явное указание типа
+    textAlign: 'center',  
     marginTop: '50px',
-  } as React.CSSProperties,  // Указываем, что это объект стилей с типами из React
+  } as React.CSSProperties,  
   button: {
     padding: '10px 20px',
     fontSize: '16px',

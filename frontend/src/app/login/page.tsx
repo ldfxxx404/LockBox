@@ -63,9 +63,10 @@ export default function Login() {
           className={styles.input}
         />
         <button type="submit" className={styles.button} disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+          {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
+      <a href="/register" className={styles.link}>Don't have an account? Sign Up</a>
     </div>
   );
 }
