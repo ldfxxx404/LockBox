@@ -56,10 +56,10 @@ export default function Login() {
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
-          required
+
 
           className={styles.input}
-          required
+
         />
         <input
           type="password"
@@ -67,10 +67,10 @@ export default function Login() {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
-          required
+
 
           className={styles.input}
-          required
+
         />
         <button type="submit" className={styles.button} disabled={loading}>
           {loading ? 'Logging in...' : 'Login'}
