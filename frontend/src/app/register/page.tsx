@@ -3,6 +3,8 @@ import { useState } from "react";
 import axios from "axios";
 import styles from "@/styles/Signup.module.css";
 import { useRouter } from "next/navigation";
+import errorHandler from "@/utils/errorHandler";
+import { API_URL } from "@/utils/apiUrl";
 
 export default function Signup() {
   const router = useRouter(); 
@@ -23,22 +25,13 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       const response = await axios.post(`${API_URL}/api/register`, formData);
       console.log("User registered:", response.data);
 
       setSuccess(true);
       router.push("/login"); 
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        if (err.response?.status === 400) {
-          setError("Invalid input. Please check your data and try again."); // ✅ Обработка ошибки 400
-        } else {
-          setError(err.response?.data?.message || "Registration failed");
-        }
-      } else {
-        setError("An unexpected error occurred");
-      }
+      setError(errorHandler(err, "Registration failed"));
     } finally {
       setLoading(false);
     }
