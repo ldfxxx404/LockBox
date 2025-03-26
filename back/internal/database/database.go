@@ -7,6 +7,7 @@ import (
 	"log"
 )
 
+// sest autodel bakcn
 func InitDB() *sqlx.DB {
 	db, err := sqlx.Connect("postgres", config.PostgresLink)
 	if err != nil {
