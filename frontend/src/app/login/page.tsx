@@ -27,9 +27,9 @@ export default function Login() {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
       const response = await axios.post(`${API_URL}/api/login`, formData);
       console.log("Login successful:", response.data);
-      
+
       localStorage.setItem("token", response.data.token);
-      
+
       router.push("/profile");
     } catch (err) {
       if (axios.isAxiosError(err)) {
