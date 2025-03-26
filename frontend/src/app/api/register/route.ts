@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     const formData = await request.json();
-
     const res = await fetch("http://localhost:5000/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -12,6 +11,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     if (!res.ok) {
       const errorData = await res.json();
+
       return NextResponse.json(
         { message: errorData.message || "Registration failed" },
         { status: res.status }
