@@ -13,6 +13,7 @@ down:
 down_force:
 	docker compose down --volumes --remove-orphans
 	docker rmi -f $$(docker images -q $(PROJECT_NAME))
+	docker rmi -f $$(docker images -q $(POSTGRES_NAME))
 
 init:
 	docker compose down --volumes --remove-orphans
@@ -33,4 +34,8 @@ migrate:
 migrate_down:
 	goose -dir $(MIGRATIONS_DIR) postgres "$(DB_URL)" down
 
-.PHONY: up down down_force init console restart migrate migrate_down
+up_db:
+	docker-compose up -d --no-deps $(POSTGRES_NAME)
+
+
+.PHONY: up down down_force init console restart migrate migrate_down up_db
