@@ -1,33 +1,32 @@
-import { NextResponse } from "next/server";
-import axios from "axios";
 
-export async function POST(req: Request) {
-  try {
-    const formData = await req.json();
+import { NextResponse } from 'next/server';
 
-    if (!formData.email || !formData.password) {
+export async function POST(request: Request): Promise<NextResponse> {
+    try {
+      const formData = await request.json();
+  
+      const res = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+  
+      if (!res.ok) {
+        const errorData = await res.json();
+        return NextResponse.json(
+          { message: errorData.message || "Login failed" },
+          { status: res.status }
+        );
+      }
+  
+      const data = await res.json();
+      return NextResponse.json(data, { status: 200 });
+    } catch (error) {
       return NextResponse.json(
-        { message: "Email and password are required" },
-        { status: 400 }
+        { message: "An unexpected error occurred" },
+        { status: 500 }
       );
     }
-
-    const response = await axios.post('http://localhost:5000/api/login', formData, {
-      headers: { "Content-Type": "application/json" },
-    });
-
-    return NextResponse.json(response.data, { status: 200 });
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      return NextResponse.json(
-        { message: err.response?.data?.message ?? "Login failed" },
-        { status: err.response?.status ?? 500 }
-      );
-    }
-
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
   }
-}
+  
+

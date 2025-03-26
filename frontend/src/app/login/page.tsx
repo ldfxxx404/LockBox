@@ -1,14 +1,16 @@
 "use client";
+
+
 import { useState } from "react";
 import axios from "axios";
-import styles from "@/styles/Signup.module.css";
 import { useRouter } from "next/navigation";
+import styles from "@/styles/Login.module.css";
 
-export default function Signup() {
+export default function Login() {
   const router = useRouter();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,17 +20,21 @@ export default function Signup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setSuccess(false);
+
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/login', formData);
-      console.log("User registered:", response.data);
-      setSuccess(true);
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+      const response = await axios.post(`${API_URL}/api/login`, formData);
+      console.log("Login successful:", response.data);
+      
+      localStorage.setItem("token", response.data.token);
+      
       router.push("/profile");
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || "Registration failed");
+        setError(err.response?.data?.message || "Login failed");
+
       } else {
         setError("An unexpected error occurred");
       }
@@ -36,16 +42,22 @@ export default function Signup() {
       setLoading(false);
     }
   };
+
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Login</h1>
+      {error && <p className={styles.error}>{error}</p>}
+
       <form onSubmit={handleSubmit}>
         <input
           type="email"
           name="email"
           placeholder="Email"
           value={formData.email}
-          onChange={handleChange} 
+          onChange={handleChange}
+          required
+
           className={styles.input}
           required
         />
@@ -54,19 +66,18 @@ export default function Signup() {
           name="password"
           placeholder="Password"
           value={formData.password}
-          onChange={handleChange} 
+          onChange={handleChange}
+          required
+
           className={styles.input}
           required
         />
-        {error && <p className={styles.error}>{error}</p>}
-        {success && <p className={styles.success}>Login successful!</p>}
         <button type="submit" className={styles.button} disabled={loading}>
-          {loading ? "Logging in..." : "Log In"}
+          {loading ? 'Logging in...' : 'Login'}
+
         </button>
       </form>
-      <a href="/register" className={styles.link}>
-        Don't have an account? Register
-      </a>
+      <a href="/register" className={styles.link}>Don't have an account? Sign Up</a>
     </div>
   );
 }

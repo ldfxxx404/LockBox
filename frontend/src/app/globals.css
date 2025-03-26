@@ -1,6 +1,5 @@
-/* globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-/* Сброс стандартных стилей браузера */
 *,
 *::before,
 *::after {
@@ -9,57 +8,59 @@
   box-sizing: border-box;
 }
 
-/* Шрифты и базовая стилизация */
 body {
-  font-family: 'Arial', sans-serif; /* Можно заменить на любой шрифт */
+  font-family: 'Roboto', sans-serif; 
   line-height: 1.6;
-  background-color: #fafafa;
+  background-color: #f0f2f5;
   color: #333;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: bold;
+  font-weight: 700;
   margin-bottom: 1rem;
+  color: #222;
 }
 
-/* Стилизация ссылок */
 a {
   text-decoration: none;
-  color: inherit; /* Убирает стандартный синий цвет у ссылок */
-  transition: color 0.3s ease;
+  color: inherit; 
+  transition: color 0.3s ease, border-bottom 0.3s ease;
+  border-bottom: 2px solid transparent;
 }
 
-a:hover {
-  color: #0070f3; /* Цвет для ховера */
-}
-
-/* Стилизация кнопок */
 button {
   font-family: inherit;
   font-size: inherit;
   background-color: #0070f3;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 0.5rem 0;
 }
 
 button:hover {
   background-color: #005bb5;
+  transform: translateY(-2px);
 }
 
-/* Основной контейнер */
+button:active {
+  transform: translateY(0);
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* Стили для фона и теней */
 .card {
   background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -73,7 +74,68 @@ img {
   display: block;
 }
 
-/* Устанавливаем стандартные отступы для абзацев */
 p {
   margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+body.dark {
+  background-color: #181818;
+  color: #ffffff;
+}
+
+body.dark a {
+  color: #ffffff;
+}
+
+body.dark a:hover {
+  color: #0070f3;
+}
+
+body.dark .card {
+  background-color: #242424;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+body.dark button {
+  background-color: #0070f3;
+  color: white;
+}
+
+body.dark button:hover {
+  background-color: #005bb5;
+}
+
+.header {
+  background-color: #0070f3;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 0 0 12px 12px;
+  margin-bottom: 2rem;
+}
+
+.footer {
+  background-color: #222;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 12px 12px 0 0;
+  margin-top: 2rem;
+}
+
+input, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: #0070f3;
+  outline: none;
 }
