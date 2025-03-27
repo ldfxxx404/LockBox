@@ -1,34 +1,31 @@
-import { NextResponse } from 'next/server';
+import {NextResponse} from 'next/server';
 
-type ServerError = {
-  message?: string;
-  status?: number;
-};
+interface ServerError {
+    message?: string | null;
+    status?: number;
+}
 
 export const serverErrorHandler = (
-  error: unknown,
-  defaultMessage: string = "An error occurred"
+    error: unknown,
+    defaultMessage: string = "Произошла ошибка"
 ): NextResponse => {
-  console.error("Server error:", error);
+    let message: string = defaultMessage;
+    let status: number = 500;
 
-  if (error instanceof Error) {
-    const err = error as ServerError & { response?: Response };
-    
-    if (err.response) {
-      return NextResponse.json(
-        { message: err.message || defaultMessage },
-        { status: err.status || 500 }
-      );
+    if (error instanceof Response) {
+        status = error.status;
+    } else if (error instanceof Error) {
+        message = error.message || defaultMessage;
+    } else if (typeof error === "object" && error !== null) {
+        const err = error as ServerError;
+        message = err.message || defaultMessage;
+        status = err.status || 500;
     }
-    
-    return NextResponse.json(
-      { message: err.message || defaultMessage },
-      { status: err.status || 500 }
-    );
-  }
 
-  return NextResponse.json(
-    { message: defaultMessage },
-    { status: 500 }
-  );
+    if (message === null) {
+        message = defaultMessage;
+    }
+
+    console.error(`❌ [API ERROR] Status: ${status}, Message: ${message}`);
+    return NextResponse.json({message}, {status});
 };

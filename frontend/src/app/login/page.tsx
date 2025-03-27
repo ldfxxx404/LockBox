@@ -4,7 +4,7 @@ import axios from "axios";
 import {useRouter} from "next/navigation";
 import styles from "@/styles/Login.module.css";
 import errorHandler from "@/utils/errorHandler";
-import { API_URL } from "@/utils/apiUrl";
+import {API_URL} from "@/utils/apiUrl";
 
 export default function Login() {
     const router = useRouter();
@@ -19,15 +19,11 @@ export default function Login() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
-
         setLoading(true);
 
         try {
-            const response = await axios.post(`${API_URL}/api/login`, formData);
-            console.log("Login successful:", response.data);
-
-            localStorage.setItem("token", response.data.token);
-
+            const {data} = await axios.post(`${API_URL}/api/login`, formData);
+            localStorage.setItem("token", data.token);
             router.push("/profile");
         } catch (err) {
             setError(errorHandler(err, "login failed"));
