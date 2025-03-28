@@ -5,6 +5,7 @@ import (
 	"back/internal/utils"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
+	"net/url"
 )
 
 type FileHandler struct {
@@ -51,10 +52,18 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 func (h *FileHandler) Download(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	filename := c.Params("filename")
-	filePath, err := h.FileServ.GetFilePath(userID, filename)
+
+	// Декодируем URL-encoded строку имени файла
+	decodedFilename, err := url.QueryUnescape(filename)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid filename"})
+	}
+
+	filePath, err := h.FileServ.GetFilePath(userID, decodedFilename)
 	if err != nil {
 		return c.Status(http.StatusNotFound).JSON(fiber.Map{"error": err.Error()})
 	}
+
 	return c.SendFile(filePath, false)
 }
 

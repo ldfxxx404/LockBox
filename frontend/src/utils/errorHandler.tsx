@@ -1,34 +1,49 @@
+import { NextResponse } from 'next/server';
 import axios from 'axios';
 
 const errorHandler = (
     err: unknown,
     defaultErrorMessage: string = "An unexpected error occurred"
-): string => {
+): NextResponse => {  // Return a NextResponse instead of just a string
+    let errorMessage = defaultErrorMessage;
+
     if (axios.isAxiosError(err)) {
         const status = err.response?.status;
-
         switch (status) {
             case 200:
-                return "";
+                errorMessage = "";  // No error
+                break;
             case 400:
-                return "Invalid input. Please check your data and try again.";
+                errorMessage = "Invalid input. Please check your data and try again.";
+                break;
             case 401:
-                return "Invalid login credentials. Please check your email and password.";
+                errorMessage = "Invalid login credentials. Please check your email and password.";
+                break;
             case 403:
-                return "Access is forbidden. You do not have permission to perform this action.";
+                errorMessage = "Access is forbidden. You do not have permission to perform this action.";
+                break;
             case 404:
-                return "The requested resource was not found. Please check the URL or contact support.";
+                errorMessage = "The requested resource was not found. Please check the URL or contact support.";
+                break;
             case 409:
-                return "This email is already registered. Please log in or use a different email.";
+                errorMessage = "This email is already registered. Please log in or use a different email.";
+                break;
             case 500:
-                return "Internal server error. Please try again later.";
+                errorMessage = "Internal server error. Please try again later.";
+                break;
             default:
-                return (err.response?.data as { message?: string })?.message || defaultErrorMessage;
+                errorMessage = (err.response?.data as { message?: string })?.message || defaultErrorMessage;
+                break;
         }
     } else if (err instanceof Error) {
-        return err.message;
+        errorMessage = err.message;
     }
-    return defaultErrorMessage;
+
+    // Return NextResponse with error message as JSON
+    return new NextResponse(
+        JSON.stringify({ error: errorMessage }),
+        { status: 400 } // Adjust status if necessary
+    );
 };
 
 export default errorHandler;

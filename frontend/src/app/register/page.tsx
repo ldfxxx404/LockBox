@@ -1,20 +1,19 @@
 "use client";
-import {useState} from "react";
+import { useState } from "react";
 import axios from "axios";
 import styles from "@/styles/Signup.module.css";
-import {useRouter} from "next/navigation";
-import errorHandler from "@/utils/errorHandler";
-import {API_URL} from "@/utils/apiUrl";
+import { useRouter } from "next/navigation";
+import { API_URL } from "@/utils/apiUrl";
 
 export default function Signup() {
     const router = useRouter();
-    const [formData, setFormData] = useState({name: "", email: "", password: ""});
+    const [formData, setFormData] = useState({ name: "", email: "", password: "" });
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData((prev) => ({...prev, [e.target.name]: e.target.value}));
+        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -27,8 +26,17 @@ export default function Signup() {
             await axios.post(`${API_URL}/api/register`, formData);
             setSuccess(true);
             router.push("/login");
-        } catch (err) {
-            setError(errorHandler(err, "Registration failed"));
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const status = err.response?.status;
+                if (status === 400) {
+                    setError("Email is already in use. Please try a different one.");
+                } else {
+                    setError("An error occurred during registration. Please try again.");
+                }
+            } else {
+                setError("An unexpected error occurred.");
+            }
         } finally {
             setLoading(false);
         }
