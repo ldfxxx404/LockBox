@@ -7,7 +7,6 @@ interface ApiResponse<T = unknown> {
     message?: string;
 }
 
-// Modify the function to be more type-safe
 export async function callApi<T>(
     endpoint: string,
     method: string,

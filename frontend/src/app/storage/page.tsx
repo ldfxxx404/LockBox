@@ -1,15 +1,14 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import styles from '@/styles/Storage.module.css';
-import { API_URL } from '@/utils/apiUrl';
 
 export default function Storage() {
-    const [files, setFiles] = useState<string[]>([]);  // Массив файлов
-    const [storageInfo, setStorageInfo] = useState({ limit: 10, used: 0 });  // Информация о хранилище
-    const [error, setError] = useState<string | null>(null);  // Ошибка
-    const [loading, setLoading] = useState(false);  // Статус загрузки
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);  // Выбранный файл для загрузки
+    const [files, setFiles] = useState<string[]>([]);
+    const [storageInfo, setStorageInfo] = useState({limit: 10, used: 0});
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     useEffect(() => {
         fetchFiles();  // Загружаем файлы при инициализации компонента
@@ -25,8 +24,8 @@ export default function Storage() {
 
         try {
             const token = localStorage.getItem('token');
-            const { data } = await axios.get(`${API_URL}/api/storage`, {
-                headers: { Authorization: `Bearer ${token}` },
+            const {data} = await axios.get(`/api/storage`, {
+                headers: {Authorization: `Bearer ${token}`},
             });
 
             setFiles(data.files);  // Устанавливаем файлы
@@ -34,8 +33,8 @@ export default function Storage() {
         } catch (err) {
             console.error(err);
             setError("Failed to fetch storage data. Please try again.");
-            setFiles([]);  // Очищаем список файлов
-            setStorageInfo({ limit: 10, used: 0 });  // Устанавливаем значения по умолчанию для хранилища
+            setFiles([]);
+            setStorageInfo({limit: 10, used: 0});
         } finally {
             setLoading(false);
         }
@@ -43,7 +42,7 @@ export default function Storage() {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setSelectedFile(e.target.files[0]); // Обновляем выбранный файл
+            setSelectedFile(e.target.files[0]);
         }
     };
 
@@ -51,22 +50,22 @@ export default function Storage() {
         e.preventDefault();
         if (!selectedFile) return;
         setLoading(true);
-        setError(null);  // Сбрасываем ошибки
+        setError(null);
 
         const formData = new FormData();
         formData.append('file', selectedFile);
 
         try {
             const token = localStorage.getItem('token');
-            await axios.post(`${API_URL}/api/upload`, formData, {
+            await axios.post(`/api/upload`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
 
-            await fetchFiles();  // Повторно загружаем файлы после загрузки
-            setSelectedFile(null);  // Очищаем выбранный файл
+            await fetchFiles();
+            setSelectedFile(null);
         } catch (err) {
             console.error(err);
             setError("Failed to upload file. Please try again.");
@@ -77,49 +76,44 @@ export default function Storage() {
 
     const downloadFile = async (fileName: string) => {
         setLoading(true);
-        setError(null);  // Сбрасываем ошибки
+        setError(null);
 
         try {
             const token = localStorage.getItem('token');
             const encodedFileName = encodeURIComponent(fileName);
 
             const response = await axios.get(`/api/proxy-download?fileName=${encodedFileName}`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
                 responseType: 'blob',
             });
 
             const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
 
-            setTimeout(() => {
-                window.open(url, '_blank');
-                window.URL.revokeObjectURL(url);
-            }, 500);
+            window.open(url, '_blank');
+
+            setTimeout(() => window.URL.revokeObjectURL(url), 5000);
         } catch (err) {
             console.error(err);
-            setError("Failed to download file. Please try again.");
+            setError("Failed to open file. Please try again.");
         } finally {
             setLoading(false);
         }
     };
 
+
     const deleteFile = async (fileName: string) => {
         setLoading(true);
-        setError(null);  // Сбрасываем ошибки
+        setError(null);
 
         try {
             const token = localStorage.getItem('token');
             const encodedFileName = encodeURIComponent(fileName);
 
             await axios.delete(`/api/storage?fileName=${encodedFileName}`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {Authorization: `Bearer ${token}`},
             });
 
-            await fetchFiles();  // Повторно загружаем файлы после удаления
+            await fetchFiles();
         } catch (err) {
             console.error(err);
             setError("Failed to delete file. Please try again.");
@@ -147,7 +141,7 @@ export default function Storage() {
 
                 <form onSubmit={uploadFile} className={styles.uploadForm}>
                     <label className={styles.fileInputLabel}>
-                        <input type="file" onChange={handleFileChange} className={styles.fileInput} />
+                        <input type="file" onChange={handleFileChange} className={styles.fileInput}/>
                         Choose File
                     </label>
                     <button type="submit" className={styles.uploadButton} disabled={loading || !selectedFile}>

@@ -3,7 +3,6 @@ import { useState } from "react";
 import axios from "axios";
 import styles from "@/styles/Signup.module.css";
 import { useRouter } from "next/navigation";
-import { API_URL } from "@/utils/apiUrl";
 
 export default function Signup() {
     const router = useRouter();
@@ -23,7 +22,7 @@ export default function Signup() {
         setLoading(true);
 
         try {
-            await axios.post(`${API_URL}/api/register`, formData);
+            await axios.post(`/api/register`, formData);
             setSuccess(true);
             router.push("/login");
         } catch (err: unknown) {

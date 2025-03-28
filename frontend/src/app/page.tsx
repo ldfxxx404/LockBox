@@ -1,18 +1,19 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import {API_URL} from '@/utils/apiUrl';
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
+    const router = useRouter();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setSelectedFile(e.target.files[0]); // Обновляем выбранный файл
+        if (e.target.files && e.target.files.length > 0) {
+            setSelectedFile(e.target.files[0]);
         }
     };
 
@@ -27,13 +28,14 @@ export default function HomePage() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(`${API_URL}/api/upload`, formData, {
+            await axios.post(`/api/upload`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log('File uploaded successfully:', response.data);
+
+            router.push("/storage");
         } catch (err) {
             setError('Failed to upload file. Please try again.');
             console.error(err);
@@ -45,46 +47,28 @@ export default function HomePage() {
     return (
         <div style={styles.container}>
             <h1>Welcome to LockBox</h1>
-            <Link href="/login" passHref>
-                <button style={styles.button}>Login</button>
-            </Link>
-            <Link href="/storage" passHref>
-                <button style={styles.button}>Storage</button>
-            </Link>
-            <Link href="/profile" passHref>
-                <button style={styles.button}>Profile</button>
-            </Link>
-            <Link href="/register" passHref>
-                <button style={styles.button}>Sign Up</button>
-            </Link>
+            <Link href="/login"><button style={styles.button}>Login</button></Link>
+            <Link href="/storage"><button style={styles.button}>Storage</button></Link>
+            <Link href="/profile"><button style={styles.button}>Profile</button></Link>
+            <Link href="/register"><button style={styles.button}>Sign Up</button></Link>
 
-            <div style={{marginTop: '20px'}}>
-                <input
-                    type="file"
-                    style={{display: 'none'}}
-                    id="file-input"
-                    onChange={handleFileChange}
-                />
-                <label htmlFor="file-input">
-                    <button
-                        style={styles.button}
-                        disabled={loading}
-                        onClick={() => document.getElementById('file-input')?.click()}
-                    >
-                        {loading ? 'Uploading...' : 'Upload a File'}
-                    </button>
+            <div style={{ marginTop: '20px' }}>
+                <input type="file" id="file-input" style={{ display: 'none' }} onChange={handleFileChange} />
+                
+                <label htmlFor="file-input" style={styles.button}>
+                    {loading ? 'Uploading...' : 'Upload a File'}
                 </label>
 
                 {selectedFile && (
-                    <div style={{marginTop: '20px'}}>
+                    <div style={{ marginTop: '20px' }}>
                         <p>Selected file: {selectedFile.name}</p>
-                        <button onClick={handleFileUpload} style={styles.button}>
-                            Confirm Upload
+                        <button onClick={handleFileUpload} style={styles.button} disabled={loading}>
+                            {loading ? 'Uploading...' : 'Confirm Upload'}
                         </button>
                     </div>
                 )}
 
-                {error && <p style={{color: 'red'}}>{error}</p>}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
         </div>
     );
@@ -105,5 +89,7 @@ const styles = {
         color: '#fff',
         transition: 'background-color 0.3s ease',
         margin: '5px',
+        display: 'inline-block',
+        textAlign: 'center' as const,
     },
 };
