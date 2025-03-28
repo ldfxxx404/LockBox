@@ -3,7 +3,6 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import styles from "@/styles/Login.module.css";
-import { API_URL } from "@/utils/apiUrl";
 
 export default function Login() {
     const router = useRouter();
@@ -21,7 +20,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const { data } = await axios.post(`${API_URL}/api/login`, formData);
+            const { data } = await axios.post(`/api/login`, formData);
             localStorage.setItem("token", data.token);
             router.push("/storage");
         } catch (err: unknown) {

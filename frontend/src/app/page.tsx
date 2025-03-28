@@ -2,7 +2,6 @@
 
 import React, {useState} from 'react';
 import axios from 'axios';
-import {API_URL} from '@/utils/apiUrl';
 import Link from "next/link";
 
 export default function HomePage() {
@@ -27,7 +26,7 @@ export default function HomePage() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post(`${API_URL}/api/upload`, formData, {
+            const response = await axios.post(`/api/upload`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',

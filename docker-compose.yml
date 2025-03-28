@@ -55,7 +55,7 @@
       ports:
         - "3000:3000"
       environment:
-        - NEXT_PUBLIC_SERVER=http://home_server:5000  # Указываем переменную окружения для фронтенда
+        - NEXT_PUBLIC_SERVER=http://home_server:5000
       depends_on:
         - app
 
