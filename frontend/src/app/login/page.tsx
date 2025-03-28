@@ -1,41 +1,46 @@
 "use client";
-import {useState} from "react";
+import { useState } from "react";
 import axios from "axios";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import styles from "@/styles/Login.module.css";
-import errorHandler from "@/utils/errorHandler";
 import { API_URL } from "@/utils/apiUrl";
 
 export default function Login() {
     const router = useRouter();
-    const [formData, setFormData] = useState({email: "", password: ""});
+    const [formData, setFormData] = useState({ email: "", password: "" });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData((prev) => ({...prev, [e.target.name]: e.target.value}));
+        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
-
         setLoading(true);
 
         try {
-            const response = await axios.post(`${API_URL}/api/login`, formData);
-            console.log("Login successful:", response.data);
-
-            localStorage.setItem("token", response.data.token);
-
-            router.push("/profile");
-        } catch (err) {
-            setError(errorHandler(err, "login failed"));
+            const { data } = await axios.post(`${API_URL}/api/login`, formData);
+            localStorage.setItem("token", data.token);
+            router.push("/storage");
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const status = err.response?.status;
+                if (status === 400) {
+                    setError("Invalid email or password.");
+                } else if (status === 401) {
+                    setError("Invalid login credentials. Please try again.");
+                } else {
+                    setError("An unexpected error occurred. Please try again later.");
+                }
+            } else {
+                setError("An unexpected error occurred.");
+            }
         } finally {
             setLoading(false);
         }
     };
-
 
     return (
         <div className={styles.container}>
@@ -61,10 +66,11 @@ export default function Login() {
                 />
                 <button type="submit" className={styles.button} disabled={loading}>
                     {loading ? 'Logging in...' : 'Login'}
-
                 </button>
             </form>
-            <a href="/register" className={styles.link}>Don't have an account? Sign Up</a>
+            <a href="/register" className={styles.link}>
+                Don&apos;t have an account? Sign Up
+            </a>
         </div>
     );
 }
