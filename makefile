@@ -1,6 +1,6 @@
 PROJECT_NAME=home_server-app
 POSTGRES_NAME=postgres
-SERVICE_NAME=app
+FRONT_NAME=home_server-frontend
 MIGRATIONS_DIR=back/migrations
 DB_URL=postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable
 
@@ -14,6 +14,7 @@ down_force:
 	docker compose down --volumes --remove-orphans
 	docker rmi -f $$(docker images -q $(PROJECT_NAME))
 	docker rmi -f $$(docker images -q $(POSTGRES_NAME))
+	docker rmi -f $$(docker images -q $(FRONT_NAME))
 
 init:
 	docker compose down --volumes --remove-orphans

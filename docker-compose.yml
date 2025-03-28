@@ -1,91 +1,43 @@
-#version: "3.8"
-#
-#services:
-#  frontend:
-#    container_name: home_frontend
-#    build:
-#      context: ./frontend
-#      dockerfile: Dockerfile
-#    ports:
-#      - "3000:3000"
-#    environment:
-#      - NEXT_PUBLIC_API_URL=http://backend:5000  # Указываем переменную окружения для фронтенда
-#    depends_on:
-#      - backend
-#
-#  backend:
-#    container_name: home_backend
-#    build:
-#      context: ./backend
-#      dockerfile: Dockerfile
-#    ports:
-#      - "5000:5000"
-#    volumes:
-#      - ./backend/storage:/root/storage
-#    environment:
-#      - SERVER_PORT=0.0.0.0:5000  # Устанавливаем переменную окружения для бэкенда
-#      - JWT_SECRET=supersecretkey
-#      - POSTGRES_URL=postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
-#    depends_on:
-#      - postgres
-#    command: sh -c "sleep 10 && ./main"
-#
-#  postgres:
-#    container_name: postgres_box
-#    image: postgres:latest
-#    ports:
-#      - "6969:5432"
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#      - POSTGRES_DB=lock_box
-#    volumes:
-#      - pgdata:/var/lib/postgresql/data
-#
-#volumes:
-#  pgdata:
+services:
+  frontend:
+    container_name: home_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_SERVER=http://home_server:5000
+    depends_on:
+      - app
 
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - "6969:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=lock_box
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
-  services:
-    frontend:
-      container_name: home_frontend
-      build:
-        context: ./frontend
-        dockerfile: Dockerfile
-      ports:
-        - "3000:3000"
-      environment:
-        - NEXT_PUBLIC_SERVER=http://home_server:5000
-      depends_on:
-        - app
-
-    postgres:
-      container_name: postgres
-      image: postgres:latest
-      ports:
-        - "6969:5432"
-      environment:
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=postgres
-        - POSTGRES_DB=lock_box
-      volumes:
-        - pgdata:/var/lib/postgresql/data
-
-    app:
-      container_name: home_server
-      build:
-        context: .
-        dockerfile: back/dockerfile
-      ports:
-        - "5000:5000"
-      volumes:
-        - ./back/storage:/root/storage
-      environment:
-        - SERVER_PORT=0.0.0.0:5000
-        - JWT_SECRET=supersecretkey
-        - POSTGRES_URL=postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
-      depends_on:
-        - postgres
-      command: sh -c "sleep 10 && ./main"
-  volumes:
-    pgdata:
+  app:
+    container_name: home_server
+    build:
+      context: .
+      dockerfile: back/dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./back/storage:/root/storage
+    environment:
+      - SERVER_PORT=0.0.0.0:5000
+      - JWT_SECRET=supersecretkey
+      - POSTGRES_URL=postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
+    depends_on:
+      - postgres
+    command: sh -c "sleep 10 && ./main"
+volumes:
+  pgdata:
