@@ -112,25 +112,30 @@
   margin: 0;
 }
 
+.fileItem:last-child {
+  margin-bottom: 0;
+}
+
 .fileItem {
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.fileItem:last-child {
-  border-bottom: none;
+  justify-content: space-between; /* Размещаем элементы с максимальным расстоянием между ними */
+  margin-bottom: 10px;
 }
 
 .fileIcon {
-  margin-right: 10px;
   font-size: 20px;
+  margin-right: 15px; /* Увеличиваем отступ между иконкой и названием файла */
 }
 
 .fileName {
   flex: 1;
   color: #333;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 20px; /* Добавляем отступ справа для файла, чтобы он не слипался с кнопками */
 }
 
 .noFiles {
@@ -140,26 +145,35 @@
   background: #f8f9fa;
   border-radius: 4px;
 }
-/* Стили для кнопки удаления */
+
+.fileItem button {
+  padding: 8px 16px;
+  margin-top: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  margin-left: auto; /* Отступ между кнопками */
+}
+
+/* Кнопка "Удалить" */
 .deleteButton {
   background-color: #ff4d4d;
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
 }
 
 .deleteButton:hover {
   background-color: #ff0000;
 }
 
-/* Ограничение длины имени файла с многоточием */
-.fileName {
-  max-width: 200px; /* Ограничиваем ширину */
-  white-space: nowrap; /* Запрещаем перенос на новую строку */
-  overflow: hidden; /* Обрезаем лишнее */
-  text-overflow: ellipsis; /* Добавляем многоточие */
+/* Кнопка "Скачать" */
+.downloadButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.downloadButton:hover {
+  background-color: #218838;
 }
