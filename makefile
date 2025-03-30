@@ -22,7 +22,7 @@ init:
 	docker compose up -d
 
 console:
-	docker exec -it $$(docker compose ps -q $(SERVICE_NAME)) sh
+	docker exec -it $$(docker compose ps -q $(PROJECT_NAME)) sh
 
 restart:
 	docker compose down --remove-orphans
