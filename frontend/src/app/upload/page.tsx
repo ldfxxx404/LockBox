@@ -1,5 +1,5 @@
-'use client';
-import styles from '@/styles/Upload.module.css';
+'use client'
+import styles from '@/styles/Upload.module.css'
 
 export default function Upload() {
   return (
@@ -8,26 +8,24 @@ export default function Upload() {
 
       {/* Форма загрузки */}
       <form className={styles.form}>
-        <input
-          type="file"
-          className={styles.input}
-        />
+        <input type='file' className={styles.input} />
         <div className={styles.fileInfo}>
-          <p><strong>File:</strong> [File Name]</p>
-          <p><strong>Size:</strong> [File Size]</p>
+          <p>
+            <strong>File:</strong> [File Name]
+          </p>
+          <p>
+            <strong>Size:</strong> [File Size]
+          </p>
         </div>
 
         <div className={styles.progressBar}>
-          <div
-            className={styles.progress}
-            style={{ width: `0%` }}
-          ></div>
+          <div className={styles.progress} style={{ width: `0%` }}></div>
         </div>
 
-        <button type="submit" className={styles.button}>
+        <button type='submit' className={styles.button}>
           Upload
         </button>
       </form>
     </div>
-  );
+  )
 }
