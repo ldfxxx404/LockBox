@@ -9,7 +9,7 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif; 
+  font-family: 'Roboto', sans-serif;
   line-height: 1.6;
   background-color: #f0f2f5;
   color: #333;
@@ -20,7 +20,12 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
   margin-bottom: 1rem;
   color: #222;
@@ -28,7 +33,7 @@ h1, h2, h3, h4, h5, h6 {
 
 a {
   text-decoration: none;
-  color: inherit; 
+  color: inherit;
   transition: color 0.3s ease, border-bottom 0.3s ease;
   border-bottom: 2px solid transparent;
 }
@@ -124,7 +129,8 @@ body.dark button:hover {
   margin-top: 2rem;
 }
 
-input, textarea {
+input,
+textarea {
   font-family: inherit;
   font-size: inherit;
   width: 100%;
@@ -135,7 +141,8 @@ input, textarea {
   transition: border-color 0.3s ease;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   border-color: #0070f3;
   outline: none;
 }
