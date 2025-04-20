@@ -1,5 +1,2 @@
 /back/storage
-/venv 
-*__pycache__
 .vscode
-/app.db
