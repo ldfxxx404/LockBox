@@ -2,7 +2,7 @@ FROM golang:1.24 AS builder
 
 WORKDIR /app
 
-COPY back/ ./
+COPY . ./
 
 RUN go mod tidy
 

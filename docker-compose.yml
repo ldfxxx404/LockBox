@@ -1,21 +1,21 @@
 services:
   frontend:
-    container_name: home_frontend
+    container_name: lockbox_frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
-      - NEXT_PUBLIC_SERVER=http://home_server:5000
+      - NEXT_PUBLIC_SERVER=http://lockbox_backend:5000
     depends_on:
-      - app
+      - backend
 
   postgres:
     container_name: postgres
     image: postgres:latest
     ports:
-      - "6969:5432"
+      - '6969:5432'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -23,13 +23,13 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  app:
-    container_name: home_server
+  backend:
+    container_name: lockbox_backend
     build:
-      context: .
-      dockerfile: back/dockerfile
+      context: ./back
+      dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - '5000:5000'
     volumes:
       - ./back/storage:/root/storage
     environment:

@@ -1,5 +1,3 @@
 .vscode
-*__pycache__
-venv
-backend/app.db
-/storage
+/back/storage
+.idea
