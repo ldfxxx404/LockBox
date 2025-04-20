@@ -1,13 +1,13 @@
 services:
   frontend:
-    container_name: home_frontend
+    container_name: lockbox_frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
       - '3000:3000'
     environment:
-      - NEXT_PUBLIC_SERVER=http://home_server:5000
+      - NEXT_PUBLIC_SERVER=http://lockbox_backend:5000
     depends_on:
       - backend
 
@@ -24,7 +24,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   backend:
-    container_name: home_backend
+    container_name: lockbox_backend
     build:
       context: ./back
       dockerfile: Dockerfile

@@ -1,5 +1,5 @@
-BACKEND_NAME=home_server-backend
-FRONT_NAME=home_server-frontend
+BACKEND_NAME=lockbox-backend
+FRONT_NAME=lockbox-frontend
 POSTGRES_NAME=postgres
 
 MIGRATIONS_DIR=back/migrations
@@ -21,6 +21,7 @@ init:
 	docker compose down --volumes --remove-orphans
 	docker compose build
 	docker compose up -d
+	make migrate
 
 console:
 	docker exec -it $$(docker compose ps -q $(BACKEND_NAME)) sh
