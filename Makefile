@@ -21,7 +21,6 @@ init:
 	docker compose down --volumes --remove-orphans
 	docker compose build
 	docker compose up -d
-	make migrate
 
 console:
 	docker exec -it $$(docker compose ps -q $(BACKEND_NAME)) sh
@@ -39,6 +38,5 @@ migrate_down:
 
 up_db:
 	docker-compose up -d --no-deps $(POSTGRES_NAME)
-
 
 .PHONY: up down down_force init console restart migrate migrate_down up_db
