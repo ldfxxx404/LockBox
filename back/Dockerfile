@@ -8,6 +8,6 @@ RUN go mod tidy
 
 RUN go mod download
 
-RUN go build -o main ./cmd/main.go
+RUN go build -o backend ./cmd/main.go
 
 EXPOSE 5000

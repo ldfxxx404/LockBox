@@ -2,9 +2,10 @@ package utils
 
 import (
 	"back/config"
+	"time"
+
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
-	"time"
 )
 
 func HashPassword(password string) (string, error) {
@@ -29,7 +30,7 @@ func GenerateToken(userID int, isAdmin bool) (string, error) {
 }
 
 func ParseToken(tokenString string) (jwt.MapClaims, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		return []byte(config.JWTSecret), nil
 	})
 
