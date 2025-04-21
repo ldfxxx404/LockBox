@@ -3,7 +3,6 @@ package database
 import (
 	"back/config"
 	"database/sql"
-	"log"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -11,26 +10,13 @@ import (
 )
 
 func InitDB() *sqlx.DB {
-	db, err := sqlx.Connect("postgres", config.PostgresLink)
-	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
-	}
+	db, _ := sqlx.Connect(config.DbName, config.PostgresLink)
 
-	if err := runMigrations(db.DB, config.MigrationsDir); err != nil {
-		log.Fatalf("Failed to run migrations: %v", err)
-	}
+	runMigrations(db.DB, config.MigrationsDir)
 	return db
 }
 
-func runMigrations(db *sql.DB, migrationsDir string) error {
-	if err := goose.SetDialect("postgres"); err != nil {
-		return err
-	}
-
-	if err := goose.Up(db, migrationsDir); err != nil {
-		return err
-	}
-
-	log.Println("DB migrations applied")
-	return nil
+func runMigrations(db *sql.DB, migrationsDir string) {
+	goose.SetDialect(config.DbName)
+	goose.Up(db, migrationsDir)
 }

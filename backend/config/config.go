@@ -9,6 +9,7 @@ var (
 	PostgresLink  = getEnv("POSTGRES_URL", "postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable")
 	StorageLimit  = 10
 	MigrationsDir = "migrations"
+	DbName        = "postgres"
 )
 
 func getEnv(key, fallback string) string {
