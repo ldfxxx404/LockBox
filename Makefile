@@ -24,6 +24,13 @@ down_force:
 init: down_force build up
 	@echo "Инициализация завершена"
 
+init_deploy:
+	@echo "Полный деплой с очисткой и пересборкой..."
+	docker compose -f docker-compose.prod.yml down --volumes --remove-orphans
+	docker compose -f docker-compose.prod.yml build --no-cache
+	docker compose -f docker-compose.prod.yml up -d
+	@echo "✅ Инициализационный деплой завершён"
+
 build:
 	@echo "Сборка образов..."
 	docker compose build --no-cache
