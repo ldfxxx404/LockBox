@@ -1,6 +1,6 @@
 BACKEND_NAME=lockbox-backend
 FRONTEND_NAME=lockbox-frontend
-POSTGRES_NAME=lockbox_postgres
+POSTGRES_NAME=lockbox-postgres
 
 MIGRATIONS_DIR=back/migrations
 DB_URL=postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable
