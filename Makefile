@@ -65,7 +65,6 @@ wait_db:
 
 reset_db: down_db up_db wait_db
 	@echo "База данных перезапущена"
-
 help:
 	@echo "Доступные команды:"
 	@echo ""
