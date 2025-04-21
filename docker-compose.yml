@@ -3,11 +3,15 @@ services:
     container_name: lockbox_frontend
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - '3000:3000'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     environment:
       - NEXT_PUBLIC_SERVER=http://lockbox_backend:5000
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend
 
