@@ -1,31 +1,16 @@
 services:
-  frontend:
-    container_name: lockbox_frontend
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    ports:
-      - '3000:3000'
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - NEXT_PUBLIC_SERVER=http://lockbox_backend:5000
-      - CHOKIDAR_USEPOLLING=true
-    depends_on:
-      - backend
-
   postgres:
-    container_name: postgres
-    image: postgres:latest
+    container_name: lockbox_postgres
+    image: postgres:15-alpine
     ports:
       - '6969:5432'
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=lock_box
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lock_box
     volumes:
       - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
 
   backend:
     container_name: lockbox_backend
@@ -37,11 +22,33 @@ services:
     volumes:
       - ./back/storage:/root/storage
     environment:
-      - SERVER_PORT=0.0.0.0:5000
-      - JWT_SECRET=82026ea3dfe8af4dbefc8db9495e442870b4408415d2ced47ab8d50b97dd9da203bfae35e9df9f527de3ae117d3af950cc57ae77967aacc9039130b86895a4ae
-      - POSTGRES_URL=postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
+      SERVER_PORT: 0.0.0.0:5000
+      JWT_SECRET: 82026ea3dfe8af4dbefc8db9495e442870b4408415d2ced47ab8d50b97dd9da203bfae35e9df9f527de3ae117d3af950cc57ae77967aacc9039130b86895a4ae
+      POSTGRES_URL: postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
     depends_on:
       - postgres
-    command: sh -c "sleep 10 && ./backend"
+    restart: unless-stopped
+    command: sh -c "sleep 5 && ./backend"
+
+  frontend:
+    container_name: lockbox_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      NEXT_PUBLIC_SERVER: http://lockbox_backend:5000
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+      NODE_ENV: development
+    depends_on:
+      - backend
+    restart: unless-stopped
+
 volumes:
   pgdata:
