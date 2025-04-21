@@ -2,7 +2,7 @@ BACKEND_NAME=lockbox-backend
 FRONTEND_NAME=lockbox-frontend
 POSTGRES_NAME=lockbox-postgres
 
-MIGRATIONS_DIR=back/migrations
+MIGRATIONS_DIR=backend/migrations
 DB_URL=postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable
 DB_CONTAINER_URL=postgres://postgres:postgres@${POSTGRES_NAME}:5432/lock_box?sslmode=disable
 
@@ -21,7 +21,7 @@ down_force:
 	docker rmi -f $$(docker images -q ${POSTGRES_NAME}) || true
 	docker rmi -f $$(docker images -q ${FRONTEND_NAME}) || true
 
-init: down_force build up migrate
+init: down_force build up
 	@echo "Инициализация завершена"
 
 build:
