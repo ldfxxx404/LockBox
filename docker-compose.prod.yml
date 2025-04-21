@@ -1,0 +1,47 @@
+services:
+  postgres:
+    container_name: lockbox-postgres
+    image: postgres:15-alpine
+    ports:
+      - '6969:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lock_box
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  backend:
+    container_name: lockbox-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '5000'
+    environment:
+      JWT_SECRET: 82026ea3dfe8af4dbefc8db9495e442870b4408415d2ced47ab8d50b97dd9da203bfae35e9df9f527de3ae117d3af950cc57ae77967aacc9039130b86895a4ae
+      POSTGRES_URL: postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    command: ./backend
+
+  frontend:
+    container_name: lockbox-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      NEXT_PUBLIC_SERVER: http://lockbox-backend:5000
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+      NODE_ENV: production
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:
