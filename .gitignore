@@ -1,3 +1,4 @@
 .vscode
 .idea
 /backend/storage
+/frontend/node_modules
