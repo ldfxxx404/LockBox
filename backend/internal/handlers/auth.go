@@ -3,8 +3,9 @@ package handlers
 import (
 	"back/internal/models"
 	"back/internal/services"
-	"github.com/gofiber/fiber/v2"
 	"net/http"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type AuthHandler struct {
@@ -15,6 +16,16 @@ func NewAuthHandler(authServ *services.AuthService) *AuthHandler {
 	return &AuthHandler{AuthServ: authServ}
 }
 
+// Register godoc
+// @Summary      Register a new user
+// @Description  Create an account with email and password
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        user  body      models.UserDTO  true  "User registration data"
+// @Success      201   {object}  map[string]any
+// @Failure      400   {object}  map[string]string
+// @Router       /api/register [post]
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var dto models.UserDTO
 	if err := c.BodyParser(&dto); err != nil {
@@ -33,6 +44,17 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	})
 }
 
+// Login godoc
+// @Summary      Log in user
+// @Description  Authenticate user and return JWT token
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        credentials  body      models.LoginDTO  true  "User login credentials"
+// @Success      200          {object}  map[string]interface{}
+// @Failure      400          {object}  map[string]string
+// @Failure      401          {object}  map[string]string
+// @Router       /api/login [post]
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var dto models.LoginDTO
 	if err := c.BodyParser(&dto); err != nil {
@@ -52,6 +74,13 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	})
 }
 
+// Logout godoc
+// @Summary      Log out user
+// @Description  Logout by removing token on the client side
+// @Tags         auth
+// @Produce      json
+// @Success      200  {object}  map[string]string
+// @Router       /api/logout [post]
 func (h *AuthHandler) Logout(c *fiber.Ctx) error {
 	// Для JWT logout осуществляется на клиентской стороне
 	return c.JSON(fiber.Map{

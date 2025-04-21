@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"back/internal/models"
 	"back/internal/services"
-	"github.com/gofiber/fiber/v2"
 	"net/http"
 	"strconv"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type AdminHandler struct {
@@ -15,6 +17,15 @@ func NewAdminHandler(adminServ *services.AdminService) *AdminHandler {
 	return &AdminHandler{AdminServ: adminServ}
 }
 
+// GetAllUsers godoc
+// @Summary      Get all users
+// @Description  Returns a list of all registered users
+// @Tags         admin
+// @Security     BearerAuth
+// @Produce      json
+// @Success      200  {array}  models.User
+// @Failure      500  {object}  map[string]string
+// @Router       /admin/users [get]
 func (h *AdminHandler) GetAllUsers(c *fiber.Ctx) error {
 	users, err := h.AdminServ.GetAllUsers()
 	if err != nil {
@@ -23,21 +34,43 @@ func (h *AdminHandler) GetAllUsers(c *fiber.Ctx) error {
 	return c.JSON(users)
 }
 
+// UpdateStorageLimit godoc
+// @Summary      Update user storage limit
+// @Description  Sets a new storage limit for a specific user
+// @Tags         admin
+// @Security     BearerAuth
+// @Accept       json
+// @Produce      json
+// @Param        body  body  models.UpdateStorage  true  "Storage limit info"
+// @Success      200  {object}  map[string]string
+// @Failure      400  {object}  map[string]string
+// @Router       /admin/update_limit [post]
 func (h *AdminHandler) UpdateStorageLimit(c *fiber.Ctx) error {
-	var req struct {
-		UserID   int `json:"user_id"`
-		NewLimit int `json:"new_limit"`
-	}
+	var req models.UpdateStorage
+
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
 	}
+
 	err := h.AdminServ.UpdateStorageLimit(req.UserID, req.NewLimit)
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
+
 	return c.JSON(fiber.Map{"message": "Storage limit updated"})
 }
 
+// MakeAdmin godoc
+// @Summary      Grant admin rights
+// @Description  Gives a user admin privileges
+// @Tags         admin
+// @Security     BearerAuth
+// @Produce      json
+// @Param        user_id  path  int  true  "User ID"
+// @Success      200  {object}  map[string]string
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Router       /admin/make_admin/{user_id} [post]
 func (h *AdminHandler) MakeAdmin(c *fiber.Ctx) error {
 	userID, err := strconv.Atoi(c.Params("user_id"))
 	if err != nil {
@@ -50,6 +83,17 @@ func (h *AdminHandler) MakeAdmin(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "User is now an admin"})
 }
 
+// RevokeAdmin godoc
+// @Summary      Revoke admin rights
+// @Description  Removes admin privileges from a user
+// @Tags         admin
+// @Security     BearerAuth
+// @Produce      json
+// @Param        user_id  path  int  true  "User ID"
+// @Success      200  {object}  map[string]string
+// @Failure      400  {object}  map[string]string
+// @Failure      500  {object}  map[string]string
+// @Router       /admin/revoke_admin/{user_id} [post]
 func (h *AdminHandler) RevokeAdmin(c *fiber.Ctx) error {
 	userID, err := strconv.Atoi(c.Params("user_id"))
 	if err != nil {

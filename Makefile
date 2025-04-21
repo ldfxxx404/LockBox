@@ -98,4 +98,20 @@ help:
 	@echo "  make help           - Показать это сообщение"
 	@echo ""
 
-.PHONY: up down down_force init build restart console frontend_logs backend_logs db_logs migrate migrate_down migrate_status up_db wait_db reset_db help
+restart_backend:
+	@echo "Пересборка и перезапуск только backend..."
+	docker compose stop backend
+	docker compose rm -f backend
+	docker compose build --no-cache backend
+	docker compose up -d --no-deps backend
+	@echo "Backend пересобран и перезапущен"
+
+restart_frontend:
+	@echo "Пересборка и перезапуск только frontend..."
+	docker compose stop frontend
+	docker compose rm -f frontend
+	docker compose build --no-cache frontend
+	docker compose up -d --no-deps frontend
+	@echo "Frontend пересобран и перезапущен"
+
+.PHONY: up down down_force init build restart console frontend_logs backend_logs db_logs migrate migrate_down migrate_status up_db wait_db reset_db help restart_frontend restart_backend

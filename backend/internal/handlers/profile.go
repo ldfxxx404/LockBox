@@ -3,8 +3,9 @@ package handlers
 import (
 	"back/internal/services"
 	"back/internal/utils"
-	"github.com/gofiber/fiber/v2"
 	"net/http"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type ProfileHandler struct {

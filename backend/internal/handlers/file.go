@@ -17,6 +17,18 @@ func NewFileHandler(fileServ *services.FileService) *FileHandler {
 	return &FileHandler{FileServ: fileServ}
 }
 
+// Upload godoc
+// @Summary      Upload a file
+// @Description  Upload a file for the authenticated user
+// @Tags         file
+// @Security     BearerAuth
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        file  formData  file  true  "File to upload"
+// @Success      200   {object}  map[string]string
+// @Failure      400   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /upload [post]
 func (h *FileHandler) Upload(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	fileHeader, err := c.FormFile("file")
@@ -30,6 +42,15 @@ func (h *FileHandler) Upload(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "File uploaded", "filename": fileHeader.Filename})
 }
 
+// ListFiles godoc
+// @Summary      List user's files
+// @Description  Returns a list of filenames and storage info for the authenticated user
+// @Tags         file
+// @Security     BearerAuth
+// @Produce      json
+// @Success      200   {object}  map[string]interface{}
+// @Failure      500   {object}  map[string]string
+// @Router       /storage [get]
 func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	files, err := h.FileServ.ListFiles(userID)
@@ -50,6 +71,17 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	})
 }
 
+// Download godoc
+// @Summary      Download a file
+// @Description  Downloads a specific file for the authenticated user
+// @Tags         file
+// @Security     BearerAuth
+// @Produce      octet-stream
+// @Param        filename  path  string  true  "File name"
+// @Success      200
+// @Failure      400   {object}  map[string]string
+// @Failure      404   {object}  map[string]string
+// @Router       /storage/{filename} [get]
 func (h *FileHandler) Download(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	filename := c.Params("filename")
@@ -67,6 +99,16 @@ func (h *FileHandler) Download(c *fiber.Ctx) error {
 	return c.SendFile(filePath, false)
 }
 
+// Delete godoc
+// @Summary      Delete a file
+// @Description  Deletes a specific file belonging to the authenticated user
+// @Tags         file
+// @Security     BearerAuth
+// @Param        filename  path  string  true  "File name"
+// @Produce      json
+// @Success      200   {object}  map[string]string
+// @Failure      500   {object}  map[string]string
+// @Router       /delete/{filename} [delete]
 func (h *FileHandler) Delete(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	filename := c.Params("filename")

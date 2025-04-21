@@ -1,3 +1,9 @@
+// @title        LockBox API
+// @version      1.0
+// @description  This is the API documentation for LockBox SaaS app.
+// @host         localhost:5000
+// @BasePath     /api
+// @schemes      https
 package main
 
 import (
@@ -9,7 +15,10 @@ import (
 	"back/internal/services"
 	"log"
 
+	_ "back/cmd/swagger"
+
 	"github.com/gofiber/fiber/v2"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 )
 
 func main() {
@@ -29,6 +38,8 @@ func main() {
 	fileHandler := handlers.NewFileHandler(fileService)
 	profileHandler := handlers.NewProfileHandler(profileService)
 	adminHandler := handlers.NewAdminHandler(adminService)
+
+	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 
 	app.Post("/api/register", authHandler.Register)
 	app.Post("/api/login", authHandler.Login)
