@@ -65,5 +65,30 @@ wait_db:
 
 reset_db: down_db up_db wait_db
 	@echo "База данных перезапущена"
+help:
+	@echo "Доступные команды:"
+	@echo ""
+	@echo "  make up             - Запуск всех сервисов в фоне"
+	@echo "  make down           - Остановка всех сервисов"
+	@echo "  make down_force     - Полная очистка (контейнеры, volumes, образы)"
+	@echo "  make init           - Полная пересборка и запуск (down_force + build + up)"
+	@echo "  make build          - Пересобрать все образы без кеша"
+	@echo "  make restart        - Перезапуск сервисов (down + up)"
+	@echo ""
+	@echo "  make console        - Войти в контейнер бэкенда"
+	@echo "  make frontend_logs  - Просмотр логов фронтенда"
+	@echo "  make backend_logs   - Просмотр логов бэкенда"
+	@echo "  make db_logs        - Просмотр логов PostgreSQL"
+	@echo ""
+	@echo "  make migrate        - Применить миграции БД"
+	@echo "  make migrate_down   - Откатить последнюю миграцию БД"
+	@echo "  make migrate_status - Показать статус миграций"
+	@echo ""
+	@echo "  make up_db          - Запустить только PostgreSQL"
+	@echo "  make wait_db        - Ожидание готовности БД"
+	@echo "  make reset_db       - Перезапуск БД (down + up + wait)"
+	@echo ""
+	@echo "  make help           - Показать это сообщение"
+	@echo ""
 
-.PHONY: up down down_force init build restart console frontend_logs backend_logs db_logs migrate migrate_down migrate_status up_db wait_db reset_db
+.PHONY: up down down_force init build restart console frontend_logs backend_logs db_logs migrate migrate_down migrate_status up_db wait_db reset_db help
