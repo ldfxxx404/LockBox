@@ -30,7 +30,7 @@ func main() {
 	fileRepo := repositories.NewFileRepo(db)
 
 	authService := services.NewAuthService(userRepo)
-	fileService := services.NewFileService(fileRepo)
+	fileService := services.NewFileService(fileRepo, userRepo)
 	profileService := services.NewProfileService(userRepo, fileService)
 	adminService := services.NewAdminService(userRepo)
 

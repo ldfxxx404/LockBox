@@ -1,10 +1,90 @@
 basePath: /api
 definitions:
+  models.ErrorResponse:
+    properties:
+      error: {}
+      massage:
+        type: string
+    type: object
+  models.FileUpload:
+    properties:
+      filename:
+        type: string
+      massage:
+        type: string
+    type: object
+  models.ListFile:
+    properties:
+      files:
+        items:
+          type: string
+        type: array
+      storage:
+        $ref: '#/definitions/models.ListFileUsed'
+    type: object
+  models.ListFileUsed:
+    properties:
+      limit:
+        type: integer
+      used:
+        type: integer
+    type: object
   models.LoginDTO:
     properties:
       email:
         type: string
       password:
+        type: string
+    type: object
+  models.LoginMassage:
+    properties:
+      message:
+        type: string
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/models.MassageDTO'
+    type: object
+  models.MassageDTO:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+    type: object
+  models.Profile:
+    properties:
+      storage:
+        $ref: '#/definitions/models.ProfileStorage'
+      user:
+        $ref: '#/definitions/models.ProfileUser'
+    type: object
+  models.ProfileStorage:
+    properties:
+      limit:
+        type: integer
+      used:
+        type: integer
+    type: object
+  models.ProfileUser:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.RegisterMassage:
+    properties:
+      message:
+        type: string
+      user:
+        $ref: '#/definitions/models.MassageDTO'
+    type: object
+  models.SucessResponse:
+    properties:
+      massage:
         type: string
     type: object
   models.UpdateStorage:
@@ -58,21 +138,15 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.SucessResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Grant admin rights
@@ -93,21 +167,15 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.SucessResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Revoke admin rights
@@ -131,15 +199,11 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.SucessResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Update user storage limit
@@ -160,9 +224,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get all users
@@ -186,20 +248,15 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.LoginMassage'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Log in user
       tags:
       - auth
@@ -212,9 +269,7 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.SucessResponse'
       summary: Log out user
       tags:
       - auth
@@ -236,14 +291,11 @@ paths:
         "201":
           description: Created
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.RegisterMassage'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Register a new user
       tags:
       - auth
@@ -262,20 +314,37 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.SucessResponse'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete a file
       tags:
       - file
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: Returns the current user's profile and storage usage info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Profile'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get user profile
+      tags:
+      - profile
   /storage:
     get:
       description: Returns a list of filenames and storage info for the authenticated
@@ -286,14 +355,11 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.ListFile'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List user's files
@@ -316,15 +382,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Download a file
@@ -347,21 +409,15 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.FileUpload'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Upload a file

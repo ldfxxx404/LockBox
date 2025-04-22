@@ -23,25 +23,20 @@ func NewAuthHandler(authServ *services.AuthService) *AuthHandler {
 // @Accept       json
 // @Produce      json
 // @Param        user  body      models.UserDTO  true  "User registration data"
-// @Success      201   {object}  map[string]any
-// @Failure      400   {object}  map[string]string
+// @Success      201   {object}  models.RegisterMassage
+// @Failure      400   {object}  models.ErrorResponse
 // @Router       /api/register [post]
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var dto models.UserDTO
 	if err := c.BodyParser(&dto); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Massage: "invalid input", Error: err})
 	}
 	user, err := h.AuthServ.Register(dto)
 	if err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Massage: "error", Error: err})
 	}
-	return c.Status(http.StatusCreated).JSON(fiber.Map{
-		"message": "Registration successful",
-		"user": fiber.Map{
-			"id":    user.ID,
-			"email": user.Email,
-		},
-	})
+
+	return c.Status(http.StatusCreated).JSON(models.RegisterMassage{Message: "Registration successful", User: &models.MassageDTO{Id: user.ID, Email: user.Email}})
 }
 
 // Login godoc
@@ -51,27 +46,21 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 // @Accept       json
 // @Produce      json
 // @Param        credentials  body      models.LoginDTO  true  "User login credentials"
-// @Success      200          {object}  map[string]interface{}
-// @Failure      400          {object}  map[string]string
-// @Failure      401          {object}  map[string]string
+// @Success      200          {object}  models.LoginMassage
+// @Failure      400          {object}  models.ErrorResponse
+// @Failure      401          {object}  models.ErrorResponse
 // @Router       /api/login [post]
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var dto models.LoginDTO
 	if err := c.BodyParser(&dto); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Massage: "error", Error: err})
 	}
 	token, user, err := h.AuthServ.Login(dto)
 	if err != nil {
-		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid email or password"})
+		return c.Status(http.StatusUnauthorized).JSON(models.ErrorResponse{Massage: "error", Error: err})
 	}
-	return c.JSON(fiber.Map{
-		"message": "Login successful",
-		"user": fiber.Map{
-			"id":    user.ID,
-			"email": user.Email,
-		},
-		"token": token,
-	})
+
+	return c.JSON(models.LoginMassage{Message: "Login successful", User: &models.MassageDTO{Id: user.ID, Email: user.Email}, Token: token})
 }
 
 // Logout godoc
@@ -79,11 +68,9 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 // @Description  Logout by removing token on the client side
 // @Tags         auth
 // @Produce      json
-// @Success      200  {object}  map[string]string
+// @Success      200  {object}  models.SucessResponse
 // @Router       /api/logout [post]
 func (h *AuthHandler) Logout(c *fiber.Ctx) error {
 	// Для JWT logout осуществляется на клиентской стороне
-	return c.JSON(fiber.Map{
-		"message": "Logout successful",
-	})
+	return c.JSON(models.SucessResponse{Massage: "Logout succesfull"})
 }
