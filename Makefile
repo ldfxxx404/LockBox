@@ -111,7 +111,7 @@ help:
 	@echo ""
 	@echo "  make help           - Показать это сообщение"
 	@echo ""
-	@echo "	 make test_front    - Запустить тесты фронтенда (eslint, prettier, typescript)"
+	@echo "  make test_front     - Запустить тесты фронтенда (eslint, prettier, typescript)"
 	@echo ""
 	@echo "  make restart_frontend - Перезапуск фронтенда"
 	@echo ""
