@@ -4,7 +4,7 @@ import { usePostRegister } from '@/api/mutations/auth/use-post-register'
 import { useForm } from '@tanstack/react-form'
 import { forwardRef, HTMLAttributes } from 'react'
 
-export const LoginForm = forwardRef<
+export const RegisterForm = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement>
 >(({}, ref) => {
@@ -21,4 +21,4 @@ export const LoginForm = forwardRef<
   return <div ref={ref}></div>
 })
 
-LoginForm.displayName = 'LoginForm'
+RegisterForm.displayName = 'LoginForm'
