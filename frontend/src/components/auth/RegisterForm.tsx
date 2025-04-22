@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { usePostRegister } from '@/api/mutations/auth/use-post-register'
 import { useForm } from '@tanstack/react-form'
@@ -8,13 +8,12 @@ export const LoginForm = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement>
 >(({}, ref) => {
-
   const form = useForm({
     defaultValues: {
-      email: "",
-      password: "",
-      name: "",
-    }
+      email: '',
+      password: '',
+      name: '',
+    },
   })
 
   const {} = usePostRegister(form.state.values)

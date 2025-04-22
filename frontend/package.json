@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -H 0.0.0.0",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier:check": "npx prettier ./src --check",
+    "prettier:fix": "npx prettier ./src --write",
+    "eslint:check": "npx eslint ./src",
+    "types:check": "npx tsc build . --noEmit"
   },
   "dependencies": {
     "@tanstack/react-form": "^1.6.3",

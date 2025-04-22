@@ -1,0 +1,35 @@
+name: Linting
+
+on:
+  push: 
+    branches-ignore: 
+      - main
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Переключение на ветку с кодом
+        uses: actions/checkout@v3
+
+      - name: Установка ноды
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Установка зависимостей
+        run: npm install
+      
+      - name: Запуск проверки типов
+        run: npm run types:check
+      
+      - name: Запуск проверки стиля кода
+        run: npm run prettier:check
+
+      - name: Запуск линтера
+        run: npm run eslint:check
+
+      - name: Запуск билда
+        run: npm run build
