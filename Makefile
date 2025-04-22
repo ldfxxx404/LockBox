@@ -73,19 +73,6 @@ wait_db:
 reset_db: down_db up_db wait_db
 	@echo "База данных перезапущена"
 
-restart_frontend:
-	@echo "Перезапуск фронтенда..."
-	docker compose restart lockbox-frontend
-
-test_front:
-	@echo "Запуск тестов фронтенда..."
-	docker exec lockbox-frontend npm run types:check
-	docker exec lockbox-frontend npm run prettier:fix
-	docker exec lockbox-frontend npm run eslint:check
-	docker exec lockbox-frontend npm run build
-	make restart_frontend
-
-
 help:
 	@echo "Доступные команды:"
 	@echo ""
@@ -114,10 +101,6 @@ help:
 	@echo ""
 	@echo "  make help           	- Показать это сообщение"
 	@echo ""
-	@echo "  make test_front     - Запустить тесты фронтенда (eslint, prettier, typescript)"
-	@echo ""
-	@echo "  make restart_frontend - Перезапуск фронтенда"
-	@echo ""
 
 restart_backend:
 	@echo "Пересборка и перезапуск только backend..."
@@ -137,10 +120,10 @@ restart_frontend:
 
 test_frontend:
 	@echo "Запуск тестов фронтенда..."
-	docker exec lockbox-frontend npm run types:check
-	docker exec lockbox-frontend npm run prettier:fix
-	docker exec lockbox-frontend npm run eslint:check
-	docker exec lockbox-frontend npm run build
-	make restart_fronten
+	docker exec $(FRONTEND_NAME) npm run types:check
+	docker exec $(FRONTEND_NAME) npm run prettier:fix
+	docker exec $(FRONTEND_NAME) npm run eslint:check
+	docker exec $(FRONTEND_NAME) npm run build
+	make restart_frontend
 
 .PHONY: up down down_force init build restart console frontend_logs backend_logs db_logs migrate migrate_down migrate_status up_db wait_db reset_db help restart_frontend restart_backend test_frontend
