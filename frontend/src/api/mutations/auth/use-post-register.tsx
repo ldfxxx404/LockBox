@@ -1,10 +1,7 @@
 import { API_ENDPOINTS } from '@/api/enums/endpoints'
 import { RegisterFormBody, RegisterResponse } from '@/api/types/auth'
 import { api } from '@/api/utils/api'
-import {
-  useMutation,
-  UseMutationOptions,
-} from '@tanstack/react-query'
+import { useMutation, UseMutationOptions } from '@tanstack/react-query'
 
 export const postRegisterOptions = (
   body: RegisterFormBody,
