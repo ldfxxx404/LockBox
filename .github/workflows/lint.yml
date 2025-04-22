@@ -4,7 +4,6 @@ on:
   push: 
     branches-ignore: 
       - main
-  pull_request:
 
 jobs:
   lint:
@@ -38,4 +37,3 @@ jobs:
       - name: Запуск билда
         run: npm run build
         working-directory: ./frontend
-        
