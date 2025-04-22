@@ -6,6 +6,6 @@ COPY . ./
 
 RUN go mod download
 
-RUN go build -o backend ./cmd/main.go
+RUN go build -o backend ./cmd/lock_box/main.go
 
 EXPOSE 5000

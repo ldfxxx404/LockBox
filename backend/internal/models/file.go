@@ -9,3 +9,18 @@ type File struct {
 	MimeType     string `db:"mime_type" json:"mime_type"`
 	CreatedAt    string `db:"created_at" json:"created_at"`
 }
+
+type FileUpload struct {
+	Massage  string `json:"massage"`
+	FileName string `json:"filename"`
+}
+
+type ListFile struct {
+	Files []string `json:"files"`
+	Storage *ListFileUsed `json:"storage"`
+}
+
+type ListFileUsed struct {
+	Used  int64 `json:"used"`
+	Limit int   `json:"limit"`
+}
