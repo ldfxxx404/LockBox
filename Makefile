@@ -83,6 +83,7 @@ help:
 	@echo "  make restart        	- Перезапуск сервисов (down + up)"
 	@echo "  make restart_backend   - Перезапуск backend"
 	@echo "  make restart_frontend  - Перезапуск сервисов (down + up)"
+	@echo "  make test_frontend     - Запуск тестов фронтенда"
 	@echo ""
 	@echo "  make console        	- Войти в контейнер бэкенда"
 	@echo "  make frontend_logs  	- Просмотр логов фронтенда"
@@ -116,4 +117,12 @@ restart_frontend:
 	docker compose up -d --no-deps frontend
 	@echo "Frontend пересобран и перезапущен"
 
-.PHONY: up down down_force init build restart console frontend_logs backend_logs db_logs migrate migrate_down migrate_status up_db wait_db reset_db help restart_frontend restart_backend
+test_frontend:
+	@echo "Запуск тестов фронтенда..."
+	docker exec lockbox-frontend npm run types:check
+	docker exec lockbox-frontend npm run prettier:fix
+	docker exec lockbox-frontend npm run eslint:check
+	docker exec lockbox-frontend npm run build
+	make restart_fronten
+
+.PHONY: up down down_force init build restart console frontend_logs backend_logs db_logs migrate migrate_down migrate_status up_db wait_db reset_db help restart_frontend restart_backend test_frontend
