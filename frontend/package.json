@@ -9,7 +9,7 @@
     "lint": "next lint",
     "prettier:check": "npx prettier ./src --check",
     "prettier:fix": "npx prettier ./src --write",
-    "eslint:check": "npx eslint ./src",
+    "eslint:check": "npx eslint",
     "types:check": "npx tsc --build --noEmit"
   },
   "dependencies": {
