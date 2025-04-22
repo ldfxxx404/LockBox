@@ -15,8 +15,6 @@ const eslintConfig = [
     extends: ['next'],
     rules: {
       '@typescript-eslint/no-empty-object-type': 0,
-      'react-hooks/exhaustive-deps': 0,
-      'react/display-name': 0,
     },
   }),
 ]
