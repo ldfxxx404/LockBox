@@ -1,10 +1,10 @@
 package models
 
 type ErrorResponse struct {
-	Massage string `json:"massage"`
+	Message string `json:"message"`
 	Error   error  `json:"error"`
 }
 
-type SucessResponse struct {
-	Massage string `json:"massage"`
+type SuccessResponse struct {
+	Message string `json:"message"`
 }

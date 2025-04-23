@@ -3,14 +3,14 @@ definitions:
   models.ErrorResponse:
     properties:
       error: {}
-      massage:
+      message:
         type: string
     type: object
   models.FileUpload:
     properties:
       filename:
         type: string
-      massage:
+      message:
         type: string
     type: object
   models.ListFile:
@@ -36,16 +36,16 @@ definitions:
       password:
         type: string
     type: object
-  models.LoginMassage:
+  models.LoginMessage:
     properties:
       message:
         type: string
       token:
         type: string
       user:
-        $ref: '#/definitions/models.MassageDTO'
+        $ref: '#/definitions/models.MessageDTO'
     type: object
-  models.MassageDTO:
+  models.MessageDTO:
     properties:
       email:
         type: string
@@ -75,16 +75,16 @@ definitions:
       name:
         type: string
     type: object
-  models.RegisterMassage:
+  models.RegisterMessage:
     properties:
       message:
         type: string
       user:
-        $ref: '#/definitions/models.MassageDTO'
+        $ref: '#/definitions/models.MessageDTO'
     type: object
-  models.SucessResponse:
+  models.SuccessResponse:
     properties:
-      massage:
+      message:
         type: string
     type: object
   models.UpdateStorage:
@@ -138,7 +138,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.SucessResponse'
+            $ref: '#/definitions/models.SuccessResponse'
         "400":
           description: Bad Request
           schema:
@@ -167,7 +167,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.SucessResponse'
+            $ref: '#/definitions/models.SuccessResponse'
         "400":
           description: Bad Request
           schema:
@@ -199,7 +199,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.SucessResponse'
+            $ref: '#/definitions/models.SuccessResponse'
         "400":
           description: Bad Request
           schema:
@@ -248,7 +248,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.LoginMassage'
+            $ref: '#/definitions/models.LoginMessage'
         "400":
           description: Bad Request
           schema:
@@ -269,7 +269,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.SucessResponse'
+            $ref: '#/definitions/models.SuccessResponse'
       summary: Log out user
       tags:
       - auth
@@ -291,7 +291,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.RegisterMassage'
+            $ref: '#/definitions/models.RegisterMessage'
         "400":
           description: Bad Request
           schema:
@@ -314,7 +314,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.SucessResponse'
+            $ref: '#/definitions/models.SuccessResponse'
         "500":
           description: Internal Server Error
           schema:
