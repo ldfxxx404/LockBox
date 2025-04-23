@@ -11,12 +11,12 @@ type File struct {
 }
 
 type FileUpload struct {
-	Massage  string `json:"massage"`
+	Message  string `json:"message"`
 	FileName string `json:"filename"`
 }
 
 type ListFile struct {
-	Files []string `json:"files"`
+	Files   []string      `json:"files"`
 	Storage *ListFileUsed `json:"storage"`
 }
 

@@ -43,7 +43,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.SucessResponse"
+                            "$ref": "#/definitions/models.SuccessResponse"
                         }
                     },
                     "400": {
@@ -89,7 +89,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.SucessResponse"
+                            "$ref": "#/definitions/models.SuccessResponse"
                         }
                     },
                     "400": {
@@ -140,7 +140,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.SucessResponse"
+                            "$ref": "#/definitions/models.SuccessResponse"
                         }
                     },
                     "400": {
@@ -214,7 +214,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.LoginMassage"
+                            "$ref": "#/definitions/models.LoginMessage"
                         }
                     },
                     "400": {
@@ -246,7 +246,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.SucessResponse"
+                            "$ref": "#/definitions/models.SuccessResponse"
                         }
                     }
                 }
@@ -280,7 +280,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.RegisterMassage"
+                            "$ref": "#/definitions/models.RegisterMessage"
                         }
                     },
                     "400": {
@@ -320,7 +320,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.SucessResponse"
+                            "$ref": "#/definitions/models.SuccessResponse"
                         }
                     },
                     "500": {
@@ -495,7 +495,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "error": {},
-                "massage": {
+                "message": {
                     "type": "string"
                 }
             }
@@ -506,7 +506,7 @@ const docTemplate = `{
                 "filename": {
                     "type": "string"
                 },
-                "massage": {
+                "message": {
                     "type": "string"
                 }
             }
@@ -547,7 +547,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.LoginMassage": {
+        "models.LoginMessage": {
             "type": "object",
             "properties": {
                 "message": {
@@ -557,11 +557,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user": {
-                    "$ref": "#/definitions/models.MassageDTO"
+                    "$ref": "#/definitions/models.MessageDTO"
                 }
             }
         },
-        "models.MassageDTO": {
+        "models.MessageDTO": {
             "type": "object",
             "properties": {
                 "email": {
@@ -608,21 +608,21 @@ const docTemplate = `{
                 }
             }
         },
-        "models.RegisterMassage": {
+        "models.RegisterMessage": {
             "type": "object",
             "properties": {
                 "message": {
                     "type": "string"
                 },
                 "user": {
-                    "$ref": "#/definitions/models.MassageDTO"
+                    "$ref": "#/definitions/models.MessageDTO"
                 }
             }
         },
-        "models.SucessResponse": {
+        "models.SuccessResponse": {
             "type": "object",
             "properties": {
-                "massage": {
+                "message": {
                     "type": "string"
                 }
             }

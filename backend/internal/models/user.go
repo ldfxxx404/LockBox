@@ -20,18 +20,18 @@ type LoginDTO struct {
 	Password string `json:"password"`
 }
 
-type MassageDTO struct {
+type MessageDTO struct {
 	Id    int    `json:"id"`
 	Email string `json:"email"`
 }
 
-type RegisterMassage struct {
+type RegisterMessage struct {
 	Message string      `json:"message"`
-	User    *MassageDTO `json:"user"`
+	User    *MessageDTO `json:"user"`
 }
 
-type LoginMassage struct {
+type LoginMessage struct {
 	Message string      `json:"message"`
-	User    *MassageDTO `json:"user"`
+	User    *MessageDTO `json:"user"`
 	Token   string      `json:"token"`
 }
