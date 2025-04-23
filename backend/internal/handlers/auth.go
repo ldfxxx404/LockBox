@@ -25,7 +25,7 @@ func NewAuthHandler(authServ *services.AuthService) *AuthHandler {
 // @Param        user  body      models.UserDTO  true  "User registration data"
 // @Success      201   {object}  models.RegisterMessage
 // @Failure      400   {object}  models.ErrorResponse
-// @Router       /api/register [post]
+// @Router       /register [post]
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var dto models.UserDTO
 	if err := c.BodyParser(&dto); err != nil {
@@ -49,7 +49,7 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 // @Success      200          {object}  models.LoginMessage
 // @Failure      400          {object}  models.ErrorResponse
 // @Failure      401          {object}  models.ErrorResponse
-// @Router       /api/login [post]
+// @Router       /login [post]
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var dto models.LoginDTO
 	if err := c.BodyParser(&dto); err != nil {
@@ -69,7 +69,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 // @Tags         auth
 // @Produce      json
 // @Success      200  {object}  models.SuccessResponse
-// @Router       /api/logout [post]
+// @Router       /logout [post]
 func (h *AuthHandler) Logout(c *fiber.Ctx) error {
 	// Для JWT logout осуществляется на клиентской стороне
 	return c.JSON(models.SuccessResponse{Message: "Logout succesfull"})

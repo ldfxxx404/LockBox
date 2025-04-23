@@ -230,7 +230,32 @@ paths:
       summary: Get all users
       tags:
       - admin
-  /api/login:
+  /delete/{filename}:
+    delete:
+      description: Deletes a specific file belonging to the authenticated user
+      parameters:
+      - description: File name
+        in: path
+        name: filename
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a file
+      tags:
+      - file
+  /login:
     post:
       consumes:
       - application/json
@@ -260,7 +285,7 @@ paths:
       summary: Log in user
       tags:
       - auth
-  /api/logout:
+  /logout:
     post:
       description: Logout by removing token on the client side
       produces:
@@ -273,7 +298,28 @@ paths:
       summary: Log out user
       tags:
       - auth
-  /api/register:
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: Returns the current user's profile and storage usage info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Profile'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get user profile
+      tags:
+      - profile
+  /register:
     post:
       consumes:
       - application/json
@@ -299,52 +345,6 @@ paths:
       summary: Register a new user
       tags:
       - auth
-  /delete/{filename}:
-    delete:
-      description: Deletes a specific file belonging to the authenticated user
-      parameters:
-      - description: File name
-        in: path
-        name: filename
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.SuccessResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Delete a file
-      tags:
-      - file
-  /profile:
-    get:
-      consumes:
-      - application/json
-      description: Returns the current user's profile and storage usage info
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Profile'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Get user profile
-      tags:
-      - profile
   /storage:
     get:
       description: Returns a list of filenames and storage info for the authenticated
