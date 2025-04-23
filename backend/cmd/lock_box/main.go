@@ -25,7 +25,7 @@ import (
 func main() {
 	db := database.InitDB()
 
-	app := fiber.New()
+	app := fiber.New(config.FiberConfig)
 
 	userRepo := repositories.NewUserRepo(db)
 	fileRepo := repositories.NewFileRepo(db)

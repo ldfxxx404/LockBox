@@ -4,6 +4,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 )
 
@@ -12,12 +13,15 @@ var (
 	JWTSecret     = getEnv("JWT_SECRET", "supersecretkey")
 	StorageDir    = getEnv("STORAGE_DIR", "./storage")
 	PostgresLink  = getEnv("POSTGRES_URL", "postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable")
-	StorageLimit  = 10
+	StorageLimit  = 20
 	MigrationsDir = "migrations"
 	DbName        = "postgres"
 	Limiter       = limiter.Config{
 		Expiration: 10 * time.Second,
 		Max:        3,
+	}
+	FiberConfig = fiber.Config{
+		BodyLimit: 20 * 1024 * 1024,
 	}
 )
 
