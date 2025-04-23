@@ -1,6 +1,11 @@
 package config
 
-import "os"
+import (
+	"os"
+	"time"
+
+	"github.com/gofiber/fiber/v2/middleware/limiter"
+)
 
 var (
 	ServerPort    = getEnv("SERVER_PORT", "0.0.0.0:5000")
@@ -10,6 +15,10 @@ var (
 	StorageLimit  = 10
 	MigrationsDir = "migrations"
 	DbName        = "postgres"
+	Limiter       = limiter.Config{
+		Expiration: 10 * time.Second,
+		Max:        3,
+	}
 )
 
 func getEnv(key, fallback string) string {

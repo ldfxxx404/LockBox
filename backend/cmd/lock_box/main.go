@@ -18,6 +18,7 @@ import (
 	_ "back/cmd/swagger"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 	fiberSwagger "github.com/swaggo/fiber-swagger"
 )
 
@@ -41,16 +42,18 @@ func main() {
 
 	app.Get("/swagger/*", fiberSwagger.WrapHandler)
 
+	app.Use(limiter.New(config.Limiter))
+
 	app.Post("/api/register", authHandler.Register)
 	app.Post("/api/login", authHandler.Login)
 	app.Post("/api/logout", authHandler.Logout)
 
 	api := app.Group("/api", middleware.AuthRequired())
-	api.Post("/upload", fileHandler.Upload)
 	api.Get("/storage", fileHandler.ListFiles)
 	api.Get("/storage/:filename", fileHandler.Download)
-	api.Delete("/delete/:filename", fileHandler.Delete)
 	api.Get("/profile", profileHandler.GetProfile)
+	api.Post("/upload", fileHandler.Upload)
+	api.Delete("/delete/:filename", fileHandler.Delete)
 
 	admin := api.Group("/admin", middleware.AdminRequired())
 	admin.Get("/users", adminHandler.GetAllUsers)

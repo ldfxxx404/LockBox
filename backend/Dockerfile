@@ -1,10 +1,11 @@
-FROM golang:1.24 AS builder
+FROM golang:1.24.1-alpine AS builder
 
 WORKDIR /app
 
-COPY . ./
-
+COPY go.mod go.sum ./
 RUN go mod download
+
+COPY . .
 
 RUN go build -o backend ./cmd/lock_box/main.go
 
