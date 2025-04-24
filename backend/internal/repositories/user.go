@@ -2,11 +2,12 @@ package repositories
 
 import (
 	"back/internal/models"
+
 	"github.com/jmoiron/sqlx"
 )
 
 const (
-	CreateUserSql         = `INSERT INTO users (email, name, password, is_admin, storage_limit) VALUES ($1, $2, $3, $4, $5)`
+	CreateUserSql         = `INSERT INTO users (email, name, password, is_admin, storage_limit) VALUES ($1, $2, $3, $4, $5) RETURNING id`
 	GetUserByEmailSql     = `SELECT * FROM users WHERE email = $1`
 	GetUserByIdSql        = `SELECT * FROM users WHERE id = $1`
 	GetAllUsersSql        = `SELECT id, email, name, is_admin, storage_limit FROM users`
@@ -23,8 +24,14 @@ func NewUserRepo(db *sqlx.DB) *UserRepo {
 }
 
 func (r *UserRepo) Create(user *models.User) error {
-	_, err := r.DB.Exec(CreateUserSql, user.Email, user.Name, user.Password, user.IsAdmin, user.StorageLimit)
-	return err
+	return r.DB.QueryRow(
+		CreateUserSql,
+		user.Email,
+		user.Name,
+		user.Password,
+		user.IsAdmin,
+		user.StorageLimit,
+	).Scan(&user.ID)
 }
 
 func (r *UserRepo) GetByEmail(email string) (*models.User, error) {

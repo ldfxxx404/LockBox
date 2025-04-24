@@ -32,14 +32,23 @@ func NewFileHandler(fileServ *services.FileService) *FileHandler {
 // @Router       /upload [post]
 func (h *FileHandler) Upload(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
+	usedMB, limitMB, _ := h.FileServ.GetStorageInfo(userID)
+
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "File is required", Error: err})
 	}
+
+	err = utils.CheckSize(usedMB, fileHeader.Size, limitMB)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "error0", Error: err})
+	}
+
 	err = h.FileServ.UploadFile(userID, fileHeader)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err})
 	}
+
 	return c.JSON(models.FileUpload{Message: "File upload", FileName: fileHeader.Filename})
 }
 

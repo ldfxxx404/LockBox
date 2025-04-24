@@ -79,18 +79,23 @@ func (s *FileService) GetStorageInfo(userID int) (usedMB int64, limitMB int, err
 	userDir := fmt.Sprintf("%s/%d", config.StorageDir, userID)
 
 	var totalSize int64
-	err = filepath.Walk(userDir, func(_ string, info os.FileInfo, err error) error {
+	if _, err := os.Stat(userDir); os.IsNotExist(err) {
+		totalSize = 0
+	} else {
+		err = filepath.Walk(userDir, func(_ string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() {
+				totalSize += info.Size()
+			}
+			return nil
+		})
 		if err != nil {
-			return err
+			return 0, 0, err
 		}
-		if !info.IsDir() {
-			totalSize += info.Size()
-		}
-		return nil
-	})
-	if err != nil {
-		return 0, 0, err
 	}
+
 	usedMB = totalSize / (1024 * 1024)
 
 	user, err := s.UserRepo.GetByID(userID)

@@ -39,7 +39,7 @@ restart: down up
 	@echo "Сервисы перезапущены"
 
 console:
-	docker exec -it $$(docker compose ps -q ${BACKEND_NAME}) sh
+	docker exec -it ${BACKEND_NAME} sh
 
 frontend_logs:
 	docker compose logs -f frontend
@@ -62,16 +62,12 @@ migrate_status:
 	@echo "Статус миграций..."
 	goose -dir ${MIGRATIONS_DIR} postgres "${DB_URL}" status
 
-up_db:
-	@echo "Запуск только PostgreSQL..."
-	docker compose up -d --no-deps ${POSTGRES_NAME}
-
-wait_db:
-	@echo "Ожидание готовности PostgreSQL..."
-	until docker exec $$(docker compose ps -q ${POSTGRES_NAME}) pg_isready; do sleep 1; done
-
-reset_db: down_db up_db wait_db
+restart_db:
 	@echo "База данных перезапущена"
+	docker compose stop postgres
+	docker compose rm -f postgres
+	docker compose build --no-cache postgres
+	docker compose up -d --no-deps postgres
 
 help:
 	@echo "Доступные команды:"
@@ -97,7 +93,7 @@ help:
 	@echo ""
 	@echo "  make up_db          	- Запустить только PostgreSQL"
 	@echo "  make wait_db        	- Ожидание готовности БД"
-	@echo "  make reset_db       	- Перезапуск БД (down + up + wait)"
+	@echo "  make restart_db       	- Перезапуск БД (down + up + wait)"
 	@echo ""
 	@echo "  make help           	- Показать это сообщение"
 	@echo ""
@@ -108,6 +104,7 @@ restart_backend:
 	docker compose rm -f backend
 	docker compose build --no-cache backend
 	docker compose up -d --no-deps backend
+	make restart_db
 	@echo "Backend пересобран и перезапущен"
 
 restart_frontend:
@@ -126,4 +123,4 @@ test_frontend:
 	docker exec $(FRONTEND_NAME) npm run build
 	make restart_frontend
 
-.PHONY: up down down_force init build restart console frontend_logs backend_logs db_logs migrate migrate_down migrate_status up_db wait_db reset_db help restart_frontend restart_backend test_frontend
+.PHONY: up down down_force init build restart console frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend
