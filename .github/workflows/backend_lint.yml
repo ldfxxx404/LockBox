@@ -1,4 +1,4 @@
-name: Linting
+name: Linting-backend
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: alpine-latest
 
     steps:
       - name: Checkout code
@@ -16,14 +16,12 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '^1.24.1'  # Укажите актуальную версию из вашего go.mod
+          go-version: '^1.24.1'
 
       - name: Run golangci-lint
         run: |
-          # Установка линтера
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
-          # Переход в директорию backend и запуск линтера
           cd backend
           go mod download
           golangci-lint run ./...
@@ -41,4 +39,4 @@ jobs:
       - name: Build project
         run: |
           cd backend
-          go build -v ./cmd/lock_box  # Укажите конкретный пакет для сборки
+          go build -v ./cmd/lock_box
