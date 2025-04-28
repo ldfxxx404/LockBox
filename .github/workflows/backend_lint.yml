@@ -10,27 +10,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Переключение на ветку с кодом
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Установка Go
+      - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '^1.24'
+          go-version: '^1.24.1'  # Укажите актуальную версию из вашего go.mod
 
-      - name: Запуск линтера (golangci-lint)
+      - name: Run golangci-lint
         run: |
-          # Установка golangci-lint
+          # Установка линтера
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
-          golangci-lint run ./backend/
 
-      - name: Проверка форматирования кода (gofmt)
+          # Переход в директорию backend и запуск линтера
+          cd backend
+          go mod download
+          golangci-lint run ./...
+
+      - name: Check formatting (gofmt)
         run: |
-          # Проверка стиля кода
+          cd backend
           test -z $(gofmt -l .)
 
-      - name: Запуск тестов
-        run: go test ./backend/
+      - name: Run tests
+        run: |
+          cd backend
+          go test -race ./...
 
-      - name: Сборка проекта
-        run: go build -v ./backend/
+      - name: Build project
+        run: |
+          cd backend
+          go build -v ./cmd/lock_box  # Укажите конкретный пакет для сборки
