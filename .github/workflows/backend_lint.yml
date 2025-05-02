@@ -1,0 +1,42 @@
+name: Linting-backend
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '^1.24.1'
+
+      - name: Run golangci-lint
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+
+          cd backend
+          go mod download
+          golangci-lint run ./...
+
+      - name: Check formatting (gofmt)
+        run: |
+          cd backend
+          test -z $(gofmt -l .)
+
+      - name: Run tests
+        run: |
+          cd backend
+          go test -race ./...
+
+      - name: Build project
+        run: |
+          cd backend
+          go build -v ./cmd/lock_box

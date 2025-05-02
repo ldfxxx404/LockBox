@@ -31,14 +31,14 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 	if err != nil {
 		return err
 	}
-	defer src.Close()
+	defer func() { _ = src.Close }()
 
 	dstPath := filepath.Join(userDir, fileHeader.Filename)
 	dst, err := os.Create(dstPath)
 	if err != nil {
 		return err
 	}
-	defer dst.Close()
+	defer func() { _ = dst.Close }()
 
 	size, err := io.Copy(dst, src)
 	if err != nil {
