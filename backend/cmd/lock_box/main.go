@@ -40,7 +40,7 @@ func main() {
 	profileHandler := handlers.NewProfileHandler(profileService)
 	adminHandler := handlers.NewAdminHandler(adminService)
 
-	app.Get("/swagger/*", fiberSwagger.WrapHandler)
+	app.Get("/docs/*", fiberSwagger.WrapHandler)
 
 	app.Use(limiter.New(config.Limiter))
 
