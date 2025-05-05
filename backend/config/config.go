@@ -18,7 +18,8 @@ var (
 	MigrationsDir = getEnv("MIGRATIONS_DIR", "migrations")
 	DbName        = getEnv("DB_NAME", "postgres")
 	StorageLimit  = getEnv("STORAGE_LIMIT", 10)
-	Limiter       = limiter.Config{
+
+	Limiter = limiter.Config{
 		Expiration: 10 * time.Second,
 		Max:        3,
 	}
