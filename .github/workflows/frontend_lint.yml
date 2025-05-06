@@ -1,4 +1,4 @@
-name: Linting-forontend
+name: Linting-frontend
 
 on:
   push:
