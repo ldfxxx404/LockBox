@@ -7,6 +7,10 @@ VALUES
     ON CONFLICT (email) DO NOTHING;
 -- +goose StatementEnd
 
+-- +goose StatementBegin
+SELECT setval(pg_get_serial_sequence('users', 'id'), (SELECT COALESCE(MAX(id), 1) FROM users));
+-- +goose StatementEnd
+
 -- +goose Down
 -- +goose StatementBegin
 DELETE FROM users WHERE email IN ('admin@admin.f', 'user@user.d');
