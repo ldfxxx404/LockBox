@@ -16,7 +16,7 @@ func NewAuthService(repo *repositories.UserRepo) *AuthService {
 	return &AuthService{UserRepo: repo}
 }
 
-func (s *AuthService) Register(dto models.UserDTO) (*models.User, error) {
+func (s *AuthService) Register(dto models.RegisterDTO) (*models.User, error) {
 	hashedPassword, err := utils.HashPassword(dto.Password)
 	if err != nil {
 		return nil, err

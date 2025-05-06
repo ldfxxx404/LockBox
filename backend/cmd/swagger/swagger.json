@@ -1,6 +1,6 @@
 {
     "schemes": [
-        "https"
+        "http"
     ],
     "swagger": "2.0",
     "info": {
@@ -343,7 +343,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.UserDTO"
+                            "$ref": "#/definitions/models.RegisterDTO"
                         }
                     }
                 ],
@@ -605,6 +605,20 @@
                 }
             }
         },
+        "models.RegisterDTO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "models.RegisterMessage": {
             "type": "object",
             "properties": {
@@ -652,20 +666,6 @@
                 },
                 "storage_limit": {
                     "type": "integer"
-                }
-            }
-        },
-        "models.UserDTO": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
                 }
             }
         }

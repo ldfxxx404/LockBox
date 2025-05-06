@@ -17,7 +17,7 @@ var (
 	PostgresLink  = getEnv("POSTGRES_URL", "postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable")
 	MigrationsDir = getEnv("MIGRATIONS_DIR", "migrations")
 	DbName        = getEnv("DB_NAME", "postgres")
-	StorageLimit  = getEnv("STORAGE_LIMIT", 10)
+	StorageLimit  = getEnv("STORAGE_LIMIT", 20)
 
 	Limiter = limiter.Config{
 		Expiration: 10 * time.Second,
