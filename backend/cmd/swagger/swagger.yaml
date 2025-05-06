@@ -75,6 +75,15 @@ definitions:
       name:
         type: string
     type: object
+  models.RegisterDTO:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
   models.RegisterMessage:
     properties:
       message:
@@ -106,15 +115,6 @@ definitions:
         type: string
       storage_limit:
         type: integer
-    type: object
-  models.UserDTO:
-    properties:
-      email:
-        type: string
-      name:
-        type: string
-      password:
-        type: string
     type: object
 host: localhost:5000
 info:
@@ -330,7 +330,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.UserDTO'
+          $ref: '#/definitions/models.RegisterDTO'
       produces:
       - application/json
       responses:
@@ -424,5 +424,5 @@ paths:
       tags:
       - file
 schemes:
-- https
+- http
 swagger: "2.0"

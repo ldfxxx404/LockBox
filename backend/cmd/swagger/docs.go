@@ -346,7 +346,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.UserDTO"
+                            "$ref": "#/definitions/models.RegisterDTO"
                         }
                     }
                 ],
@@ -608,6 +608,20 @@ const docTemplate = `{
                 }
             }
         },
+        "models.RegisterDTO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "models.RegisterMessage": {
             "type": "object",
             "properties": {
@@ -657,20 +671,6 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
-        },
-        "models.UserDTO": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
         }
     }
 }`
@@ -680,7 +680,7 @@ var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:5000",
 	BasePath:         "/api",
-	Schemes:          []string{"https"},
+	Schemes:          []string{"http"},
 	Title:            "LockBox API",
 	Description:      "This is the API documentation for LockBox SaaS app.",
 	InfoInstanceName: "swagger",

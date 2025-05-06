@@ -3,7 +3,8 @@
 // @description  This is the API documentation for LockBox SaaS app.
 // @host         localhost:5000
 // @BasePath     /api
-// @schemes      https
+// TODO: fix http to https when it need!!!
+// @schemes      http
 package main
 
 import (

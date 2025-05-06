@@ -9,29 +9,7 @@ type User struct {
 	StorageLimit int    `db:"storage_limit" json:"storage_limit"`
 }
 
-type UserDTO struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Name     string `json:"name"`
-}
-
-type LoginDTO struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
 type MessageDTO struct {
 	Id    int    `json:"id"`
 	Email string `json:"email"`
-}
-
-type RegisterMessage struct {
-	Message string      `json:"message"`
-	User    *MessageDTO `json:"user"`
-}
-
-type LoginMessage struct {
-	Message string      `json:"message"`
-	User    *MessageDTO `json:"user"`
-	Token   string      `json:"token"`
 }

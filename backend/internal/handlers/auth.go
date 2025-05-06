@@ -22,12 +22,12 @@ func NewAuthHandler(authServ *services.AuthService) *AuthHandler {
 // @Tags         auth
 // @Accept       json
 // @Produce      json
-// @Param        user  body      models.UserDTO  true  "User registration data"
+// @Param        user  body      models.RegisterDTO  true  "User registration data"
 // @Success      201   {object}  models.RegisterMessage
 // @Failure      400   {object}  models.ErrorResponse
 // @Router       /register [post]
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
-	var dto models.UserDTO
+	var dto models.RegisterDTO
 	if err := c.BodyParser(&dto); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "invalid input", Error: err})
 	}
