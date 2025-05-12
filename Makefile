@@ -6,6 +6,9 @@ MIGRATIONS_DIR=backend/migrations
 DB_URL=postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable
 DB_CONTAINER_URL=postgres://postgres:postgres@${POSTGRES_NAME}:5432/lock_box?sslmode=disable
 
+GREEN=\033[0;32m
+NC=\033[0m
+
 up:
 	@echo "Запуск всех сервисов..."
 	docker compose up -d
@@ -70,33 +73,31 @@ restart_db:
 	docker compose up -d --no-deps postgres
 
 help:
-	@echo "Доступные команды:"
-	@echo ""
-	@echo "  make up             	- Запуск всех сервисов в фоне"
-	@echo "  make down           	- Остановка всех сервисов"
-	@echo "  make down_force     	- Полная очистка (контейнеры, volumes, образы)"
-	@echo "  make init           	- Полная пересборка и запуск (down_force + build + up)"
-	@echo "  make build          	- Пересобрать все образы без кеша"
-	@echo "  make restart        	- Перезапуск сервисов (down + up)"
-	@echo "  make restart_backend   - Перезапуск backend"
-	@echo "  make restart_frontend  - Перезапуск сервисов (down + up)"
-	@echo "  make test_frontend     - Запуск тестов фронтенда"
-	@echo ""
-	@echo "  make console        	- Войти в контейнер бэкенда"
-	@echo "  make frontend_logs  	- Просмотр логов фронтенда"
-	@echo "  make backend_logs   	- Просмотр логов бэкенда"
-	@echo "  make db_logs        	- Просмотр логов PostgreSQL"
-	@echo ""
-	@echo "  make migrate        	- Применить миграции БД"
-	@echo "  make migrate_down   	- Откатить последнюю миграцию БД"
-	@echo "  make migrate_status 	- Показать статус миграций"
-	@echo ""
-	@echo "  make up_db          	- Запустить только PostgreSQL"
-	@echo "  make wait_db        	- Ожидание готовности БД"
-	@echo "  make restart_db       	- Перезапуск БД (down + up + wait)"
-	@echo ""
-	@echo "  make help           	- Показать это сообщение"
-	@echo ""
+	@printf "\nДоступные команды:\n\n"
+	@printf "  ${GREEN}make up               			${NC}- Запуск всех сервисов в фоне\n"
+	@printf "  ${GREEN}make down             			${NC}- Остановка всех сервисов\n"
+	@printf "  ${GREEN}make down_force       			${NC}- Полная очистка (контейнеры, volumes, образы)\n"
+	@printf "  ${GREEN}make init             			${NC}- Полная пересборка и запуск (down_force + build + up)\n"
+	@printf "  ${GREEN}make build            			${NC}- Пересобрать все образы без кеша\n"
+	@printf "  ${GREEN}make restart          			${NC}- Перезапуск сервисов (down + up)\n"
+	@printf "  ${GREEN}make restart_backend  			${NC}- Перезапуск backend\n"
+	@printf "  ${GREEN}make restart_frontend 			${NC}- Перезапуск сервисов (down + up)\n"
+	@printf "  ${GREEN}make test_frontend    			${NC}- Запуск тестов фронтенда\n"
+	@printf "\n"
+	@printf "  ${GREEN}make console          			${NC}- Войти в контейнер бэкенда\n"
+	@printf "  ${GREEN}make frontend_logs    			${NC}- Просмотр логов фронтенда\n"
+	@printf "  ${GREEN}make backend_logs     			${NC}- Просмотр логов бэкенда\n"
+	@printf "  ${GREEN}make db_logs          			${NC}- Просмотр логов PostgreSQL\n"
+	@printf "\n"
+	@printf "  ${GREEN}make migrate          			${NC}- Применить миграции БД\n"
+	@printf "  ${GREEN}make migrate_down     			${NC}- Откатить последнюю миграцию БД\n"
+	@printf "  ${GREEN}make migrate_status   			${NC}- Показать статус миграций\n"
+	@printf "\n"
+	@printf "  ${GREEN}make up_db            			${NC}- Запустить только PostgreSQL\n"
+	@printf "  ${GREEN}make wait_db          			${NC}- Ожидание готовности БД\n"
+	@printf "  ${GREEN}make restart_db       			${NC}- Перезапуск БД (down + up + wait)\n"
+	@printf "\n"
+	@printf "  ${GREEN}make help             			${NC}- Показать это сообщение\n\n"
 
 restart_backend:
 	@echo "Пересборка и перезапуск только backend..."
