@@ -1,3 +1,5 @@
+package main
+
 // @title        LockBox API
 // @version      1.0
 // @description  This is the API documentation for LockBox SaaS app.
@@ -5,7 +7,6 @@
 // @BasePath     /api
 // TODO: fix http to https when it need!!!
 // @schemes      http
-package main
 
 import (
 	"back/config"
@@ -32,17 +33,31 @@ func main() {
 	fileRepo := repositories.NewFileRepo(db)
 
 	authService := services.NewAuthService(userRepo)
-	fileService := services.NewFileService(fileRepo, userRepo)
+
+	fileService, err := services.NewFileService(
+		fileRepo,
+		userRepo,
+		config.MinioEndpoint,
+		config.MinioAccessKey,
+		config.MinioSecretKey,
+		config.MinioBucket,
+		config.MinioUseSSL,
+	)
+	if err != nil {
+		log.Fatalf("failed to initialize FileService: %v", err)
+	}
+
 	profileService := services.NewProfileService(userRepo, fileService)
 	adminService := services.NewAdminService(userRepo)
 
+	// Handlers
 	authHandler := handlers.NewAuthHandler(authService)
 	fileHandler := handlers.NewFileHandler(fileService)
 	profileHandler := handlers.NewProfileHandler(profileService)
 	adminHandler := handlers.NewAdminHandler(adminService)
 
+	// Routes
 	app.Get("/docs/*", fiberSwagger.WrapHandler)
-
 	app.Use(limiter.New(config.Limiter))
 
 	app.Post("/api/register", authHandler.Register)
