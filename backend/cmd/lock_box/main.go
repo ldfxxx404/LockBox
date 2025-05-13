@@ -7,7 +7,6 @@ package main
 // @BasePath     /api
 // TODO: fix http to https when it need!!!
 // @schemes      http
-
 import (
 	"back/config"
 	"back/internal/database"
@@ -15,9 +14,10 @@ import (
 	"back/internal/middleware"
 	"back/internal/repositories"
 	"back/internal/services"
-	"log"
 
 	_ "back/cmd/swagger"
+
+	log "github.com/charmbracelet/log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
@@ -50,13 +50,11 @@ func main() {
 	profileService := services.NewProfileService(userRepo, fileService)
 	adminService := services.NewAdminService(userRepo)
 
-	// Handlers
 	authHandler := handlers.NewAuthHandler(authService)
 	fileHandler := handlers.NewFileHandler(fileService)
 	profileHandler := handlers.NewProfileHandler(profileService)
 	adminHandler := handlers.NewAdminHandler(adminService)
 
-	// Routes
 	app.Get("/docs/*", fiberSwagger.WrapHandler)
 	app.Use(limiter.New(config.Limiter))
 

@@ -101,7 +101,7 @@ func (h *FileHandler) Download(c *fiber.Ctx) error {
 
 	filePath, err := h.FileServ.GetFilePath(userID, decodedFilename)
 	if err != nil {
-		return c.Status(http.StatusNotFound).JSON(models.ErrorResponse{Message: "error", Error: err})
+		return c.Status(http.StatusNotFound).JSON(models.ErrorResponse{Message: "File not found", Error: err})
 	}
 
 	return c.SendFile(filePath, false)

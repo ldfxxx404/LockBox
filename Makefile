@@ -1,6 +1,7 @@
 BACKEND_NAME=lockbox-backend
 FRONTEND_NAME=lockbox-frontend
 POSTGRES_NAME=lockbox-postgres
+MINIO_NAME=lockbox-minio
 
 MIGRATIONS_DIR=backend/migrations
 DB_URL=postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable
@@ -20,9 +21,7 @@ down:
 down_force:
 	@echo "Полная очистка всех сервисов и образов..."
 	docker compose down --volumes --remove-orphans
-	docker rmi -f $$(docker images -q ${BACKEND_NAME}) || true
-	docker rmi -f $$(docker images -q ${POSTGRES_NAME}) || true
-	docker rmi -f $$(docker images -q ${FRONTEND_NAME}) || true
+	docker-compose down --rmi all --volumes --remove-orphans
 
 init: down_force build up
 	@echo "Инициализация завершена"
@@ -41,8 +40,11 @@ build:
 restart: down up
 	@echo "Сервисы перезапущены"
 
-console:
+console_backend:
 	docker exec -it ${BACKEND_NAME} sh
+
+console_minio:
+	docker exec -it ${MINIO_NAME} sh
 
 frontend_logs:
 	docker compose logs -f frontend
@@ -52,6 +54,9 @@ backend_logs:
 
 db_logs:
 	docker compose logs -f postgres
+
+minio_logs:
+	docker compose logs -f minio
 
 migrate:
 	@echo "Применение миграций..."
@@ -81,10 +86,11 @@ help:
 	@printf "  ${GREEN}make build            			${NC}- Пересобрать все образы без кеша\n"
 	@printf "  ${GREEN}make restart          			${NC}- Перезапуск сервисов (down + up)\n"
 	@printf "  ${GREEN}make restart_backend  			${NC}- Перезапуск backend\n"
-	@printf "  ${GREEN}make restart_frontend 			${NC}- Перезапуск сервисов (down + up)\n"
+	@printf "  ${GREEN}make restart_frontend 			${NC}- Перезапуск frontend\n"
 	@printf "  ${GREEN}make test_frontend    			${NC}- Запуск тестов фронтенда\n"
 	@printf "\n"
-	@printf "  ${GREEN}make console          			${NC}- Войти в контейнер бэкенда\n"
+	@printf "  ${GREEN}make console_backend				${NC}- Войти в контейнер бэкенда\n"
+	@printf "  ${GREEN}make console_minio				${NC}- Войти в контейнер minio\n"
 	@printf "  ${GREEN}make frontend_logs    			${NC}- Просмотр логов фронтенда\n"
 	@printf "  ${GREEN}make backend_logs     			${NC}- Просмотр логов бэкенда\n"
 	@printf "  ${GREEN}make db_logs          			${NC}- Просмотр логов PostgreSQL\n"
@@ -96,6 +102,7 @@ help:
 	@printf "  ${GREEN}make up_db            			${NC}- Запустить только PostgreSQL\n"
 	@printf "  ${GREEN}make wait_db          			${NC}- Ожидание готовности БД\n"
 	@printf "  ${GREEN}make restart_db       			${NC}- Перезапуск БД (down + up + wait)\n"
+	@printf "  ${GREEN}make restart_minio				${NC}- Перезапуск minio \n"
 	@printf "\n"
 	@printf "  ${GREEN}make help             			${NC}- Показать это сообщение\n\n"
 
@@ -107,6 +114,14 @@ restart_backend:
 	docker compose up -d --no-deps backend
 	make restart_db
 	@echo "Backend пересобран и перезапущен"
+
+restart_minio:
+	@echo "Пересборка и перезапуск только minio..."
+	docker compose stop minio
+	docker compose rm -f minio
+	docker compose build --no-cache minio
+	docker compose up -d --no-deps minio
+	@echo "minio пересобран и перезапущен"
 
 restart_frontend:
 	@echo "Пересборка и перезапуск только frontend..."
@@ -124,4 +139,4 @@ test_frontend:
 	docker exec $(FRONTEND_NAME) npm run build
 	make restart_frontend
 
-.PHONY: up down down_force init build restart console frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend
+.PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs

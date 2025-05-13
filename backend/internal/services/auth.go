@@ -6,6 +6,8 @@ import (
 	"back/internal/repositories"
 	"back/internal/utils"
 	"errors"
+
+	log "github.com/charmbracelet/log"
 )
 
 type AuthService struct {
@@ -19,6 +21,7 @@ func NewAuthService(repo *repositories.UserRepo) *AuthService {
 func (s *AuthService) Register(dto models.RegisterDTO) (*models.User, error) {
 	hashedPassword, err := utils.HashPassword(dto.Password)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	user := &models.User{
@@ -30,6 +33,7 @@ func (s *AuthService) Register(dto models.RegisterDTO) (*models.User, error) {
 	}
 	err = s.UserRepo.Create(user)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	return user, nil
@@ -38,6 +42,7 @@ func (s *AuthService) Register(dto models.RegisterDTO) (*models.User, error) {
 func (s *AuthService) Login(dto models.LoginDTO) (string, *models.User, error) {
 	user, err := s.UserRepo.GetByEmail(dto.Email)
 	if err != nil {
+		log.Error(err)
 		return "", nil, errors.New("invalid email or password")
 	}
 	if !utils.CheckPasswordHash(dto.Password, user.Password) {
@@ -45,6 +50,7 @@ func (s *AuthService) Login(dto models.LoginDTO) (string, *models.User, error) {
 	}
 	token, err := utils.GenerateToken(user.ID, user.IsAdmin)
 	if err != nil {
+		log.Error(err)
 		return "", nil, err
 	}
 	return token, user, nil
