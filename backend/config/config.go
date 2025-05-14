@@ -11,14 +11,13 @@ import (
 )
 
 var (
-	ServerPort    = getEnv("SERVER_PORT", "0.0.0.0:5000")
-	JWTSecret     = getEnv("JWT_SECRET", "supersecretkey")
-	PostgresLink  = getEnv("POSTGRES_URL", "postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable")
-	MigrationsDir = getEnv("MIGRATIONS_DIR", "migrations")
-	DbName        = getEnv("DB_NAME", "postgres")
-	StorageLimit  = getEnv("STORAGE_LIMIT", 20)
-
-	MinioEndpoint  = getEnv("MINIO_ENDPOINT", "localhost:9069")
+	ServerPort     = getEnv("SERVER_PORT", "0.0.0.0:5000")
+	JWTSecret      = getEnv("JWT_SECRET", "supersecretkey")
+	PostgresLink   = getEnv("POSTGRES_URL", "postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable")
+	MigrationsDir  = getEnv("MIGRATIONS_DIR", "migrations")
+	DbName         = getEnv("DB_NAME", "postgres")
+	StorageLimit   = getEnv("STORAGE_LIMIT", 20)
+	MinioEndpoint  = getEnv("MINIO_ENDPOINT", "localhost:9000")
 	MinioAccessKey = getEnv("MINIO_ACCESS_KEY", "minioadmin")
 	MinioSecretKey = getEnv("MINIO_SECRET_KEY", "minioadmin123")
 	MinioBucket    = getEnv("MINIO_BUCKET", "uploads")

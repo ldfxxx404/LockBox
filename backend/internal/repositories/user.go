@@ -3,6 +3,8 @@ package repositories
 import (
 	"back/internal/models"
 
+	log "github.com/charmbracelet/log"
+
 	"github.com/jmoiron/sqlx"
 )
 
@@ -37,27 +39,49 @@ func (r *UserRepo) Create(user *models.User) error {
 func (r *UserRepo) GetByEmail(email string) (*models.User, error) {
 	var user models.User
 	err := r.DB.Get(&user, GetUserByEmailSql, email)
-	return &user, err
+	if err != nil {
+		log.Error("get by email error", "err", err)
+		return nil, err
+	}
+	return &user, nil
 }
 
 func (r *UserRepo) GetByID(id int) (*models.User, error) {
 	var user models.User
 	err := r.DB.Get(&user, GetUserByIdSql, id)
-	return &user, err
+	if err != nil {
+		log.Error("get by id user", "err", err)
+		return nil, err
+	}
+	return &user, nil
 }
 
 func (r *UserRepo) GetAll() ([]models.User, error) {
 	var users []models.User
 	err := r.DB.Select(&users, GetAllUsersSql)
-	return users, err
+	if err != nil {
+		log.Error("get all", "err", err)
+		return nil, err
+	}
+	return users, nil
 }
 
 func (r *UserRepo) UpdateStorageLimit(userID, newLimit int) error {
-	_, err := r.DB.Exec(UpdateStorageLimitSql, newLimit, userID)
-	return err
+	result, err := r.DB.Exec(UpdateStorageLimitSql, newLimit, userID)
+	log.Debug("database update storage limit", result)
+	if err != nil {
+		log.Error("update storage limit", "err", err)
+		return err
+	}
+	return nil
 }
 
 func (r *UserRepo) UpdateAdmin(userID int, isAdmin bool) error {
-	_, err := r.DB.Exec(UpdateAdminSql, isAdmin, userID)
-	return err
+	result, err := r.DB.Exec(UpdateAdminSql, isAdmin, userID)
+	log.Debug("database update admin", result)
+	if err != nil {
+		log.Error("update update admin", "err", err)
+		return err
+	}
+	return nil
 }

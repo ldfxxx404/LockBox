@@ -3,8 +3,10 @@ package utils
 import (
 	"back/config"
 	"errors"
+	"flag"
 	"time"
 
+	log "github.com/charmbracelet/log"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -52,7 +54,22 @@ func GetUserID(c *fiber.Ctx) int {
 func CheckSize(used, size int64, limit int) error {
 	sizeMB := size / (1024 * 1024)
 	if used+sizeMB > int64(limit) {
-		return errors.New("file size is too large")
+		return errors.New("file size is to large")
 	}
 	return nil
+}
+
+func ParseLoglevelFlags() {
+	debug := flag.Bool("debug", false, "debug level")
+	info := flag.Bool("info", false, "info level")
+	errlog := flag.Bool("errlog", false, "error level")
+	flag.Parse()
+
+	if *debug {
+		log.SetLevel(log.DebugLevel)
+	} else if *info {
+		log.SetLevel(log.InfoLevel)
+	} else if *errlog {
+		log.SetLevel(log.ErrorLevel)
+	}
 }

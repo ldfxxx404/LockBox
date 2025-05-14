@@ -23,9 +23,10 @@ services:
       - ./backend/storage:/root/storage
     environment:
       SERVER_PORT: 0.0.0.0:5000
+      STORAGE_LIMIT: 20
       JWT_SECRET: 82026ea3dfe8af4dbefc8db9495e442870b4408415d2ced47ab8d50b97dd9da203bfae35e9df9f527de3ae117d3af950cc57ae77967aacc9039130b86895a4ae
       POSTGRES_URL: postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
-      MINIO_ENDPOINT: minio:9000
+      MINIO_ENDPOINT: minio:9090
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin123
       MINIO_BUCKET: uploads
@@ -33,7 +34,7 @@ services:
       - postgres
       - minio
     restart: unless-stopped
-    command: sh -c "sleep 5 && ./backend"
+    command: sh -c "./backend --info --debug --errlog"
 
   frontend:
     container_name: lockbox-frontend
@@ -59,14 +60,14 @@ services:
     container_name: lockbox-minio
     image: minio/minio:latest
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "9090:9090"
+      - "9091:9091"
     volumes:
       - miniodata:/data
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin123
-    command: server /data --console-address ":9001"
+    command: server /data --address ":9090" --console-address ":9091"
     restart: always
 
 volumes:

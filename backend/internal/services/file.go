@@ -29,20 +29,20 @@ func NewFileService(fileRepo *repositories.FileRepo, userRepo *repositories.User
 		Secure: useSSL,
 	})
 	if err != nil {
-		log.Error(err)
+		log.Error("minio openssl connect err", "err", err)
 		return nil, err
 	}
 
 	ctx := context.Background()
 	exists, err := minioClient.BucketExists(ctx, bucket)
 	if err != nil {
-		log.Error(err)
+		log.Error("bucker exist check error", "err", err)
 		return nil, err
 	}
 	if !exists {
 		err = minioClient.MakeBucket(ctx, bucket, minio.MakeBucketOptions{})
 		if err != nil {
-			log.Error(err)
+			log.Error("make bucket error", "err", err)
 			return nil, err
 		}
 	}
@@ -58,20 +58,26 @@ func NewFileService(fileRepo *repositories.FileRepo, userRepo *repositories.User
 func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) error {
 	file, err := fileHeader.Open()
 	if err != nil {
-		log.Error(err)
+		log.Error("open file header", "err", err)
 		return err
 	}
-	defer func() { _ = file.Close() }()
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			log.Error("file close error", "err", err)
+		}
+	}()
 
 	objectName := fmt.Sprintf("%d/%s", userID, fileHeader.Filename)
 	size := fileHeader.Size
 	contentType := fileHeader.Header.Get("Content-Type")
 
-	_, err = s.Minio.PutObject(context.Background(), s.Bucket, objectName, file, size, minio.PutObjectOptions{
+	uploadInfo, err := s.Minio.PutObject(context.Background(), s.Bucket, objectName, file, size, minio.PutObjectOptions{
 		ContentType: contentType,
 	})
+	log.Debug(uploadInfo)
 	if err != nil {
-		log.Error(err)
+		log.Error("put object error", "err", err)
 		return err
 	}
 
@@ -92,16 +98,17 @@ func (s *FileService) ListFiles(userID int) ([]models.File, error) {
 func (s *FileService) GetFilePath(userID int, filename string) (string, error) {
 	objectName := fmt.Sprintf("%d/%s", userID, filename)
 
-	_, err := s.Minio.StatObject(context.Background(), s.Bucket, objectName, minio.StatObjectOptions{})
+	objectInfo, err := s.Minio.StatObject(context.Background(), s.Bucket, objectName, minio.StatObjectOptions{})
+	log.Debug(objectInfo)
 	if err != nil {
-		log.Error(err)
+		log.Error("stat object error", "err", err)
 		return "", fmt.Errorf("file not found: %w", err)
 	}
 
 	reqParams := make(url.Values)
 	presignedURL, err := s.Minio.PresignedGetObject(context.Background(), s.Bucket, objectName, time.Second*60, reqParams)
 	if err != nil {
-		log.Error(err)
+		log.Error("presigned get objetc error", "err", err)
 		return "", fmt.Errorf("failed to generate link: %w", err)
 	}
 
@@ -112,7 +119,7 @@ func (s *FileService) DeleteFile(userID int, filename string) error {
 	objectName := fmt.Sprintf("%d/%s", userID, filename)
 	err := s.Minio.RemoveObject(context.Background(), s.Bucket, objectName, minio.RemoveObjectOptions{})
 	if err != nil {
-		log.Error(err)
+		log.Error("error of delete file", "err", err)
 		return errors.New("failed to delete file")
 	}
 	return s.FileRepo.DeleteFile(userID, filename)
@@ -133,7 +140,7 @@ func (s *FileService) GetStorageInfo(userID int) (usedMB int64, limitMB int, err
 
 	user, err := s.UserRepo.GetByID(userID)
 	if err != nil {
-		log.Error(err)
+		log.Error("error of use repo", "err", err)
 		return 0, 0, err
 	}
 	limitMB = user.StorageLimit

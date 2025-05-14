@@ -14,6 +14,7 @@ import (
 	"back/internal/middleware"
 	"back/internal/repositories"
 	"back/internal/services"
+	"back/internal/utils"
 
 	_ "back/cmd/swagger"
 
@@ -25,6 +26,7 @@ import (
 )
 
 func main() {
+	utils.ParseLoglevelFlags()
 	db := database.InitDB()
 
 	app := fiber.New(config.FiberConfig)
@@ -33,7 +35,6 @@ func main() {
 	fileRepo := repositories.NewFileRepo(db)
 
 	authService := services.NewAuthService(userRepo)
-
 	fileService, err := services.NewFileService(
 		fileRepo,
 		userRepo,
@@ -56,6 +57,7 @@ func main() {
 	adminHandler := handlers.NewAdminHandler(adminService)
 
 	app.Get("/docs/*", fiberSwagger.WrapHandler)
+
 	app.Use(limiter.New(config.Limiter))
 
 	app.Post("/api/register", authHandler.Register)
