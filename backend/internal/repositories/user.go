@@ -68,7 +68,7 @@ func (r *UserRepo) GetAll() ([]models.User, error) {
 
 func (r *UserRepo) UpdateStorageLimit(userID, newLimit int) error {
 	result, err := r.DB.Exec(UpdateStorageLimitSql, newLimit, userID)
-	log.Debug("database update storage limit", result)
+	log.Debug("database update storage limit", "result", result)
 	if err != nil {
 		log.Error("update storage limit", "err", err)
 		return err
@@ -78,7 +78,7 @@ func (r *UserRepo) UpdateStorageLimit(userID, newLimit int) error {
 
 func (r *UserRepo) UpdateAdmin(userID int, isAdmin bool) error {
 	result, err := r.DB.Exec(UpdateAdminSql, isAdmin, userID)
-	log.Debug("database update admin", result)
+	log.Debug("database update admin", "result", result)
 	if err != nil {
 		log.Error("update update admin", "err", err)
 		return err

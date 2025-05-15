@@ -20,7 +20,7 @@ func NewAuthService(repo *repositories.UserRepo) *AuthService {
 
 func (s *AuthService) Register(dto models.RegisterDTO) (*models.User, error) {
 	hashedPassword, err := utils.HashPassword(dto.Password)
-	log.Debug("hashed passwod of latest user", hashedPassword)
+	log.Debug("hashed passwod of latest user", "Password hash", hashedPassword)
 	if err != nil {
 		log.Error("hash password check", "err", err)
 		return nil, err
@@ -32,7 +32,7 @@ func (s *AuthService) Register(dto models.RegisterDTO) (*models.User, error) {
 		IsAdmin:      false,
 		StorageLimit: config.StorageLimit,
 	}
-	log.Debug("current user info", user)
+	log.Debug("current user info", "userModel", user)
 	err = s.UserRepo.Create(user)
 	if err != nil {
 		log.Error("error of create user", "err", err)
@@ -56,7 +56,7 @@ func (s *AuthService) Login(dto models.LoginDTO) (string, *models.User, error) {
 		return "", nil, err
 	}
 
-	log.Debug("new logn info", user, token)
+	log.Debug("new logn info", "new login user", user, "user JWT token", token)
 	return token, user, nil
 }
 

@@ -75,7 +75,7 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 	uploadInfo, err := s.Minio.PutObject(context.Background(), s.Bucket, objectName, file, size, minio.PutObjectOptions{
 		ContentType: contentType,
 	})
-	log.Debug(uploadInfo)
+	log.Debug("put object minio:", "upload file info", uploadInfo)
 	if err != nil {
 		log.Error("put object error", "err", err)
 		return err
@@ -99,7 +99,7 @@ func (s *FileService) GetFilePath(userID int, filename string) (string, error) {
 	objectName := fmt.Sprintf("%d/%s", userID, filename)
 
 	objectInfo, err := s.Minio.StatObject(context.Background(), s.Bucket, objectName, minio.StatObjectOptions{})
-	log.Debug(objectInfo)
+	log.Debug("stat object minio:", "info of object", objectInfo)
 	if err != nil {
 		log.Error("stat object error", "err", err)
 		return "", fmt.Errorf("file not found: %w", err)

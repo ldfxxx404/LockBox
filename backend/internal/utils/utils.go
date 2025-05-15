@@ -60,16 +60,19 @@ func CheckSize(used, size int64, limit int) error {
 }
 
 func ParseLoglevelFlags() {
-	debug := flag.Bool("debug", false, "debug level")
-	info := flag.Bool("info", false, "info level")
-	errlog := flag.Bool("errlog", false, "error level")
+	debug := flag.Bool("debug", false, "Enable debug logging")
+	info := flag.Bool("info", false, "Enable info logging")
+	errlog := flag.Bool("errlog", false, "Enable error logging")
 	flag.Parse()
 
-	if *debug {
+	switch {
+	case *debug:
 		log.SetLevel(log.DebugLevel)
-	} else if *info {
+	case *info:
 		log.SetLevel(log.InfoLevel)
-	} else if *errlog {
+	case *errlog:
 		log.SetLevel(log.ErrorLevel)
+	default:
+		log.SetLevel(log.WarnLevel)
 	}
 }

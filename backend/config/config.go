@@ -25,7 +25,7 @@ var (
 
 	Limiter = limiter.Config{
 		Expiration: 10 * time.Second,
-		Max:        3,
+		Max:        5,
 	}
 
 	FiberConfig = fiber.Config{

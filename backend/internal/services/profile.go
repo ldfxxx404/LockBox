@@ -27,5 +27,6 @@ func (s *ProfileService) GetProfile(userID int) (*models.User, int64, int, error
 		log.Error("use get storage", "err", err)
 		return nil, 0, 0, err
 	}
+	log.Debug("User profile info", "Used storage MB", usedMB, "User info", user, "Limit MB", limitMB)
 	return user, usedMB, limitMB, nil
 }
