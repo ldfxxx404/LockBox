@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"back/internal/models"
+
+	log "github.com/charmbracelet/log"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -20,17 +22,32 @@ func NewFileRepo(db *sqlx.DB) *FileRepo {
 }
 
 func (r *FileRepo) Create(file *models.File) error {
-	_, err := r.DB.Exec(CreateFileSql, file.UserID, file.Filename, file.OriginalName, file.Size, file.MimeType)
-	return err
+	result, err := r.DB.Exec(CreateFileSql, file.UserID, file.Filename, file.OriginalName, file.Size, file.MimeType)
+	log.Debug("create file", "result", result)
+	if err != nil {
+		log.Error("create file error", "err", err)
+		return err
+	}
+	return nil
 }
 
 func (r *FileRepo) GetFilesByUser(userID int) ([]models.File, error) {
 	var files []models.File
 	err := r.DB.Select(&files, GetFileSql, userID)
-	return files, err
+	log.Debug("get files", "files", files)
+	if err != nil {
+		log.Error("get files by users", "err", err)
+		return nil, err
+	}
+	return files, nil
 }
 
 func (r *FileRepo) DeleteFile(userID int, filename string) error {
-	_, err := r.DB.Exec(DeleteFileSql, userID, filename)
-	return err
+	result, err := r.DB.Exec(DeleteFileSql, userID, filename)
+	log.Debug("delete file", "result", result)
+	if err != nil {
+		log.Error("delete file error", "err", err)
+		return err
+	}
+	return nil
 }

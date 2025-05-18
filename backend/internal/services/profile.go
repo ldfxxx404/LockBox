@@ -3,6 +3,8 @@ package services
 import (
 	"back/internal/models"
 	"back/internal/repositories"
+
+	log "github.com/charmbracelet/log"
 )
 
 type ProfileService struct {
@@ -17,11 +19,14 @@ func NewProfileService(userRepo *repositories.UserRepo, fileServ *FileService) *
 func (s *ProfileService) GetProfile(userID int) (*models.User, int64, int, error) {
 	user, err := s.UserRepo.GetByID(userID)
 	if err != nil {
+		log.Error("use repo error", "err", err)
 		return nil, 0, 0, err
 	}
 	usedMB, limitMB, err := s.FileServ.GetStorageInfo(userID)
 	if err != nil {
+		log.Error("use get storage", "err", err)
 		return nil, 0, 0, err
 	}
+	log.Debug("User profile info", "Used storage MB", usedMB, "User info", user, "Limit MB", limitMB)
 	return user, usedMB, limitMB, nil
 }

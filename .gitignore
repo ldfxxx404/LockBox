@@ -1,5 +1,7 @@
 .vscode
 .idea
+/backend/cmd/tmp
 /backend/storage
 /frontend/node_modules
 TODO.md
+*excalidraw*

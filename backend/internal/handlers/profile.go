@@ -6,6 +6,8 @@ import (
 	"back/internal/utils"
 	"net/http"
 
+	log "github.com/charmbracelet/log"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -31,8 +33,10 @@ func (h *ProfileHandler) GetProfile(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	user, usedMB, limitMB, err := h.ProfileServ.GetProfile(userID)
 	if err != nil {
+		log.Error("handler: get user profile", "err", err)
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
+	log.Info("success get user profile")
 	return c.JSON(models.Profile{User: &models.ProfileUser{Id: userID, Email: user.Email, Name: user.Name}, Storage: &models.ProfileStorage{Used: usedMB, Limit: limitMB}})
 }

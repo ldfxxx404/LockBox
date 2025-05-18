@@ -1,3 +1,5 @@
+package main
+
 // @title        LockBox API
 // @version      1.0
 // @description  This is the API documentation for LockBox SaaS app.
@@ -5,8 +7,6 @@
 // @BasePath     /api
 // TODO: fix http to https when it need!!!
 // @schemes      http
-package main
-
 import (
 	"back/config"
 	"back/internal/database"
@@ -14,9 +14,11 @@ import (
 	"back/internal/middleware"
 	"back/internal/repositories"
 	"back/internal/services"
-	"log"
+	"back/internal/utils"
 
 	_ "back/cmd/swagger"
+
+	log "github.com/charmbracelet/log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
@@ -24,22 +26,39 @@ import (
 )
 
 func main() {
+	utils.ParseLoglevelFlags()
 	db := database.InitDB()
 
 	app := fiber.New(config.FiberConfig)
+	log.Infof("create new fiber config with settings")
 
 	userRepo := repositories.NewUserRepo(db)
 	fileRepo := repositories.NewFileRepo(db)
+	log.Info("database init")
 
 	authService := services.NewAuthService(userRepo)
-	fileService := services.NewFileService(fileRepo, userRepo)
+	fileService, err := services.NewFileService(
+		fileRepo,
+		userRepo,
+		config.MinioEndpoint,
+		config.MinioAccessKey,
+		config.MinioSecretKey,
+		config.MinioBucket,
+		config.MinioUseSSL,
+	)
+	if err != nil {
+		log.Fatalf("failed to initialize FileService: %v", err)
+	}
+
 	profileService := services.NewProfileService(userRepo, fileService)
 	adminService := services.NewAdminService(userRepo)
+	log.Info("init services")
 
 	authHandler := handlers.NewAuthHandler(authService)
 	fileHandler := handlers.NewFileHandler(fileService)
 	profileHandler := handlers.NewProfileHandler(profileService)
 	adminHandler := handlers.NewAdminHandler(adminService)
+	log.Info("init handlers")
 
 	app.Get("/docs/*", fiberSwagger.WrapHandler)
 
@@ -61,6 +80,7 @@ func main() {
 	admin.Post("/update_limit", adminHandler.UpdateStorageLimit)
 	admin.Post("/make_admin/:user_id", adminHandler.MakeAdmin)
 	admin.Post("/revoke_admin/:user_id", adminHandler.RevokeAdmin)
+	log.Info("init routes")
 
 	log.Fatal(app.Listen(config.ServerPort))
 }
