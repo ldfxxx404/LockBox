@@ -30,8 +30,9 @@ func NewAdminHandler(adminServ *services.AdminService) *AdminHandler {
 func (h *AdminHandler) GetAllUsers(c *fiber.Ctx) error {
 	users, err := h.AdminServ.GetAllUsers()
 	if err != nil {
+		log.Debug(err)
 		log.Error("handler: error of getallsers", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "model is no found", Error: err})
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "model is no found", Error: err.Error()})
 	}
 	log.Info("success get all users")
 	return c.JSON(users)
@@ -53,13 +54,13 @@ func (h *AdminHandler) UpdateStorageLimit(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&req); err != nil {
 		log.Error("handler: body parcer error", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "Invalid input", Error: err})
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "Invalid input", Error: err.Error()})
 	}
 
 	err := h.AdminServ.UpdateStorageLimit(req.UserID, req.NewLimit)
 	if err != nil {
 		log.Error("handler: update storage limit", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "error", Error: err})
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
 	}
 	log.Info("success update storage limit")
 	return c.JSON(models.SuccessResponse{Message: "Storage update limit succes"})
@@ -80,12 +81,12 @@ func (h *AdminHandler) MakeAdmin(c *fiber.Ctx) error {
 	userID, err := strconv.Atoi(c.Params("user_id"))
 	if err != nil {
 		log.Error("handler: get params user Ids", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "invalid user id", Error: err})
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "invalid user id", Error: err.Error()})
 	}
 	err = h.AdminServ.MakeAdmin(userID)
 	if err != nil {
 		log.Error("handler: make admin", "err", err)
-		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err})
+		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
 	}
 	log.Info("success user make admin")
 	return c.JSON(models.SuccessResponse{Message: "User in now an admin"})
@@ -106,12 +107,12 @@ func (h *AdminHandler) RevokeAdmin(c *fiber.Ctx) error {
 	userID, err := strconv.Atoi(c.Params("user_id"))
 	if err != nil {
 		log.Error("handler: revoke admin", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "invalid user id", Error: err})
+		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "invalid user id", Error: err.Error()})
 	}
 	err = h.AdminServ.RevokeAdmin(userID)
 	if err != nil {
 		log.Error("handler: revoke admin", "err", err)
-		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err})
+		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
 	}
 	log.Info("success Revoke admin")
 	return c.JSON(models.SuccessResponse{Message: "Admin rights revoked"})

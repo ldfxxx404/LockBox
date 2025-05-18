@@ -60,6 +60,7 @@ func (r *UserRepo) GetAll() ([]models.User, error) {
 	var users []models.User
 	err := r.DB.Select(&users, GetAllUsersSql)
 	if err != nil {
+		log.Debug(err)
 		log.Error("get all", "err", err)
 		return nil, err
 	}
