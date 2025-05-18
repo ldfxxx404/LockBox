@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"net/url"
 
+	log "github.com/charmbracelet/log"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -36,19 +38,22 @@ func (h *FileHandler) Upload(c *fiber.Ctx) error {
 
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
+		log.Error("handler: error of formFile upload", "err", err)
 		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "File is required", Error: err})
 	}
 
 	err = utils.CheckSize(usedMB, fileHeader.Size, limitMB)
 	if err != nil {
+		log.Error("handler: check file size", "err", err)
 		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "error0", Error: err})
 	}
 
 	err = h.FileServ.UploadFile(userID, fileHeader)
 	if err != nil {
+		log.Error("handler: upload user file", "err", err)
 		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err})
 	}
-
+	log.Info("success file upload")
 	return c.JSON(models.FileUpload{Message: "File upload", FileName: fileHeader.Filename})
 }
 
@@ -65,10 +70,12 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
 	files, err := h.FileServ.ListFiles(userID)
 	if err != nil {
+		log.Error("handler: list users files", "err", err)
 		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err})
 	}
 	usedMB, limitMB, err := h.FileServ.GetStorageInfo(userID)
 	if err != nil {
+		log.Error("handler: get storage info", "err", err)
 		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err})
 	}
 	var filenames []string
@@ -76,6 +83,7 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 		filenames = append(filenames, file.Filename)
 	}
 
+	log.Info("success list files users")
 	return c.JSON(models.ListFile{Files: filenames, Storage: &models.ListFileUsed{Used: usedMB, Limit: limitMB}})
 }
 
@@ -96,14 +104,16 @@ func (h *FileHandler) Download(c *fiber.Ctx) error {
 
 	decodedFilename, err := url.QueryUnescape(filename)
 	if err != nil {
+		log.Error("handler: get query of files", "err", err)
 		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "Invalid filename", Error: err})
 	}
 
 	filePath, err := h.FileServ.GetFilePath(userID, decodedFilename)
 	if err != nil {
+		log.Error("handler: get file path", "err", err)
 		return c.Status(http.StatusNotFound).JSON(models.ErrorResponse{Message: "File not found", Error: err})
 	}
-
+	log.Info("success download file")
 	return c.SendFile(filePath, false)
 }
 
@@ -122,6 +132,7 @@ func (h *FileHandler) Delete(c *fiber.Ctx) error {
 	filename := c.Params("filename")
 	err := h.FileServ.DeleteFile(userID, filename)
 	if err != nil {
+		log.Error("handler: delete files", "err", err)
 		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err})
 	}
 	return c.JSON(models.SuccessResponse{Message: "File delited"})

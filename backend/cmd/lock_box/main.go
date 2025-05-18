@@ -30,9 +30,11 @@ func main() {
 	db := database.InitDB()
 
 	app := fiber.New(config.FiberConfig)
+	log.Infof("create new fiber config with settings")
 
 	userRepo := repositories.NewUserRepo(db)
 	fileRepo := repositories.NewFileRepo(db)
+	log.Info("database init")
 
 	authService := services.NewAuthService(userRepo)
 	fileService, err := services.NewFileService(
@@ -50,11 +52,13 @@ func main() {
 
 	profileService := services.NewProfileService(userRepo, fileService)
 	adminService := services.NewAdminService(userRepo)
+	log.Info("init services")
 
 	authHandler := handlers.NewAuthHandler(authService)
 	fileHandler := handlers.NewFileHandler(fileService)
 	profileHandler := handlers.NewProfileHandler(profileService)
 	adminHandler := handlers.NewAdminHandler(adminService)
+	log.Info("init handlers")
 
 	app.Get("/docs/*", fiberSwagger.WrapHandler)
 
@@ -76,6 +80,7 @@ func main() {
 	admin.Post("/update_limit", adminHandler.UpdateStorageLimit)
 	admin.Post("/make_admin/:user_id", adminHandler.MakeAdmin)
 	admin.Post("/revoke_admin/:user_id", adminHandler.RevokeAdmin)
+	log.Info("init routes")
 
 	log.Fatal(app.Listen(config.ServerPort))
 }
