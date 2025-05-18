@@ -2,6 +2,8 @@ package middleware
 
 import (
 	"back/config"
+	"back/internal/models"
+
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v3"
 	"github.com/golang-jwt/jwt/v4"
@@ -16,8 +18,16 @@ func AuthRequired() fiber.Handler {
 }
 
 func jwtError(c *fiber.Ctx, err error) error {
-	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-		"error": "Unauthorized",
+	return c.Status(fiber.StatusUnauthorized).JSON(models.ErrorResponse{
+		Message: "Unauthorized",
+		Error:   err.Error(),
+	})
+}
+
+func unauthorizedResponse(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusUnauthorized).JSON(models.ErrorResponse{
+		Message: "Unauthorized",
+		Error:   "access denied",
 	})
 }
 
@@ -25,21 +35,20 @@ func AdminRequired() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		userToken := c.Locals("user")
 		if userToken == nil {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+			return unauthorizedResponse(c)
 		}
 		token, ok := userToken.(*jwt.Token)
 		if !ok {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+			return unauthorizedResponse(c)
 		}
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized"})
+			return unauthorizedResponse(c)
 		}
-		if isAdmin, ok := claims["is_admin"].(bool); ok && isAdmin {
-			return c.Next()
+		isAdmin, ok := claims["is_admin"].(bool)
+		if !ok || !isAdmin {
+			return unauthorizedResponse(c)
 		}
-		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
-			"error": "Admin access required",
-		})
+		return c.Next()
 	}
 }

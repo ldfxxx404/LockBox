@@ -4,6 +4,8 @@ import (
 	"back/internal/models"
 	"back/internal/repositories"
 	"errors"
+
+	"github.com/gofiber/fiber/v2/log"
 )
 
 type AdminService struct {
@@ -15,7 +17,13 @@ func NewAdminService(repo *repositories.UserRepo) *AdminService {
 }
 
 func (s *AdminService) GetAllUsers() ([]models.User, error) {
-	return s.UserRepo.GetAll()
+	model, err := s.UserRepo.GetAll()
+	if err != nil {
+		log.Debug(err)
+		log.Error("get all users fetch", "err", err)
+		return nil, err
+	}
+	return model, nil
 }
 
 func (s *AdminService) UpdateStorageLimit(userID, newLimit int) error {
