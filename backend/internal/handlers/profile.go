@@ -34,7 +34,7 @@ func (h *ProfileHandler) GetProfile(c *fiber.Ctx) error {
 	user, usedMB, limitMB, err := h.ProfileServ.GetProfile(userID)
 	if err != nil {
 		log.Error("handler: get user profile", "err", err)
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "Get user profile", Error: err.Error()})
 	}
 
 	log.Info("success get user profile")
