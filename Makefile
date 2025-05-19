@@ -10,9 +10,6 @@ DB_CONTAINER_URL=postgres://postgres:postgres@${POSTGRES_NAME}:5432/lock_box?ssl
 GREEN=\033[0;32m
 NC=\033[0m
 
-GREEN=\033[0;32m
-NC=\033[0m
-
 up:
 	@echo "Запуск всех сервисов..."
 	docker compose up -d
