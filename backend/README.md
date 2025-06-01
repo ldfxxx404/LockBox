@@ -37,7 +37,7 @@ Limiter            Rate limiting settings (requests per period)
 You can find full API documentation at:
 
 ```
-http://localhost/docs/index.html
+http://localhost:5000/docs/index.html
 ```
 
 Swagger files are located in `cmd/swagger/`.
