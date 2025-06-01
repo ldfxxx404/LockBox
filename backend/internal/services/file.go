@@ -17,13 +17,13 @@ import (
 )
 
 type FileService struct {
-	FileRepo *repositories.FileRepo
-	UserRepo *repositories.UserRepo
+	FileRepo repositories.FileRepoInterface
+	UserRepo repositories.UserRepoInterface
 	Minio    *minio.Client
 	Bucket   string
 }
 
-func NewFileService(fileRepo *repositories.FileRepo, userRepo *repositories.UserRepo, endpoint, accessKey, secretKey, bucket string, useSSL bool) (*FileService, error) {
+func NewFileService(fileRepo repositories.FileRepoInterface, userRepo repositories.UserRepoInterface, endpoint, accessKey, secretKey, bucket string, useSSL bool) (*FileService, error) {
 	minioClient, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
 		Secure: useSSL,
