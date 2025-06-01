@@ -16,7 +16,7 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/admin/make_admin/{user_id}": {
-            "post": {
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -62,7 +62,7 @@ const docTemplate = `{
             }
         },
         "/admin/revoke_admin/{user_id}": {
-            "post": {
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -108,7 +108,7 @@ const docTemplate = `{
             }
         },
         "/admin/update_limit": {
-            "post": {
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []

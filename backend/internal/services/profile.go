@@ -8,11 +8,11 @@ import (
 )
 
 type ProfileService struct {
-	UserRepo *repositories.UserRepo
+	UserRepo repositories.UserRepoInterface
 	FileServ *FileService
 }
 
-func NewProfileService(userRepo *repositories.UserRepo, fileServ *FileService) *ProfileService {
+func NewProfileService(userRepo repositories.UserRepoInterface, fileServ *FileService) *ProfileService {
 	return &ProfileService{UserRepo: userRepo, FileServ: fileServ}
 }
 

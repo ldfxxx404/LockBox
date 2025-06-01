@@ -2,6 +2,7 @@ package utils
 
 import (
 	"back/config"
+	"back/internal/models"
 	"errors"
 	"flag"
 	"time"
@@ -23,10 +24,12 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 func GenerateToken(userID int, isAdmin bool) (string, error) {
-	claims := jwt.MapClaims{
-		"user_id":  userID,
-		"is_admin": isAdmin,
-		"exp":      time.Now().Add(time.Hour * 24).Unix(),
+	claims := models.JWTClaims{
+		UserID:  userID,
+		IsAdmin: isAdmin,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

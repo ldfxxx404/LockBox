@@ -48,7 +48,7 @@ func (h *AdminHandler) GetAllUsers(c *fiber.Ctx) error {
 // @Param        body  body  models.UpdateStorage  true  "Storage limit info"
 // @Success      200  {object}  models.SuccessResponse
 // @Failure      400  {object}  models.ErrorResponse
-// @Router       /admin/update_limit [post]
+// @Router       /admin/update_limit [put]
 func (h *AdminHandler) UpdateStorageLimit(c *fiber.Ctx) error {
 	var req models.UpdateStorage
 
@@ -76,7 +76,7 @@ func (h *AdminHandler) UpdateStorageLimit(c *fiber.Ctx) error {
 // @Success      200  {object}  models.SuccessResponse
 // @Failure      400  {object}  models.ErrorResponse
 // @Failure      500  {object}  models.ErrorResponse
-// @Router       /admin/make_admin/{user_id} [post]
+// @Router       /admin/make_admin/{user_id} [put]
 func (h *AdminHandler) MakeAdmin(c *fiber.Ctx) error {
 	userID, err := strconv.Atoi(c.Params("user_id"))
 	if err != nil {
@@ -102,7 +102,7 @@ func (h *AdminHandler) MakeAdmin(c *fiber.Ctx) error {
 // @Success      200  {object}  models.SuccessResponse
 // @Failure      400  {object}  models.ErrorResponse
 // @Failure      500  {object}  models.ErrorResponse
-// @Router       /admin/revoke_admin/{user_id} [post]
+// @Router       /admin/revoke_admin/{user_id} [put]
 func (h *AdminHandler) RevokeAdmin(c *fiber.Ctx) error {
 	userID, err := strconv.Atoi(c.Params("user_id"))
 	if err != nil {
