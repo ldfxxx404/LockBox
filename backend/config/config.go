@@ -5,9 +5,6 @@ import (
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/limiter"
 )
 
 var (
@@ -22,15 +19,6 @@ var (
 	MinioSecretKey = getEnv("MINIO_SECRET_KEY", "minioadmin123")
 	MinioBucket    = getEnv("MINIO_BUCKET", "uploads")
 	MinioUseSSL    = getEnv("MINIO_USE_SSL", false)
-
-	Limiter = limiter.Config{
-		Expiration: 10 * time.Second,
-		Max:        5,
-	}
-
-	FiberConfig = fiber.Config{
-		BodyLimit: 20 * 1024 * 1024,
-	}
 )
 
 func getEnv[T any](key string, fallback T) T {

@@ -125,7 +125,7 @@ info:
   version: "1.0"
 paths:
   /admin/make_admin/{user_id}:
-    post:
+    put:
       description: Gives a user admin privileges
       parameters:
       - description: User ID
@@ -154,7 +154,7 @@ paths:
       tags:
       - admin
   /admin/revoke_admin/{user_id}:
-    post:
+    put:
       description: Removes admin privileges from a user
       parameters:
       - description: User ID
@@ -183,7 +183,7 @@ paths:
       tags:
       - admin
   /admin/update_limit:
-    post:
+    put:
       consumes:
       - application/json
       description: Sets a new storage limit for a specific user

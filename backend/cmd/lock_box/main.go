@@ -77,9 +77,9 @@ func main() {
 
 	admin := api.Group("/admin", middleware.AdminRequired())
 	admin.Get("/users", adminHandler.GetAllUsers)
-	admin.Post("/update_limit", adminHandler.UpdateStorageLimit)
-	admin.Post("/make_admin/:user_id", adminHandler.MakeAdmin)
-	admin.Post("/revoke_admin/:user_id", adminHandler.RevokeAdmin)
+	admin.Put("/update_limit", adminHandler.UpdateStorageLimit)
+	admin.Put("/make_admin/:user_id", adminHandler.MakeAdmin)
+	admin.Put("/revoke_admin/:user_id", adminHandler.RevokeAdmin)
 	log.Info("init routes")
 
 	log.Fatal(app.Listen(config.ServerPort))
