@@ -122,7 +122,7 @@ func TestLogin_FailInvalidPassword(t *testing.T) {
 		Password: "$2a$10$7EqJtq98hPqEX7fNZaFWoOQFzNHw4nRXKd6vlY5Lx3cQ7xcl5rDvy",
 		IsAdmin:  false,
 	}
-	repo.Create(user)
+	_ = repo.Create(user)
 
 	dto := models.LoginDTO{
 		Email:    "badpass@example.com",
