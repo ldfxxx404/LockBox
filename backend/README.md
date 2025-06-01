@@ -79,3 +79,9 @@ Swagger files are located in `cmd/swagger/`.
 - `migrations/` — SQL migration files
 - `Dockerfile` — Docker image build script
 - `docker-compose.yml` — (if present) container setup for services
+
+## Logs flags
+
+- `--info` — info log level
+- `--debug` — debug log level
+- `--errlog` — error log level
