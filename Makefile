@@ -39,6 +39,9 @@ console_backend:
 console_minio:
 	docker exec -it ${MINIO_NAME} sh
 
+console_front:
+	docker exec -it ${FRONTEND_NAME} sh
+
 frontend_logs:
 	docker compose logs -f frontend
 
@@ -114,4 +117,4 @@ test_frontend:
 	docker exec $(FRONTEND_NAME) npm run build
 	make restart_frontend
 
-.PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs
+.PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs console_front
