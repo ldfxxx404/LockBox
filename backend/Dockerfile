@@ -2,14 +2,24 @@ FROM golang:1.24.1-alpine AS builder
 
 WORKDIR /app
 
+RUN apk add --no-cache \
+    gcc \
+    musl-dev \
+    libc-dev \
+    make \
+    git
+
+ENV CGO_ENABLED=1 \
+    GO111MODULE=on \
+    PATH="/go/bin:${PATH}"
+
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
 RUN go install github.com/swaggo/swag/cmd/swag@latest
-
-ENV PATH="/go/bin:${PATH}"
+RUN go install github.com/pressly/goose/v3/cmd/goose@latest
 
 RUN swag init -g /cmd/lock_box/main.go --output /cmd/swagger/
 

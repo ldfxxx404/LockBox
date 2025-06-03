@@ -1,35 +1,36 @@
+SHELL := /bin/bash
+
+DOCKER_COMPOSE := $(shell command -v "docker compose" >/dev/null 2>&1 && echo "docker compose" || echo "docker-compose")
+
 BACKEND_NAME=lockbox-backend
 FRONTEND_NAME=lockbox-frontend
 POSTGRES_NAME=lockbox-postgres
 MINIO_NAME=lockbox-minio
 
-MIGRATIONS_DIR=backend/migrations
-DB_URL=postgres://postgres:postgres@localhost:6969/lock_box?sslmode=disable
+MIGRATIONS_DIR=migrations
+DB_URL=postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
 DB_CONTAINER_URL=postgres://postgres:postgres@${POSTGRES_NAME}:5432/lock_box?sslmode=disable
 
-GREEN=\033[0;32m
-NC=\033[0m
-
 up:
-	docker compose up -d
+	$(DOCKER_COMPOSE) up -d
 
 down:
-	docker compose down
+	$(DOCKER_COMPOSE) down
 
 down_force:
-	docker compose down --volumes --remove-orphans
-	docker-compose down --rmi all --volumes --remove-orphans
+	$(DOCKER_COMPOSE) down --volumes --remove-orphans
+	$(DOCKER_COMPOSE) down --rmi all --volumes --remove-orphans
 
 init: down_force build up
 	@echo "Инициализация завершена"
 
 init_deploy:
-	docker compose -f docker-compose.prod.yml down --volumes --remove-orphans
-	docker compose -f docker-compose.prod.yml build --no-cache
-	docker compose -f docker-compose.prod.yml up -d
+	$(DOCKER_COMPOSE) -f docker-compose.prod.yml down --volumes --remove-orphans
+	$(DOCKER_COMPOSE) -f docker-compose.prod.yml build --no-cache
+	$(DOCKER_COMPOSE) -f docker-compose.prod.yml up -d
 
 build:
-	docker compose build --no-cache
+	$(DOCKER_COMPOSE) build --no-cache
 
 restart: down up
 
@@ -43,31 +44,31 @@ console_front:
 	docker exec -it ${FRONTEND_NAME} sh
 
 frontend_logs:
-	docker compose logs -f frontend
+	$(DOCKER_COMPOSE) logs -f frontend
 
 backend_logs:
-	docker compose logs -f backend
+	$(DOCKER_COMPOSE) logs -f backend
 
 db_logs:
-	docker compose logs -f postgres
+	$(DOCKER_COMPOSE) logs -f postgres
 
 minio_logs:
-	docker compose logs -f minio
+	$(DOCKER_COMPOSE) logs -f minio
 
 migrate:
-	goose -dir ${MIGRATIONS_DIR} postgres "${DB_URL}" up
+	docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} up
 
 migrate_down:
-	goose -dir ${MIGRATIONS_DIR} postgres "${DB_URL}" down
+	docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} down
 
 migrate_status:
-	goose -dir ${MIGRATIONS_DIR} postgres "${DB_URL}" status
+	docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} status
 
 restart_db:
-	docker compose stop postgres
-	docker compose rm -f postgres
-	docker compose build --no-cache postgres
-	docker compose up -d --no-deps postgres
+	$(DOCKER_COMPOSE) stop postgres
+	$(DOCKER_COMPOSE) rm -f postgres
+	$(DOCKER_COMPOSE) build --no-cache postgres
+	$(DOCKER_COMPOSE) up -d --no-deps postgres
 
 help:
 	@echo "make up                              - Запуск всех сервисов в фоне"
@@ -79,6 +80,7 @@ help:
 	@echo "make restart_backend                 - Перезапуск backend"
 	@echo "make restart_frontend                - Перезапуск сервисов (down + up)"
 	@echo "make test_frontend                   - Запуск тестов фронтенда"
+	@echo "make test_backend                    - Запуск тестов бэкенда"
 	@echo "make console                         - Войти в контейнер бэкенда"
 	@echo "make frontend_logs                   - Просмотр логов фронтенда"
 	@echo "make backend_logs                    - Просмотр логов бэкенда"
@@ -92,23 +94,23 @@ help:
 	@echo "make help                            - Показать это сообщение"
 
 restart_backend:
-	docker compose stop backend
-	docker compose rm -f backend
-	docker compose build --no-cache backend
-	docker compose up -d --no-deps backend
+	$(DOCKER_COMPOSE) stop backend
+	$(DOCKER_COMPOSE) rm -f backend
+	$(DOCKER_COMPOSE) build --no-cache backend
+	$(DOCKER_COMPOSE) up -d --no-deps backend
 	make restart_db
 
 restart_minio:
-	docker compose stop minio
-	docker compose rm -f minio
-	docker compose build --no-cache minio
-	docker compose up -d --no-deps minio
+	$(DOCKER_COMPOSE) stop minio
+	$(DOCKER_COMPOSE) rm -f minio
+	$(DOCKER_COMPOSE) build --no-cache minio
+	$(DOCKER_COMPOSE) up -d --no-deps minio
 
 restart_frontend:
-	docker compose stop frontend
-	docker compose rm -f frontend
-	docker compose build --no-cache frontend
-	docker compose up -d --no-deps frontend
+	$(DOCKER_COMPOSE) stop frontend
+	$(DOCKER_COMPOSE) rm -f frontend
+	$(DOCKER_COMPOSE) build --no-cache frontend
+	$(DOCKER_COMPOSE) up -d --no-deps frontend
 
 test_frontend:
 	docker exec $(FRONTEND_NAME) npm run types:check
@@ -117,4 +119,7 @@ test_frontend:
 	docker exec $(FRONTEND_NAME) npm run build
 	make restart_frontend
 
-.PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs console_front
+test_backend:
+	docker exec $(BACKEND_NAME) go test ./internal/services/ -v
+
+.PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs console_front test_backend

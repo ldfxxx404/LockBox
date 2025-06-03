@@ -9,11 +9,11 @@ import (
 	"back/internal/utils"
 )
 
-type fakeUserRepo struct {
+type fakeUserRepoAuth struct {
 	users map[string]*models.User
 }
 
-func (f *fakeUserRepo) Create(user *models.User) error {
+func (f *fakeUserRepoAuth) Create(user *models.User) error {
 	if user.Email == "error@example.com" {
 		return errors.New("create error")
 	}
@@ -21,7 +21,7 @@ func (f *fakeUserRepo) Create(user *models.User) error {
 	return nil
 }
 
-func (f *fakeUserRepo) GetByEmail(email string) (*models.User, error) {
+func (f *fakeUserRepoAuth) GetByEmail(email string) (*models.User, error) {
 	user, ok := f.users[email]
 	if !ok {
 		return nil, errors.New("not found")
@@ -29,13 +29,13 @@ func (f *fakeUserRepo) GetByEmail(email string) (*models.User, error) {
 	return user, nil
 }
 
-func (f *fakeUserRepo) GetByID(id int) (*models.User, error)          { return nil, nil }
-func (f *fakeUserRepo) GetAll() ([]models.User, error)                { return nil, nil }
-func (f *fakeUserRepo) UpdateStorageLimit(userID, newLimit int) error { return nil }
-func (f *fakeUserRepo) UpdateAdmin(userID int, isAdmin bool) error    { return nil }
+func (f *fakeUserRepoAuth) GetByID(id int) (*models.User, error)          { return nil, nil }
+func (f *fakeUserRepoAuth) GetAll() ([]models.User, error)                { return nil, nil }
+func (f *fakeUserRepoAuth) UpdateStorageLimit(userID, newLimit int) error { return nil }
+func (f *fakeUserRepoAuth) UpdateAdmin(userID int, isAdmin bool) error    { return nil }
 
 func TestRegister(t *testing.T) {
-	repo := &fakeUserRepo{users: make(map[string]*models.User)}
+	repo := &fakeUserRepoAuth{users: make(map[string]*models.User)}
 	svc := services.NewAuthService(repo)
 
 	dto := models.RegisterDTO{
@@ -59,7 +59,7 @@ func TestRegister(t *testing.T) {
 }
 
 func TestRegister_FailOnCreate(t *testing.T) {
-	repo := &fakeUserRepo{users: make(map[string]*models.User)}
+	repo := &fakeUserRepoAuth{users: make(map[string]*models.User)}
 	svc := services.NewAuthService(repo)
 
 	dto := models.RegisterDTO{
@@ -75,7 +75,7 @@ func TestRegister_FailOnCreate(t *testing.T) {
 }
 
 func TestLogin_Success(t *testing.T) {
-	repo := &fakeUserRepo{users: make(map[string]*models.User)}
+	repo := &fakeUserRepoAuth{users: make(map[string]*models.User)}
 	svc := services.NewAuthService(repo)
 
 	hashedPassword, err := utils.HashPassword("password")
@@ -114,7 +114,7 @@ func TestLogin_Success(t *testing.T) {
 }
 
 func TestLogin_FailInvalidPassword(t *testing.T) {
-	repo := &fakeUserRepo{users: make(map[string]*models.User)}
+	repo := &fakeUserRepoAuth{users: make(map[string]*models.User)}
 	svc := services.NewAuthService(repo)
 
 	user := &models.User{
@@ -122,21 +122,24 @@ func TestLogin_FailInvalidPassword(t *testing.T) {
 		Password: "$2a$10$7EqJtq98hPqEX7fNZaFWoOQFzNHw4nRXKd6vlY5Lx3cQ7xcl5rDvy",
 		IsAdmin:  false,
 	}
-	_ = repo.Create(user)
+	err := repo.Create(user)
+	if err != nil {
+		t.Fatal("bad create user for test data")
+	}
 
 	dto := models.LoginDTO{
 		Email:    "badpass@example.com",
 		Password: "wrongpass",
 	}
 
-	_, _, err := svc.Login(dto)
+	_, _, err = svc.Login(dto)
 	if err == nil {
 		t.Fatal("expected error on bad password, got nil")
 	}
 }
 
 func TestLogin_FailUserNotFound(t *testing.T) {
-	repo := &fakeUserRepo{users: make(map[string]*models.User)}
+	repo := &fakeUserRepoAuth{users: make(map[string]*models.User)}
 	svc := services.NewAuthService(repo)
 
 	dto := models.LoginDTO{
