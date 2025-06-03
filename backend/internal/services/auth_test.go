@@ -122,14 +122,17 @@ func TestLogin_FailInvalidPassword(t *testing.T) {
 		Password: "$2a$10$7EqJtq98hPqEX7fNZaFWoOQFzNHw4nRXKd6vlY5Lx3cQ7xcl5rDvy",
 		IsAdmin:  false,
 	}
-	_ = repo.Create(user)
+	err := repo.Create(user)
+	if err != nil {
+		t.Fatal("bad create user for test data")
+	}
 
 	dto := models.LoginDTO{
 		Email:    "badpass@example.com",
 		Password: "wrongpass",
 	}
 
-	_, _, err := svc.Login(dto)
+	_, _, err = svc.Login(dto)
 	if err == nil {
 		t.Fatal("expected error on bad password, got nil")
 	}
