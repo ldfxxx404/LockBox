@@ -40,6 +40,12 @@ You can find full API documentation at:
 http://localhost:5000/docs/index.html
 ```
 
+Port for postgresDB
+
+```
+postgres://postgres:postgres@postgres:6969/lock_box?
+```
+
 Swagger files are located in `cmd/swagger/`.
 
 ---
@@ -85,3 +91,17 @@ Swagger files are located in `cmd/swagger/`.
 - `--info` — info log level
 - `--debug` — debug log level
 - `--errlog` — error log level
+
+## Porst who use (external)
+
+- 9191 - minio web gui
+- 3000 - frontend
+- 5000 - backend
+- 6969 - postgres database port
+
+### Internal ports
+
+- 3000 - frontend
+- 5000 - backend
+- 9090 - minio socket
+- 5432 - postgres database
