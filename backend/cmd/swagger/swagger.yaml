@@ -122,7 +122,7 @@ info:
   contact: {}
   description: This is the API documentation for LockBox SaaS app.
   title: LockBox API
-  version: "1.0"
+  version: 0.1.1
 paths:
   /admin/make_admin/{user_id}:
     put:
