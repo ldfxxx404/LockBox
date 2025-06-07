@@ -11,6 +11,8 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - lockbox-net
 
   backend:
     container_name: lockbox-backend
@@ -35,6 +37,8 @@ services:
       - minio
     restart: unless-stopped
     command: sh -c "./backend --info --debug --errlog"
+    networks:
+      - lockbox-net
 
   frontend:
     container_name: lockbox-frontend
@@ -49,19 +53,21 @@ services:
       - /app/.next
     environment:
       NEXT_PUBLIC_SERVER: http://lockbox-backend:5000
-      CHOKIDAR_USEPOLLING: "true"
-      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: 'true'
+      WATCHPACK_POLLING: 'true'
       NODE_ENV: development
     depends_on:
       - backend
     restart: unless-stopped
+    networks:
+      - lockbox-net
 
   minio:
     container_name: lockbox-minio
     image: minio/minio:latest
     ports:
-      - "9090:9090"
-      - "9091:9091"
+      - '9090:9090'
+      - '9091:9091'
     volumes:
       - miniodata:/data
     environment:
@@ -69,7 +75,16 @@ services:
       MINIO_ROOT_PASSWORD: minioadmin123
     command: server /data --address ":9090" --console-address ":9091"
     restart: always
+    networks:
+      - lockbox-net
 
 volumes:
   pgdata:
+    name: lockbox-pg-data
   miniodata:
+    name: lockbox-minio-data
+
+networks:
+  lockbox-net:
+    name: lockbox-net
+    driver: bridge
