@@ -21,8 +21,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - '5000:5000'
-    volumes:
-      - ./backend/storage:/root/storage
     environment:
       SERVER_PORT: 0.0.0.0:5000
       STORAGE_LIMIT: 20
