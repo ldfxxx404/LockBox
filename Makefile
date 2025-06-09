@@ -64,6 +64,9 @@ migrate_down:
 migrate_status:
 	docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} status
 
+swag_generate:
+	docker exec ${BACKEND_NAME} swag init -g /cmd/lock_box/main.go --output /cmd/swagger/
+
 restart_db:
 	$(DOCKER_COMPOSE) stop postgres
 	$(DOCKER_COMPOSE) rm -f postgres

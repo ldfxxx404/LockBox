@@ -1,7 +1,7 @@
 package main
 
 // @title        LockBox API
-// @version      1.0
+// @version      0.1.1
 // @description  This is the API documentation for LockBox SaaS app.
 // @host         localhost:5000
 // @BasePath     /api
