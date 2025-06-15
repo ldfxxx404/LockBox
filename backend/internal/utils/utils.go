@@ -7,8 +7,8 @@ import (
 	"flag"
 	"time"
 
-	log "github.com/charmbracelet/log"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -70,12 +70,12 @@ func ParseLoglevelFlags() {
 
 	switch {
 	case *debug:
-		log.SetLevel(log.DebugLevel)
+		log.SetLevel(log.LevelDebug)
 	case *info:
-		log.SetLevel(log.InfoLevel)
+		log.SetLevel(log.LevelInfo)
 	case *errlog:
-		log.SetLevel(log.ErrorLevel)
+		log.SetLevel(log.LevelError)
 	default:
-		log.SetLevel(log.WarnLevel)
+		log.SetLevel(log.LevelWarn)
 	}
 }

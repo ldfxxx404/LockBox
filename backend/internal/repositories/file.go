@@ -3,7 +3,7 @@ package repositories
 import (
 	"back/internal/models"
 
-	log "github.com/charmbracelet/log"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/jmoiron/sqlx"
 )
 

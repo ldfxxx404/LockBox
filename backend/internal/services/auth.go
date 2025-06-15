@@ -7,7 +7,7 @@ import (
 	"back/internal/utils"
 	"errors"
 
-	log "github.com/charmbracelet/log"
+	"github.com/gofiber/fiber/v2/log"
 )
 
 type AuthService struct {

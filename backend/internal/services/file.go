@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"time"
 
-	log "github.com/charmbracelet/log"
+	"github.com/gofiber/fiber/v2/log"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
