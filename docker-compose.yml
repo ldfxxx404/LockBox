@@ -30,11 +30,12 @@ services:
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin123
       MINIO_BUCKET: uploads
+      LOG_LEVEL: debug
     depends_on:
       - postgres
       - minio
     restart: unless-stopped
-    command: sh -c "./backend --info --debug --errlog"
+    command: sh -c "./backend"
     networks:
       - lockbox-net
 

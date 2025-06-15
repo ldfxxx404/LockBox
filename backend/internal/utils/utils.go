@@ -4,11 +4,10 @@ import (
 	"back/config"
 	"back/internal/models"
 	"errors"
-	"flag"
 	"time"
 
-	log "github.com/charmbracelet/log"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -63,19 +62,16 @@ func CheckSize(used, size int64, limit int) error {
 }
 
 func ParseLoglevelFlags() {
-	debug := flag.Bool("debug", false, "Enable debug logging")
-	info := flag.Bool("info", false, "Enable info logging")
-	errlog := flag.Bool("errlog", false, "Enable error logging")
-	flag.Parse()
+	level := config.LogLevel
 
-	switch {
-	case *debug:
-		log.SetLevel(log.DebugLevel)
-	case *info:
-		log.SetLevel(log.InfoLevel)
-	case *errlog:
-		log.SetLevel(log.ErrorLevel)
+	switch level {
+	case "debug":
+		log.SetLevel(log.LevelDebug)
+	case "info":
+		log.SetLevel(log.LevelInfo)
+	case "error":
+		log.SetLevel(log.LevelError)
 	default:
-		log.SetLevel(log.WarnLevel)
+		log.SetLevel(log.LevelWarn)
 	}
 }

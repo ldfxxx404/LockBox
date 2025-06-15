@@ -6,7 +6,7 @@ import (
 	"back/internal/utils"
 	"net/http"
 
-	log "github.com/charmbracelet/log"
+	"github.com/gofiber/fiber/v2/log"
 
 	"github.com/gofiber/fiber/v2"
 )

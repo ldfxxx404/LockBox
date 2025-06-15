@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/url"
 
-	log "github.com/charmbracelet/log"
+	"github.com/gofiber/fiber/v2/log"
 
 	"github.com/gofiber/fiber/v2"
 )

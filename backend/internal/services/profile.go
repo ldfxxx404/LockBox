@@ -4,7 +4,7 @@ import (
 	"back/internal/models"
 	"back/internal/repositories"
 
-	log "github.com/charmbracelet/log"
+	"github.com/gofiber/fiber/v2/log"
 )
 
 type ProfileService struct {
