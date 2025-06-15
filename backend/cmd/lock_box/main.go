@@ -49,7 +49,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to initialize FileService: %v", err)
 	}
-
+    
 	profileService := services.NewProfileService(userRepo, fileService)
 	adminService := services.NewAdminService(userRepo)
 	log.Info("init services")
@@ -81,6 +81,6 @@ func main() {
 	admin.Put("/make_admin/:user_id", adminHandler.MakeAdmin)
 	admin.Put("/revoke_admin/:user_id", adminHandler.RevokeAdmin)
 	log.Info("init routes")
-
+    
 	log.Fatal(app.Listen(config.ServerPort))
 }

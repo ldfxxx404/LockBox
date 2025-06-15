@@ -4,7 +4,6 @@ import (
 	"back/config"
 	"back/internal/models"
 	"errors"
-	"flag"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -63,17 +62,14 @@ func CheckSize(used, size int64, limit int) error {
 }
 
 func ParseLoglevelFlags() {
-	debug := flag.Bool("debug", false, "Enable debug logging")
-	info := flag.Bool("info", false, "Enable info logging")
-	errlog := flag.Bool("errlog", false, "Enable error logging")
-	flag.Parse()
+	level := config.Log_level
 
-	switch {
-	case *debug:
+	switch level {
+	case "debug":
 		log.SetLevel(log.LevelDebug)
-	case *info:
+	case "info":
 		log.SetLevel(log.LevelInfo)
-	case *errlog:
+	case "error":
 		log.SetLevel(log.LevelError)
 	default:
 		log.SetLevel(log.LevelWarn)

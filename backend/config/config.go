@@ -18,6 +18,7 @@ var (
 	MinioAccessKey = getEnv("MINIO_ACCESS_KEY", "minioadmin")
 	MinioSecretKey = getEnv("MINIO_SECRET_KEY", "minioadmin123")
 	MinioBucket    = getEnv("MINIO_BUCKET", "uploads")
+	Log_level      = getEnv("LOG_LEVEL", "debug")
 	MinioUseSSL    = getEnv("MINIO_USE_SSL", false)
 )
 
