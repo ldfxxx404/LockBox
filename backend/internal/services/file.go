@@ -29,7 +29,6 @@ func NewFileService(
 	endpoint, accessKey, secretKey, bucket string,
 	useSSL bool,
 ) (*FileService, error) {
-
 	minioClient, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
 		Secure: useSSL,
