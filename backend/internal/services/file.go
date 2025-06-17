@@ -23,7 +23,12 @@ type FileService struct {
 	Bucket   string
 }
 
-func NewFileService(fileRepo repositories.FileRepoInterface, userRepo repositories.UserRepoInterface, endpoint, accessKey, secretKey, bucket string, useSSL bool) (*FileService, error) {
+func NewFileService(
+	fileRepo repositories.FileRepoInterface,
+	userRepo repositories.UserRepoInterface,
+	endpoint, accessKey, secretKey, bucket string,
+	useSSL bool,
+) (*FileService, error) {
 	minioClient, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
 		Secure: useSSL,
@@ -61,6 +66,7 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 		log.Error("open file header", "err", err)
 		return err
 	}
+
 	defer func() {
 		err = file.Close()
 		if err != nil {
@@ -72,9 +78,14 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 	size := fileHeader.Size
 	contentType := fileHeader.Header.Get("Content-Type")
 
-	uploadInfo, err := s.Minio.PutObject(context.Background(), s.Bucket, objectName, file, size, minio.PutObjectOptions{
-		ContentType: contentType,
-	})
+	uploadInfo, err := s.Minio.PutObject(
+		context.Background(),
+		s.Bucket,
+		objectName,
+		file, size,
+		minio.PutObjectOptions{
+			ContentType: contentType,
+		})
 	log.Debug("put object minio:", "upload file info", uploadInfo)
 	if err != nil {
 		log.Error("put object error", "err", err)
@@ -98,7 +109,11 @@ func (s *FileService) ListFiles(userID int) ([]models.File, error) {
 func (s *FileService) GetFilePath(userID int, filename string) (string, error) {
 	objectName := fmt.Sprintf("%d/%s", userID, filename)
 
-	objectInfo, err := s.Minio.StatObject(context.Background(), s.Bucket, objectName, minio.StatObjectOptions{})
+	objectInfo, err := s.Minio.StatObject(
+		context.Background(),
+		s.Bucket,
+		objectName,
+		minio.StatObjectOptions{})
 	log.Debug("stat object minio:", "info of object", objectInfo)
 	if err != nil {
 		log.Error("stat object error", "err", err)
@@ -106,7 +121,12 @@ func (s *FileService) GetFilePath(userID int, filename string) (string, error) {
 	}
 
 	reqParams := make(url.Values)
-	presignedURL, err := s.Minio.PresignedGetObject(context.Background(), s.Bucket, objectName, time.Second*60, reqParams)
+	presignedURL, err := s.Minio.PresignedGetObject(
+		context.Background(),
+		s.Bucket,
+		objectName,
+		time.Second*60,
+		reqParams)
 	if err != nil {
 		log.Error("presigned get objetc error", "err", err)
 		return "", fmt.Errorf("failed to generate link: %w", err)
@@ -117,7 +137,11 @@ func (s *FileService) GetFilePath(userID int, filename string) (string, error) {
 
 func (s *FileService) DeleteFile(userID int, filename string) error {
 	objectName := fmt.Sprintf("%d/%s", userID, filename)
-	err := s.Minio.RemoveObject(context.Background(), s.Bucket, objectName, minio.RemoveObjectOptions{})
+	err := s.Minio.RemoveObject(
+		context.Background(),
+		s.Bucket,
+		objectName,
+		minio.RemoveObjectOptions{})
 	if err != nil {
 		log.Error("error of delete file", "err", err)
 		return errors.New("failed to delete file")
@@ -130,7 +154,10 @@ func (s *FileService) GetStorageInfo(userID int) (usedMB int64, limitMB int, err
 	opts := minio.ListObjectsOptions{Prefix: prefix, Recursive: true}
 
 	var totalSize int64
-	for object := range s.Minio.ListObjects(context.Background(), s.Bucket, opts) {
+	for object := range s.Minio.ListObjects(
+		context.Background(),
+		s.Bucket,
+		opts) {
 		if object.Err != nil {
 			return 0, 0, object.Err
 		}
