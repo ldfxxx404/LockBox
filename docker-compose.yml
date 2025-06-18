@@ -1,4 +1,4 @@
-services:
+иservices:
   postgres:
     container_name: lockbox-postgres
     image: postgres:15-alpine
