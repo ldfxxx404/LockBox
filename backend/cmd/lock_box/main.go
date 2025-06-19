@@ -26,7 +26,7 @@ import (
 // TODO: fix http to https when it need!!!
 // @schemes      http
 func main() {
-	utils.ParseLoglevelFlags()
+	utils.ParseLoglevel()
 	db := database.InitDB()
 
 	app := fiber.New(config.FiberConfig)
