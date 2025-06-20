@@ -32,16 +32,30 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var dto models.RegisterDTO
 	if err := c.BodyParser(&dto); err != nil {
 		log.Error("handler: invalid input", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "invalid input", Error: err.Error()})
+		return c.Status(http.StatusBadRequest).
+			JSON(models.ErrorResponse{
+				Message: "invalid input",
+				Error:   err.Error(),
+			})
 	}
 	user, err := h.AuthServ.Register(dto)
 
 	if err != nil {
 		log.Error("handler: new user register", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
+		return c.Status(http.StatusBadRequest).
+			JSON(models.ErrorResponse{
+				Message: "error",
+				Error:   err.Error(),
+			})
 	}
 	log.Info("new user registration is successful")
-	return c.Status(http.StatusCreated).JSON(models.RegisterMessage{Message: "Registration successful", User: &models.MessageDTO{Id: user.ID, Email: user.Email}})
+	return c.Status(http.StatusCreated).
+		JSON(models.RegisterMessage{
+			Message: "Registration successful",
+			User: &models.MessageDTO{
+				Id:    user.ID,
+				Email: user.Email,
+			}})
 }
 
 // Login godoc
@@ -59,16 +73,30 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var dto models.LoginDTO
 	if err := c.BodyParser(&dto); err != nil {
 		log.Error("handler: parsing request body", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
+		return c.Status(http.StatusBadRequest).
+			JSON(models.ErrorResponse{
+				Message: "error",
+				Error:   err.Error(),
+			})
 	}
 	token, user, err := h.AuthServ.Login(dto)
 	if err != nil {
 		log.Error("handler: user login", "err", err)
-		return c.Status(http.StatusUnauthorized).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
+		return c.Status(http.StatusUnauthorized).
+			JSON(models.ErrorResponse{
+				Message: "error",
+				Error:   err.Error(),
+			})
 	}
 
 	log.Info("login successful")
-	return c.JSON(models.LoginMessage{Message: "Login successful", User: &models.MessageDTO{Id: user.ID, Email: user.Email}, Token: token})
+	return c.JSON(models.LoginMessage{
+		Message: "Login successful",
+		User: &models.MessageDTO{
+			Id:    user.ID,
+			Email: user.Email,
+		},
+		Token: token})
 }
 
 // Logout godoc
@@ -81,5 +109,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 func (h *AuthHandler) Logout(c *fiber.Ctx) error {
 	// Для JWT logout осуществляется на клиентской стороне
 	log.Warn("!!!GET IT IN FRONTEND")
-	return c.JSON(models.SuccessResponse{Message: "Logout succesfull"})
+	return c.JSON(models.SuccessResponse{
+		Message: "Logout succesfull",
+	})
 }
