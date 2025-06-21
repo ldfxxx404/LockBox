@@ -1,12 +1,5 @@
 package main
 
-// @title        LockBox API
-// @version      0.1.1
-// @description  This is the API documentation for LockBox SaaS app.
-// @host         localhost:5000
-// @BasePath     /api
-// TODO: fix http to https when it need!!!
-// @schemes      http
 import (
 	"back/config"
 	"back/internal/database"
@@ -22,11 +15,18 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
-	fiberSwagger "github.com/swaggo/fiber-swagger"
+	swaber "github.com/swaggo/fiber-swagger"
 )
 
+// @title        LockBox API
+// @version      0.1.1
+// @description  This is the API documentation for LockBox SaaS app.
+// @host         localhost:5000
+// @BasePath     /api
+// TODO: fix http to https when it need!!!
+// @schemes      http
 func main() {
-	utils.ParseLoglevelFlags()
+	utils.ParseLoglevel()
 	db := database.InitDB()
 
 	app := fiber.New(config.FiberConfig)
@@ -60,7 +60,7 @@ func main() {
 	adminHandler := handlers.NewAdminHandler(adminService)
 	log.Info("init handlers")
 
-	app.Get("/docs/*", fiberSwagger.WrapHandler)
+	app.Get("/docs/*", swaber.WrapHandler)
 
 	app.Use(limiter.New(config.Limiter))
 

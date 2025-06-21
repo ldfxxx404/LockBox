@@ -3,7 +3,7 @@ services:
     container_name: lockbox-postgres
     image: postgres:15-alpine
     ports:
-      - '6969:5432'
+      - '5432:5432'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -11,6 +11,8 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - lockbox-net
 
   backend:
     container_name: lockbox-backend
@@ -18,14 +20,24 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - '5000'
+      - '5000:5000'
     environment:
-      JWT_SECRET: 82026ea3dfe8af4dbefc8db9495e442870b4408415d2ced47ab8d50b97dd9da203bfae35e9df9f527de3ae117d3af950cc57ae77967aacc9039130b86895a4ae
+      SERVER_PORT: 0.0.0.0:5000
+      STORAGE_LIMIT: 20
+      JWT_SECRET: ${JWT_SECRET}
       POSTGRES_URL: postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
+      MINIO_ENDPOINT: minio:9090
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: uploads
+      LOG_LEVEL: info
     depends_on:
       - postgres
+      - minio
     restart: unless-stopped
     command: ./backend
+    networks:
+      - lockbox-net
 
   frontend:
     container_name: lockbox-frontend
@@ -36,12 +48,36 @@ services:
       - '3000:3000'
     environment:
       NEXT_PUBLIC_SERVER: http://lockbox-backend:5000
-      CHOKIDAR_USEPOLLING: "true"
-      WATCHPACK_POLLING: "true"
       NODE_ENV: production
     depends_on:
       - backend
     restart: unless-stopped
+    networks:
+      - lockbox-net
+
+  minio:
+    container_name: lockbox-minio
+    image: minio/minio:latest
+    ports:
+      - '9090:9090'
+      - '9091:9091'
+    volumes:
+      - miniodata:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    command: server /data --address ":9090" --console-address ":9091"
+    restart: always
+    networks:
+      - lockbox-net
 
 volumes:
   pgdata:
+    name: lockbox-pg-data
+  miniodata:
+    name: lockbox-minio-data
+
+networks:
+  lockbox-net:
+    name: lockbox-net
+    driver: bridge

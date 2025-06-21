@@ -4,6 +4,7 @@ import (
 	"back/internal/models"
 	"back/internal/services"
 	"back/internal/utils"
+	"fmt"
 	"net/http"
 	"net/url"
 
@@ -39,22 +40,37 @@ func (h *FileHandler) Upload(c *fiber.Ctx) error {
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
 		log.Error("handler: error of formFile upload", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "File is required", Error: err.Error()})
+		return c.Status(http.StatusBadRequest).
+			JSON(models.ErrorResponse{
+				Message: "File is required",
+				Error:   err.Error(),
+			})
 	}
 
 	err = utils.CheckSize(usedMB, fileHeader.Size, limitMB)
 	if err != nil {
 		log.Error("handler: check file size", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
+		return c.Status(http.StatusBadRequest).
+			JSON(models.ErrorResponse{
+				Message: "error",
+				Error:   err.Error(),
+			})
 	}
 
 	err = h.FileServ.UploadFile(userID, fileHeader)
 	if err != nil {
 		log.Error("handler: upload user file", "err", err)
-		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
+		return c.Status(http.StatusInternalServerError).
+			JSON(models.ErrorResponse{
+				Message: "error",
+				Error:   err.Error(),
+			})
 	}
 	log.Info("success file upload")
-	return c.JSON(models.FileUpload{Message: "File upload", FileName: fileHeader.Filename})
+	return c.JSON(models.FileUpload{
+		Message:  "File upload",
+		FileName: fileHeader.Filename,
+	})
 }
 
 // ListFiles godoc
@@ -71,12 +87,20 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	files, err := h.FileServ.ListFiles(userID)
 	if err != nil {
 		log.Error("handler: list users files", "err", err)
-		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
+		return c.Status(http.StatusInternalServerError).
+			JSON(models.ErrorResponse{
+				Message: "error",
+				Error:   err.Error(),
+			})
 	}
 	usedMB, limitMB, err := h.FileServ.GetStorageInfo(userID)
 	if err != nil {
 		log.Error("handler: get storage info", "err", err)
-		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
+		return c.Status(http.StatusInternalServerError).
+			JSON(models.ErrorResponse{
+				Message: "error",
+				Error:   err.Error(),
+			})
 	}
 	var filenames []string
 	for _, file := range files {
@@ -84,7 +108,12 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	}
 
 	log.Info("success list files users")
-	return c.JSON(models.ListFile{Files: filenames, Storage: &models.ListFileUsed{Used: usedMB, Limit: limitMB}})
+	return c.JSON(models.ListFile{
+		Files: filenames,
+		Storage: &models.ListFileUsed{
+			Used:  usedMB,
+			Limit: limitMB,
+		}})
 }
 
 // Download godoc
@@ -105,16 +134,29 @@ func (h *FileHandler) Download(c *fiber.Ctx) error {
 	decodedFilename, err := url.QueryUnescape(filename)
 	if err != nil {
 		log.Error("handler: get query of files", "err", err)
-		return c.Status(http.StatusBadRequest).JSON(models.ErrorResponse{Message: "Invalid filename", Error: err.Error()})
+		return c.Status(http.StatusBadRequest).
+			JSON(models.ErrorResponse{
+				Message: "Invalid filename",
+				Error:   err.Error(),
+			})
 	}
 
-	filePath, err := h.FileServ.GetFilePath(userID, decodedFilename)
+	data, err := h.FileServ.GetFile(userID, decodedFilename)
 	if err != nil {
-		log.Error("handler: get file path", "err", err)
-		return c.Status(http.StatusNotFound).JSON(models.ErrorResponse{Message: "File not found", Error: err.Error()})
+		log.Error("handler: get file data", "err", err)
+		return c.Status(http.StatusNotFound).
+			JSON(models.ErrorResponse{
+				Message: "File not found",
+				Error:   err.Error(),
+			})
 	}
+
 	log.Info("success download file")
-	return c.SendFile(filePath, false)
+
+	c.Set("Content-Type", "application/octet-stream")
+	c.Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, decodedFilename))
+
+	return c.Send(data)
 }
 
 // Delete godoc
@@ -133,7 +175,11 @@ func (h *FileHandler) Delete(c *fiber.Ctx) error {
 	err := h.FileServ.DeleteFile(userID, filename)
 	if err != nil {
 		log.Error("handler: delete files", "err", err)
-		return c.Status(http.StatusInternalServerError).JSON(models.ErrorResponse{Message: "error", Error: err.Error()})
+		return c.Status(http.StatusInternalServerError).
+			JSON(models.ErrorResponse{
+				Message: "error",
+				Error:   err.Error(),
+			})
 	}
 	return c.JSON(models.SuccessResponse{Message: "File delited"})
 }

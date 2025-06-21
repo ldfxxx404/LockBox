@@ -6,9 +6,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"mime/multipart"
-	"net/url"
-	"time"
 
 	"github.com/gofiber/fiber/v2/log"
 
@@ -29,7 +28,6 @@ func NewFileService(
 	endpoint, accessKey, secretKey, bucket string,
 	useSSL bool,
 ) (*FileService, error) {
-
 	minioClient, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
 		Secure: useSSL,
@@ -106,31 +104,24 @@ func (s *FileService) ListFiles(userID int) ([]models.File, error) {
 	return s.FileRepo.GetFilesByUser(userID)
 }
 
-func (s *FileService) GetFilePath(userID int, filename string) (string, error) {
+func (s *FileService) GetFile(userID int, filename string) ([]byte, error) {
 	objectName := fmt.Sprintf("%d/%s", userID, filename)
 
-	objectInfo, err := s.Minio.StatObject(context.Background(),
+	obj, err := s.Minio.GetObject(context.Background(),
 		s.Bucket,
 		objectName,
-		minio.StatObjectOptions{})
-	log.Debug("stat object minio:", "info of object", objectInfo)
+		minio.GetObjectOptions{})
 	if err != nil {
-		log.Error("stat object error", "err", err)
-		return "", fmt.Errorf("file not found: %w", err)
+		return nil, fmt.Errorf("get object error: %w", err)
 	}
 
-	reqParams := make(url.Values)
-	presignedURL, err := s.Minio.PresignedGetObject(context.Background(),
-		s.Bucket,
-		objectName,
-		time.Second*60,
-		reqParams)
+	defer func() { _ = obj.Close() }()
+	data, err := io.ReadAll(obj)
 	if err != nil {
-		log.Error("presigned get objetc error", "err", err)
-		return "", fmt.Errorf("failed to generate link: %w", err)
+		return nil, fmt.Errorf("failed to read object: %w", err)
 	}
 
-	return presignedURL.String(), nil
+	return data, nil
 }
 
 func (s *FileService) DeleteFile(userID int, filename string) error {

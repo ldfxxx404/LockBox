@@ -24,7 +24,7 @@ down_force:
 init: down_force build up
 	@echo "Инициализация завершена"
 
-init_deploy:
+init_prod:
 	$(DOCKER_COMPOSE) -f docker-compose.prod.yml down --volumes --remove-orphans
 	$(DOCKER_COMPOSE) -f docker-compose.prod.yml build --no-cache
 	$(DOCKER_COMPOSE) -f docker-compose.prod.yml up -d
@@ -125,4 +125,4 @@ test_frontend:
 test_backend:
 	docker exec $(BACKEND_NAME) go test ./internal/services/ -v
 
-.PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs console_front test_backend
+.PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs console_front test_backend  

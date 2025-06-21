@@ -61,7 +61,7 @@ func CheckSize(used, size int64, limit int) error {
 	return nil
 }
 
-func ParseLoglevelFlags() {
+func ParseLoglevel() {
 	level := config.LogLevel
 
 	switch level {
