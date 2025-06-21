@@ -4,6 +4,7 @@ import (
 	"back/internal/models"
 	"back/internal/services"
 	"back/internal/utils"
+	"fmt"
 	"net/http"
 	"net/url"
 
@@ -140,17 +141,22 @@ func (h *FileHandler) Download(c *fiber.Ctx) error {
 			})
 	}
 
-	filePath, err := h.FileServ.GetFilePath(userID, decodedFilename)
+	data, err := h.FileServ.GetFile(userID, decodedFilename)
 	if err != nil {
-		log.Error("handler: get file path", "err", err)
+		log.Error("handler: get file data", "err", err)
 		return c.Status(http.StatusNotFound).
 			JSON(models.ErrorResponse{
 				Message: "File not found",
 				Error:   err.Error(),
 			})
 	}
+
 	log.Info("success download file")
-	return c.SendFile(filePath, false)
+
+	c.Set("Content-Type", "application/octet-stream")
+	c.Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, decodedFilename))
+
+	return c.Send(data)
 }
 
 // Delete godoc
