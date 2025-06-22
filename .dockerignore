@@ -1,6 +1,9 @@
+.github
 .vscode
 .idea
-/backend/storage
 Makefile
 README.md
+docker-compose.yml
+docker-compose.prod.yml
 todo.txt
+.gitignore

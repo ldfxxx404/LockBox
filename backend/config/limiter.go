@@ -8,5 +8,5 @@ import (
 
 var Limiter = limiter.Config{
 	Expiration: 10 * time.Second,
-	Max:        5,
+	Max:        FiberLimitReq,
 }
