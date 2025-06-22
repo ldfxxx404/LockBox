@@ -1,10 +1,10 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"strconv"
-	"time"
+
+	"github.com/gofiber/fiber/v2/log"
 )
 
 var (
@@ -20,6 +20,8 @@ var (
 	MinioBucket    = getEnv("MINIO_BUCKET", "uploads")
 	LogLevel       = getEnv("LOG_LEVEL", "debug")
 	MinioUseSSL    = getEnv("MINIO_USE_SSL", false)
+	FiberLimitBody = getEnv("BODY_LIMIT_MB", 20)
+	FiberLimitReq  = getEnv("FIBER_LIMIT_REQ", 5)
 )
 
 func getEnv[T any](key string, fallback T) T {
@@ -46,13 +48,8 @@ func getEnv[T any](key string, fallback T) T {
 		if err == nil {
 			return any(b).(T)
 		}
-	case time.Duration:
-		d, err := time.ParseDuration(val)
-		if err == nil {
-			return any(d).(T)
-		}
 	default:
-		fmt.Printf("Unsupported type for key %s\n", key)
+		log.Fatalf("Unsupported type for key %s\n", key)
 	}
 	return fallback
 }

@@ -18,10 +18,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go install github.com/swaggo/swag/cmd/swag@latest
 RUN go install github.com/pressly/goose/v3/cmd/goose@latest
-
-RUN swag init -g /cmd/lock_box/main.go --output /cmd/swagger/
 
 RUN go build -o backend ./cmd/lock_box/main.go
 

@@ -3,7 +3,7 @@ services:
     container_name: lockbox-postgres
     image: postgres:15-alpine
     ports:
-      - '5432:5432'
+      - '5432'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -20,9 +20,10 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - '5000:5000'
+      - '5000'
     environment:
       SERVER_PORT: 0.0.0.0:5000
+      BODY_LIMIT_MB: 20
       STORAGE_LIMIT: 20
       JWT_SECRET: ${JWT_SECRET}
       POSTGRES_URL: postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
@@ -48,7 +49,7 @@ services:
       - '3000:3000'
     environment:
       NEXT_PUBLIC_SERVER: http://lockbox-backend:5000
-      NODE_ENV: production
+      NODE_ENV: ${NODE_ENV}
     depends_on:
       - backend
     restart: unless-stopped
@@ -59,7 +60,7 @@ services:
     container_name: lockbox-minio
     image: minio/minio:latest
     ports:
-      - '9090:9090'
+      - '9090'
       - '9091:9091'
     volumes:
       - miniodata:/data
@@ -70,7 +71,7 @@ services:
     restart: always
     networks:
       - lockbox-net
-
+# TODO: add nginx as a revers proxy & entry point
 volumes:
   pgdata:
     name: lockbox-pg-data

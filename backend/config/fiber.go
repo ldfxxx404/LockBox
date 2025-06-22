@@ -5,5 +5,5 @@ import (
 )
 
 var FiberConfig = fiber.Config{
-	BodyLimit: 20 * 1024 * 1024,
+	BodyLimit: FiberLimitBody * 1024 * 1024,
 }

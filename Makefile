@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-DOCKER_COMPOSE := $(shell command -v "docker compose" >/dev/null 2>&1 && echo "docker compose" || echo "docker-compose")
+DOCKER_COMPOSE := docker compose
 
 BACKEND_NAME=lockbox-backend
 FRONTEND_NAME=lockbox-frontend
@@ -24,8 +24,7 @@ down_force:
 init: down_force build up
 	@echo "Инициализация завершена"
 
-init_prod:
-	$(DOCKER_COMPOSE) -f docker-compose.prod.yml down --volumes --remove-orphans
+init_prod: down_force 
 	$(DOCKER_COMPOSE) -f docker-compose.prod.yml build --no-cache
 	$(DOCKER_COMPOSE) -f docker-compose.prod.yml up -d
 
