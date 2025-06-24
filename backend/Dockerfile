@@ -4,6 +4,7 @@ WORKDIR /app
 
 RUN apk add --no-cache \
     gcc \
+    bash \
     musl-dev \
     libc-dev \
     make \

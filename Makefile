@@ -33,14 +33,17 @@ build:
 
 restart: down up
 
+console_bd:
+	docker exec -it ${POSTGRES_NAME} bash
+
 console_backend:
-	docker exec -it ${BACKEND_NAME} sh
+	docker exec -it ${BACKEND_NAME} bash
 
 console_minio:
-	docker exec -it ${MINIO_NAME} sh
+	docker exec -it ${MINIO_NAME} bash
 
 console_front:
-	docker exec -it ${FRONTEND_NAME} sh
+	docker exec -it ${FRONTEND_NAME} bash
 
 frontend_logs:
 	$(DOCKER_COMPOSE) logs -f frontend
