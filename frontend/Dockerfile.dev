@@ -2,12 +2,12 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci --silent  
+RUN apk add --no-cache \
+    bash 
+
+COPY package*.json ./
+RUN npm ci
 
 COPY . .
-
-RUN chown -R node:node /app
-USER node
 
 CMD ["npm", "run", "dev"]

@@ -33,14 +33,17 @@ build:
 
 restart: down up
 
+console_bd:
+	docker exec -it ${POSTGRES_NAME} ${SHELL}
+
 console_backend:
-	docker exec -it ${BACKEND_NAME} sh
+	docker exec -it ${BACKEND_NAME} ${SHELL}
 
 console_minio:
-	docker exec -it ${MINIO_NAME} sh
+	docker exec -it ${MINIO_NAME} ${SHELL}
 
 console_front:
-	docker exec -it ${FRONTEND_NAME} sh
+	docker exec -it ${FRONTEND_NAME} ${SHELL}
 
 frontend_logs:
 	$(DOCKER_COMPOSE) logs -f frontend
@@ -71,6 +74,12 @@ restart_db:
 	$(DOCKER_COMPOSE) rm -f postgres
 	$(DOCKER_COMPOSE) build --no-cache postgres
 	$(DOCKER_COMPOSE) up -d --no-deps postgres
+
+dump:
+	./backend/scripts/dump.sh 
+
+restore: 
+	./backend/scripts/restore_dump.sh 
 
 help:
 	@echo "make up                              - Запуск всех сервисов в фоне"
