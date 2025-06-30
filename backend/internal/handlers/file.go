@@ -171,7 +171,7 @@ func (h *FileHandler) Download(c *fiber.Ctx) error {
 // @Router       /delete/{filename} [delete]
 func (h *FileHandler) Delete(c *fiber.Ctx) error {
 	userID := utils.GetUserID(c)
-	filename := c.Params("filename")
+	filename, _ := url.QueryUnescape(c.Params("filename"))
 	err := h.FileServ.DeleteFile(userID, filename)
 	if err != nil {
 		log.Error("handler: delete files", "err", err)
