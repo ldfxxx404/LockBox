@@ -1,5 +1,3 @@
-import { REGISTER_URL } from '../constants/api'
-
 interface RegistrationPayload {
   email: string
   name: string
@@ -7,16 +5,19 @@ interface RegistrationPayload {
 }
 
 export async function UsrReg(data: RegistrationPayload) {
-  const res = await fetch(REGISTER_URL, {
+  const res = await fetch('/api/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
   })
+
+  const json = await res.json().catch(() => ({}))
+
   if (!res.ok) {
-    const error = await res.json()
-    throw new Error(error.message || 'Registration fault nya register.ts')
+    throw new Error(json.message || 'Registration failed')
   }
-  return await res.json()
+
+  return json
 }

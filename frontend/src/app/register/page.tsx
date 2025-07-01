@@ -1,12 +1,9 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { UsrReg } from '../api/register'
-import { LOGIN_URL } from '../constants/api'
+import { UsrReg } from '../lib/ClentRegister'
 
 export default function RegisterPage() {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
@@ -15,7 +12,6 @@ export default function RegisterPage() {
     ev.preventDefault()
     try {
       await UsrReg({ email, name, password })
-      router.push(LOGIN_URL)
     } catch (err) {
       console.log('reg fault retry!')
     }
