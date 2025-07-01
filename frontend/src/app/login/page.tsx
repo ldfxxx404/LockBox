@@ -89,8 +89,7 @@ export default function LoginPage() {
             color: '#bcbcbc',
             textAlign: 'center',
           }}
-        >
-        </div>
+        ></div>
       </div>
     </main>
   )

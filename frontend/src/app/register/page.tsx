@@ -1,12 +1,43 @@
 export default function RegisterPage() {
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--background)' }}>
-      <div style={{ background: '#343746', padding: '2.5rem 2rem', borderRadius: 12, boxShadow: '0 2px 16px 0 #0002', minWidth: 400, maxWidth: '90vw', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <h1 style={{ color: 'var(--foreground)', fontSize: 32, marginBottom: 32 }}>Registration</h1>
-        <form style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 18 }}>
+    <main
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--background)',
+      }}
+    >
+      <div
+        style={{
+          background: '#343746',
+          padding: '2.5rem 2rem',
+          borderRadius: 12,
+          boxShadow: '0 2px 16px 0 #0002',
+          minWidth: 400,
+          maxWidth: '90vw',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <h1
+          style={{ color: 'var(--foreground)', fontSize: 32, marginBottom: 32 }}
+        >
+          Registration
+        </h1>
+        <form
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 18,
+          }}
+        >
           <input
-            type="email"
-            placeholder="Email"
+            type='email'
+            placeholder='Email'
             required
             style={{
               background: '#44475a',
@@ -20,8 +51,8 @@ export default function RegisterPage() {
             }}
           />
           <input
-            type="text"
-            placeholder="Name"
+            type='text'
+            placeholder='Name'
             required
             style={{
               background: '#44475a',
@@ -35,8 +66,8 @@ export default function RegisterPage() {
             }}
           />
           <input
-            type="password"
-            placeholder="Password"
+            type='password'
+            placeholder='Password'
             required
             style={{
               background: '#44475a',
@@ -50,7 +81,7 @@ export default function RegisterPage() {
             }}
           />
           <button
-            type="submit"
+            type='submit'
             style={{
               background: '#6272a4',
               color: '#fff',
@@ -68,5 +99,5 @@ export default function RegisterPage() {
         </form>
       </div>
     </main>
-  );
+  )
 }
