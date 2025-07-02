@@ -6,7 +6,7 @@ import { REGISTER_URL } from '../constants/api'
 import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
-  const router = useRouter();
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
