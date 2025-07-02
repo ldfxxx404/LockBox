@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(json, { status: apiRes.status })
   } catch (err: any) {
-    console.error('Error in API route /api/register:', err)
+    console.error(`Error in API route ${REGISTER_URL}`, err)
     return NextResponse.json(
       { message: 'Internal server error', detail: err.message },
       { status: 500 }
