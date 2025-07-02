@@ -4,7 +4,7 @@ interface RegistrationPayload {
   password: string
 }
 
-export async function UsrReg(data: RegistrationPayload) {
+export async function UserRegister(data: RegistrationPayload) {
   const res = await fetch('/api/register', {
     method: 'POST',
     headers: {

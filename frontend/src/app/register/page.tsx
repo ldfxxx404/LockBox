@@ -1,7 +1,7 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { UsrReg } from '../lib/ClentRegister'
+import { UserRegister } from '../lib/clientRegister'
 import { REGISTER_URL } from '../constants/api'
 import { useRouter } from 'next/navigation'
 
@@ -14,7 +14,7 @@ export default function RegisterPage() {
   const handleSubmitRegistration = async (ev: FormEvent) => {
     ev.preventDefault()
     try {
-      await UsrReg({ email, name, password })
+      await UserRegister({ email, name, password })
       router.push('/login')
     } catch (err) {
       console.log('Registration fault URL:', REGISTER_URL)
