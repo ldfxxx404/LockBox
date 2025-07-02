@@ -33,20 +33,20 @@ func NewFileService(
 		Secure: useSSL,
 	})
 	if err != nil {
-		log.Error("minio openssl connect err", "err", err)
+		log.Error("minio openssl connect err", err)
 		return nil, err
 	}
 
 	ctx := context.Background()
 	exists, err := minioClient.BucketExists(ctx, bucket)
 	if err != nil {
-		log.Error("bucket exist check error", "err", err)
+		log.Error("bucket exist check error", err)
 		return nil, err
 	}
 	if !exists {
 		err = minioClient.MakeBucket(ctx, bucket, minio.MakeBucketOptions{})
 		if err != nil {
-			log.Error("make bucket error", "err", err)
+			log.Error("make bucket error", err)
 			return nil, err
 		}
 	}
@@ -62,13 +62,13 @@ func NewFileService(
 func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) error {
 	file, err := fileHeader.Open()
 	if err != nil {
-		log.Error("open file header", "err", err)
+		log.Error("open file header", err)
 		return err
 	}
 	defer func() {
 		err = file.Close()
 		if err != nil {
-			log.Error("file close error", "err", err)
+			log.Error("file close error", err)
 		}
 	}()
 
@@ -86,7 +86,7 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 		})
 	log.Debug("put object minio:", "upload file info", uploadInfo)
 	if err != nil {
-		log.Error("put object error", "err", err)
+		log.Error("put object error", err)
 		return err
 	}
 
@@ -131,7 +131,7 @@ func (s *FileService) DeleteFile(userID int, filename string) error {
 		objectName,
 		minio.RemoveObjectOptions{})
 	if err != nil {
-		log.Error("error of delete file", "err", err)
+		log.Error("error of delete file", err)
 		return errors.New("failed to delete file")
 	}
 	return s.FileRepo.DeleteFile(userID, filename)
@@ -152,7 +152,7 @@ func (s *FileService) GetStorageInfo(userID int) (usedMB int64, limitMB int, err
 
 	user, err := s.UserRepo.GetByID(userID)
 	if err != nil {
-		log.Error("error of use repo", "err", err)
+		log.Error("error of use repo", err)
 		return 0, 0, err
 	}
 	limitMB = user.StorageLimit
