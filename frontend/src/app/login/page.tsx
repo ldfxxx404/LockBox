@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LOGIN_URL } from '../constants/api'
+import { UserLogin } from '../lib/clientLogin'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -11,16 +12,10 @@ export default function LoginPage() {
 
   const handleSubmitLogin = async (ev: FormEvent) => {
     ev.preventDefault()
-
-    const response = await fetch(LOGIN_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
-    if (response.ok) {
-      router.push('/')
-    } else {
-      console.log('error')
+    try {
+      await UserLogin({ email, password })
+    } catch (err) {
+      console.log('Login failed URL: ', LOGIN_URL)
     }
   }
 
