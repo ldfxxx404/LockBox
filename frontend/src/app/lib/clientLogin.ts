@@ -1,16 +1,19 @@
-interface loginUserPayload {
+interface loginPayload {
   email: string
   password: string
 }
 
-export async function UserLogin(data: loginUserPayload) {
-  const response = await fetch('/api/login', {
+export async function UserLogin(data: loginPayload) {
+  const res = await fetch('/api/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   })
-  if (!response.ok) {
-    throw new Error('Login failed')
+
+  const json = await res.json().catch(() => ({}))
+
+  if (!res.ok) {
+    throw new Error(json.message || 'Login failed')
   }
-  return response.json()
+  return json
 }
