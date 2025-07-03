@@ -1,18 +1,20 @@
 import { LOGIN_URL } from '@/app/constants/api'
 import { NextResponse } from 'next/server'
 
-export async function getLoginResponseHandler(req: Request) {
+export async function POST(req: Request) {
   try {
     const body = await req.json()
 
-    const res = await fetch(LOGIN_URL, {
+    const apiRes = await fetch(LOGIN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'Application/json' },
       body: JSON.stringify(body),
     })
 
-    const json = await res.json()
+    const json = await apiRes.json()
     console.log('Backend response: ', json)
+    return NextResponse.json(json, { status: apiRes.status })
+
   } catch (err: any) {
     console.error(`Error in API route ${LOGIN_URL}`, err)
     return NextResponse.json(
