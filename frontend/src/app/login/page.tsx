@@ -14,7 +14,7 @@ export default function LoginPage() {
     ev.preventDefault()
     try {
       await UserLogin({ email, password })
-      router.push('/user_profile')
+      router.push('/profile')
     } catch (err) {
       console.log('Login failed URL: ', LOGIN_URL)
     }
