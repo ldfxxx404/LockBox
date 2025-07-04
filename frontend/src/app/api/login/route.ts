@@ -16,11 +16,11 @@ export async function POST(req: Request) {
     const json = await apiRes.json()
     console.log('Backend response: ', json)
     return NextResponse.json(json, { status: apiRes.status })
-
-  } catch (err: any) {
+  } catch (err) {
+    const error = err as Error
     console.error(`Error in API route ${LOGIN_URL}`, err)
     return NextResponse.json(
-      { message: 'Internal server error', detail: err.message },
+      { message: 'Internal server error', detail: error.message },
       { status: 500 }
     )
   }

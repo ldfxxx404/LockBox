@@ -31,7 +31,8 @@ export async function UserLogin(data: loginPayload) {
     }
 
     return json
-  } catch (error: any) {
+  } catch (err) {
+    const error = err as Error
     throw new Error(error?.message || 'Network Error')
   }
 }

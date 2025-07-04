@@ -2,12 +2,11 @@ import { jwtDecode, JwtPayload } from 'jwt-decode'
 import { useMemo } from 'react'
 
 interface MyTokenPayload extends JwtPayload {
-user_id: string
+  user_id: string
 }
 export const useDecodedPayload = (): MyTokenPayload | null => {
-
   return useMemo(() => {
-    const tokenPayload = localStorage.getItem('token',)
+    const tokenPayload = localStorage.getItem('token')
     if (!tokenPayload) return null
 
     try {

@@ -17,7 +17,7 @@ export default function RegisterPage() {
       await UserRegister({ email, name, password })
       router.push('/login')
     } catch (err) {
-      console.log('Registration fault URL:', REGISTER_URL)
+      console.log('Registration fault URL:', REGISTER_URL, err)
     }
   }
 
