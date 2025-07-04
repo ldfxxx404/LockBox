@@ -18,22 +18,23 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Установка зависимостей
-        run: npm install
+      - name: Установка зависимостей с помощью Yarn
+        run: yarn install
         working-directory: ./frontend
 
       - name: Запуск проверки типов
-        run: npm run types:check
+        run: yarn types:check
         working-directory: ./frontend
 
       - name: Запуск проверки стиля кода
-        run: npm run prettier:check
+        run: yarn prettier:check
         working-directory: ./frontend
 
       - name: Запуск линтера
-        run: npm run eslint:check
+        run: yarn eslint:check
         working-directory: ./frontend
 
       - name: Запуск билда
-        run: npm run build
+        run: yarn build
         working-directory: ./frontend
+
