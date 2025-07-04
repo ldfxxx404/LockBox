@@ -19,5 +19,5 @@ export async function UserRegister(data: RegistrationPayload) {
     throw new Error(json.message || 'Registration failed')
   }
 
-  return json 
+  return json
 }
