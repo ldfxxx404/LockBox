@@ -1,17 +1,24 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function UserProfile() {
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    router.push('/')
+  }
+  
+  const router = useRouter();
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
 
   useEffect(() => {
-    const name = localStorage.getItem('name')
-    const email = localStorage.getItem('email')
+    const token = localStorage.getItem('token')
 
-    if (name && email) {
-      setName(name)
-      setEmail(email)
+    if (!token) {
+      router.push('/404')
     }
   }, [])
 
@@ -47,7 +54,7 @@ export default function UserProfile() {
           <button className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'>
             Download
           </button>
-          <button className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'>
+          <button className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg' onClick={handleLogout}>
             Logout
           </button>
         </div>
