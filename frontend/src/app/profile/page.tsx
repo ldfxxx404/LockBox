@@ -1,28 +1,26 @@
 'use client'
-import { use, useEffect, useState} from "react"  
+import { use, useEffect, useState } from 'react'
 
 export default function UserProfile() {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
 
-const [name, setName] = useState('');
-const [email, setEmail] = useState('');
+  useEffect(() => {
+    const name = localStorage.getItem('name')
+    const email = localStorage.getItem('email')
 
-useEffect(() => {
-  const name = localStorage.getItem('name')
-  const email = localStorage.getItem('email')
-
-  if (name && email) {
-    setName(name) 
-    setEmail(email)
-  }
-
-}, [])
+    if (name && email) {
+      setName(name)
+      setEmail(email)
+    }
+  }, [])
 
   return (
     <div className='min-h-screen bg-[#232536] flex flex-col items-center py-10'>
       <div className='flex items-center gap-6 bg-[#2d2f44] px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl border-b border-[#35364a]'>
         <div className='flex-shrink-0'>
           <div className='w-20 h-20 rounded-full bg-[#35364a] border-4 border-indigo-400 flex items-center justify-center text-3xl font-bold text-indigo-300'>
-            LB 
+            LB
           </div>
         </div>
         <div>
