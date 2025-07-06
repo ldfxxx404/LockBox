@@ -1,5 +1,5 @@
 'use client'
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function UserProfile() {
   const [name, setName] = useState('')
