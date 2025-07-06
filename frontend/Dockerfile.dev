@@ -2,12 +2,12 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-RUN apk add --no-cache \
-    bash 
+RUN apk add --no-cache bash
 
-COPY package*.json ./
-RUN npm ci
+COPY package.json yarn.lock ./
+
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "dev"]
