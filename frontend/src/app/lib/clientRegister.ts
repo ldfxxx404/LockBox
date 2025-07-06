@@ -15,7 +15,10 @@ export async function UserRegister(data: RegistrationPayload) {
 
   const json = await res.json().catch(() => ({}))
 
-  if (!res.ok) {
+  if (res.ok) {
+    localStorage.setItem('email', JSON.stringify(data.email))
+    localStorage.setItem('name', JSON.stringify(data.name))
+  } else {
     throw new Error(json.message || 'Registration failed')
   }
 
