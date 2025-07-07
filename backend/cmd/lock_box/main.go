@@ -30,7 +30,7 @@ func main() {
 	db := database.InitDB()
 
 	app := fiber.New(config.FiberConfig)
-	log.Infof("create new fiber config with settings")
+	log.Info("create new fiber config with settings")
 
 	userRepo := repositories.NewUserRepo(db)
 	fileRepo := repositories.NewFileRepo(db)
