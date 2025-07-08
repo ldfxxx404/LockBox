@@ -1,4 +1,4 @@
-FROM node:18-alpine AS builder
+FROM node:current-alpine AS builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN yarn install
 COPY . .
 RUN yarn build
 
-FROM node:18-alpine AS runner
+FROM node:current-alpine AS runner
 
 WORKDIR /app
 

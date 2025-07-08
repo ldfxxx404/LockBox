@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-DOCKER_COMPOSE := docker compose
+DOCKER_COMPOSE := @docker compose
 
 BACKEND_NAME=lockbox-backend
 FRONTEND_NAME=lockbox-frontend
