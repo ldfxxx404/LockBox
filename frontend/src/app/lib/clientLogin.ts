@@ -11,7 +11,6 @@ export async function UserLogin(data: loginPayload) {
       body: JSON.stringify(data),
     })
 
-    // Пытаемся распарсить JSON, если не получилось — json останется пустым объектом
     const json = await res.json().catch(() => ({}))
 
     if (!res.ok) {
@@ -22,10 +21,8 @@ export async function UserLogin(data: loginPayload) {
       throw new Error(message || 'Login failed')
     }
     try {
-      // Логика для парсинга токена
       const token = json.token
-      console.log('token: ', token)
-      localStorage.setItem('token', token)
+      sessionStorage.setItem('token', token)
     } catch (error) {
       console.log('Error get token', error)
     }
