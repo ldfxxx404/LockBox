@@ -3,38 +3,30 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function UserProfile() {
+const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const router = useRouter()
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
+    sessionStorage.removeItem('token')
     router.push('/')
   }
-  
-  const router = useRouter();
-
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
 
     if (!token) {
       router.push('/404')
+    } else {
+      setIsCheckingAuth(false)
     }
   }, [])
 
+  if (isCheckingAuth) {
+    return <div>Status check</div> // отдельная страница для проверки на авторизацию
+  }
+
   return (
     <div className='min-h-screen bg-[#232536] flex flex-col items-center py-10'>
-      <div className='flex items-center gap-6 bg-[#2d2f44] px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl border-b border-[#35364a]'>
-        <div className='flex-shrink-0'>
-          <div className='w-20 h-20 rounded-full bg-[#35364a] border-4 border-indigo-400 flex items-center justify-center text-3xl font-bold text-indigo-300'>
-            LB
-          </div>
-        </div>
-        <div>
-          <h2 className='text-2xl font-semibold text-white mb-1'>{name}</h2>
-          <p className='text-[#b0b3c6]'>{email}</p>{' '}
-        </div>
-      </div>
       <div className='bg-[#2d2f44] mt-8 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl'>
         <h3 className='text-indigo-400 text-lg font-semibold mb-4'>
           User storage information
@@ -54,7 +46,10 @@ export default function UserProfile() {
           <button className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'>
             Download
           </button>
-          <button className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg' onClick={handleLogout}>
+          <button
+            className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'
+            onClick={handleLogout}
+          >
             Logout
           </button>
         </div>
