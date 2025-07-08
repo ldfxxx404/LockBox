@@ -19,7 +19,7 @@ export default function UserProfile() {
     } else {
       setIsCheckingAuth(false)
     }
-  }, [])
+  }, [router])
 
   if (isCheckingAuth) {
     return <div>Status check</div> // отдельная страница для проверки на авторизацию
