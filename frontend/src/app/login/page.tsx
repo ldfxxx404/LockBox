@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LOGIN_URL } from '../constants/api'
 import { UserLogin } from '../lib/clientLogin'
+import { Button } from '../components/ActionButton'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -44,12 +45,7 @@ export default function LoginPage() {
             required
             className='bg-[#44475a] text-foreground border-none rounded-lg py-3 px-4 text-base outline-none'
           />
-          <button
-            type='submit'
-            className='bg-[#6272a4] text-white border-none rounded-lg py-[0.7rem] text-lg mt-2 cursor-pointer transition-colors duration-200 hover:bg-[#5761a0]'
-          >
-            Sign in
-          </button>
+          <Button label='Sign In' type='submit' />
         </form>
         <div className='mt-[18px] text-[13px] text-[#bcbcbc] text-center'></div>
       </div>

@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react'
 import { UserRegister } from '../lib/clientRegister'
 import { REGISTER_URL } from '../constants/api'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/app/components/ActionButton'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -50,12 +51,7 @@ export default function RegisterPage() {
             required
             className='bg-[#44475a] text-foreground border-none rounded-lg py-3 px-4 text-base outline-none'
           />
-          <button
-            type='submit'
-            className='bg-[#6272a4] text-white border-none rounded-lg py-[0.7rem] text-lg mt-2 cursor-pointer transition-colors duration-200 hover:bg-[#5761a0]'
-          >
-            Sign up
-          </button>
+          <Button label='Sign Up' type='submit' />
         </form>
       </div>
     </main>
