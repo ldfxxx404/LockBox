@@ -17,26 +17,50 @@ func NewAdminService(repo repositories.UserRepoInterface) *AdminService {
 }
 
 func (s *AdminService) GetAllUsers() ([]models.User, error) {
-	model, err := s.UserRepo.GetAll()
+	users, err := s.UserRepo.GetAll()
 	if err != nil {
-		log.Debug(err)
-		log.Error("get all users fetch", "err", err)
+		log.Error("AdminService: failed to get all users", "err", err)
 		return nil, err
 	}
-	return model, nil
+	log.Info("AdminService: successfully fetched all users", "count", len(users))
+	return users, nil
 }
 
 func (s *AdminService) UpdateStorageLimit(userID, newLimit int) error {
 	if newLimit <= 0 {
-		return errors.New("invalid storage limit")
+		err := errors.New("invalid storage limit: must be greater than zero")
+		log.Error("AdminService: update storage limit failed", "user_id", userID, "new_limit", newLimit, "err", err)
+		return err
 	}
-	return s.UserRepo.UpdateStorageLimit(userID, newLimit)
+
+	err := s.UserRepo.UpdateStorageLimit(userID, newLimit)
+	if err != nil {
+		log.Error("AdminService: failed to update storage limit", "user_id", userID, "new_limit", newLimit, "err", err)
+		return err
+	}
+
+	log.Info("AdminService: updated storage limit", "user_id", userID, "new_limit", newLimit)
+	return nil
 }
 
 func (s *AdminService) MakeAdmin(userID int) error {
-	return s.UserRepo.UpdateAdmin(userID, true)
+	err := s.UserRepo.UpdateAdmin(userID, true)
+	if err != nil {
+		log.Error("AdminService: failed to make user admin", "user_id", userID, "err", err)
+		return err
+	}
+
+	log.Info("AdminService: user promoted to admin", "user_id", userID)
+	return nil
 }
 
 func (s *AdminService) RevokeAdmin(userID int) error {
-	return s.UserRepo.UpdateAdmin(userID, false)
+	err := s.UserRepo.UpdateAdmin(userID, false)
+	if err != nil {
+		log.Error("AdminService: failed to revoke admin rights", "user_id", userID, "err", err)
+		return err
+	}
+
+	log.Info("AdminService: admin rights revoked", "user_id", userID)
+	return nil
 }

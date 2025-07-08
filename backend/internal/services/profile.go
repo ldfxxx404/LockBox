@@ -19,12 +19,12 @@ func NewProfileService(userRepo repositories.UserRepoInterface, fileServ *FileSe
 func (s *ProfileService) GetProfile(userID int) (*models.User, int64, int, error) {
 	user, err := s.UserRepo.GetByID(userID)
 	if err != nil {
-		log.Error("use repo error", "err", err)
+		log.Error("use repo error", err)
 		return nil, 0, 0, err
 	}
 	usedMB, limitMB, err := s.FileServ.GetStorageInfo(userID)
 	if err != nil {
-		log.Error("use get storage", "err", err)
+		log.Error("use get storage", err)
 		return nil, 0, 0, err
 	}
 	log.Debug("User profile info", "Used storage MB", usedMB, "User info", user, "Limit MB", limitMB)

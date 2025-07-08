@@ -1,7 +1,9 @@
 #!/bin/bash
 
-docker exec -t lockbox-postgres pg_dump \ 
-  -U postgres \ 
+set -e
+
+docker exec -t lockbox-postgres pg_dump \
+  -U postgres \
   -d lock_box \
   -F c \
   -f /tmp/dump.dump
