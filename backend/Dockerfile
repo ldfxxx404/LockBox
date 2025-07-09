@@ -23,4 +23,14 @@ RUN go install github.com/pressly/goose/v3/cmd/goose@latest
 
 RUN go build -o backend ./cmd/lock_box/main.go
 
+FROM alpine:latest
+
+RUN apk add --no-cache ca-certificates bash
+
+WORKDIR /app
+
+COPY --from=builder /app/backend .
+COPY --from=builder /go/bin/goose /usr/local/bin/goose
+COPY ./migrations /app/migrations
+
 EXPOSE 5000
