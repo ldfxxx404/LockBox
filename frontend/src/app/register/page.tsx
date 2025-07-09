@@ -5,6 +5,7 @@ import { UserRegister } from '../lib/clientRegister'
 import { REGISTER_URL } from '../constants/api'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/app/components/ActionButton'
+import { UserInput } from '@/app/components/InputForm'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -30,27 +31,27 @@ export default function RegisterPage() {
           className='w-full flex flex-col gap-[18px]'
           onSubmit={handleSubmitRegistration}
         >
-          <input
+          <UserInput
             onChange={ev => setEmail(ev.target.value)}
             type='email'
             placeholder='Email'
-            required
-            className='bg-[#44475a] text-foreground border-none rounded-lg py-3 px-4 text-base outline-none'
+            required={true}
           />
-          <input
+
+          <UserInput
             onChange={ev => setName(ev.target.value)}
-            type='text'
+            type='name'
             placeholder='Name'
-            required
-            className='bg-[#44475a] text-foreground border-none rounded-lg py-3 px-4 text-base outline-none'
+            required={true}
           />
-          <input
+
+          <UserInput
             onChange={ev => setPassword(ev.target.value)}
             type='password'
             placeholder='Password'
-            required
-            className='bg-[#44475a] text-foreground border-none rounded-lg py-3 px-4 text-base outline-none'
+            required={true}
           />
+
           <Button label='Sign Up' type='submit' />
         </form>
       </div>
