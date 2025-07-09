@@ -1,0 +1,30 @@
+import { ChangeEvent, InputHTMLAttributes, useState } from 'react'
+
+interface InputFormProps extends InputHTMLAttributes<HTMLInputElement> {
+  value?: string
+  type?: 'email' | 'password' | 'name'
+  placeholder?: 'Email' | 'Password'
+  required?: boolean
+  onChange?: (ev: ChangeEvent<HTMLInputElement>) => void
+}
+
+export const UserInput = ({
+  value,
+  type,
+  placeholder,
+  required,
+  onChange,
+  ...props
+}: InputFormProps) => {
+  return (
+    <input
+      onChange={onChange}
+      value={value}
+      type={type}
+      required={required}
+      placeholder={placeholder}
+      className='bg-[#44475a] text-foreground border-none rounded-lg py-3 px-4 text-base outline-none'
+      {...props}
+    />
+  )
+}

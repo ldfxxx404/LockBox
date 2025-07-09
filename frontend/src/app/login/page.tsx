@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { LOGIN_URL } from '../constants/api'
 import { UserLogin } from '../lib/clientLogin'
 import { Button } from '../components/ActionButton'
+import { UserInput } from '../components/InputForm'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -29,22 +30,21 @@ export default function LoginPage() {
           className='w-full flex flex-col gap-[18px]'
           onSubmit={handleSubmitLogin}
         >
-          <input
+          <UserInput
             value={email}
-            onChange={ev => setEmail(ev.target.value)}
             type='email'
             placeholder='Email'
-            required
-            className='bg-[#44475a] text-foreground border-none rounded-lg py-3 px-4 text-base outline-none'
+            onChange={ev => setEmail(ev.target.value)}
+            required={true}
           />
-          <input
+          <UserInput
             value={password}
-            onChange={ev => setPassword(ev.target.value)}
             type='password'
             placeholder='Password'
-            required
-            className='bg-[#44475a] text-foreground border-none rounded-lg py-3 px-4 text-base outline-none'
+            onChange={ev => setPassword(ev.target.value)}
+            required={true}
           />
+
           <Button label='Sign In' type='submit' />
         </form>
         <div className='mt-[18px] text-[13px] text-[#bcbcbc] text-center'></div>
