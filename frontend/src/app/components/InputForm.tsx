@@ -1,4 +1,4 @@
-import { ChangeEvent, InputHTMLAttributes, useState } from 'react'
+import { ChangeEvent, InputHTMLAttributes } from 'react'
 
 interface InputFormProps extends InputHTMLAttributes<HTMLInputElement> {
   value?: string
