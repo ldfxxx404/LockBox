@@ -3,7 +3,10 @@
 import { ProgressHTMLAttributes } from 'react'
 import { useState, useEffect } from 'react'
 
-interface BarProps extends ProgressHTMLAttributes<HTMLProgressElement> {}
+interface BarProps extends ProgressHTMLAttributes<HTMLProgressElement> {
+  max?: number
+  value?: number
+}
 
 export const Bar = ({}: BarProps) => {
   const [progress, setProgress] = useState(0)
