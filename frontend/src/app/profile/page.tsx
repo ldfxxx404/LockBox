@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Forbidden from '@/app/forbidden/page'
 
 export default function UserProfile() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true)
@@ -13,16 +14,17 @@ export default function UserProfile() {
 
   useEffect(() => {
     const token = sessionStorage.getItem('token')
-
-    if (!token) {
-      router.push('/404')
-    } else {
-      setIsCheckingAuth(false)
-    }
+    setTimeout(() => {
+      if (!token) {
+        router.push('/404')
+      } else {
+        setIsCheckingAuth(false)
+      }
+    }, 5000)
   }, [router])
 
   if (isCheckingAuth) {
-    return <div>Status check</div> // отдельная страница для проверки на авторизацию
+    return <Forbidden /> // отдельная страница для проверки на авторизацию (preload page)
   }
 
   return (
