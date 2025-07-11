@@ -1,30 +1,43 @@
 'use client'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Forbidden from '@/app/forbidden/page'
 
 export default function UserProfile() {
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+  const [hasToken, setHasToken] = useState<boolean | null>(null)
   const router = useRouter()
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = sessionStorage.getItem('token')
+
+      if (!token) {
+        setHasToken(false)
+        const timer = setTimeout(() => {
+          router.push('/404')
+        }, 5000)
+        return () => clearTimeout(timer)
+      } else {
+        setHasToken(true)
+        if (window.location.pathname !== '/profile') {
+          router.push('/profile')
+        }
+      }
+    }
+  }, [router])
 
   const handleLogout = () => {
     sessionStorage.removeItem('token')
     router.push('/')
   }
 
-  useEffect(() => {
-    const token = sessionStorage.getItem('token')
-    setTimeout(() => {
-      if (!token) {
-        router.push('/404')
-      } else {
-        setIsCheckingAuth(false)
-      }
-    }, 5000)
-  }, [router])
+  if (hasToken === false) {
+    return <Forbidden />
+  }
 
-  if (isCheckingAuth) {
-    return <Forbidden /> // отдельная страница для проверки на авторизацию (preload page)
+  if (hasToken === null) {
+    return null
   }
 
   return (
