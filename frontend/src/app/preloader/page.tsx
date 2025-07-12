@@ -1,6 +1,6 @@
 import { Bar } from '@/app/components/ProgressBar'
 
-export default function Forbidden() {
+export default function Preloader() {
   return (
     <div className='flex flex-col items-center justify-center mt-72'>
       <h1 role='status' className='text-2xl font-bold'>

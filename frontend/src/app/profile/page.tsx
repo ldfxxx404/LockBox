@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Forbidden from '@/app/forbidden/page'
+import Forbidden from '@/app/preloader/page'
 
 export default function UserProfile() {
   const [hasToken, setHasToken] = useState<boolean | null>(null)
