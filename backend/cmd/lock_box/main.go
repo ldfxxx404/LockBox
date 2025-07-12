@@ -29,7 +29,7 @@ import (
 // @schemes      http
 func main() {
 	utils.ParseLoglevel()
-	
+
 	file, _ := os.OpenFile(config.LogFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	iw := io.MultiWriter(os.Stdout, file)
 	log.SetOutput(iw)
