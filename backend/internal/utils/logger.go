@@ -20,4 +20,3 @@ func ParseLoglevel() {
 		log.SetLevel(log.LevelWarn)
 	}
 }
-
