@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -59,19 +58,4 @@ func CheckSize(used, size int64, limit int) error {
 		return errors.New("file size is to large")
 	}
 	return nil
-}
-
-func ParseLoglevel() {
-	level := config.LogLevel
-
-	switch level {
-	case "debug":
-		log.SetLevel(log.LevelDebug)
-	case "info":
-		log.SetLevel(log.LevelInfo)
-	case "error":
-		log.SetLevel(log.LevelError)
-	default:
-		log.SetLevel(log.LevelWarn)
-	}
 }
