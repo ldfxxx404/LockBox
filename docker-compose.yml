@@ -32,6 +32,9 @@ services:
       MINIO_SECRET_KEY: minioadmin123
       MINIO_BUCKET: uploads
       LOG_LEVEL: debug
+      BACK_LOG_FILE: ${BACK_LOG_FILE}
+    volumes:
+      - ./data/logs/backend:/app/logs/:z
     depends_on:
       - postgres
       - minio
