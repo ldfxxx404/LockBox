@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Forbidden from '@/app/preloader/page'
+import logout from '../lib/clientLogout'
 
 export default function UserProfile() {
   const [hasToken, setHasToken] = useState<boolean | null>(null)
@@ -27,9 +28,14 @@ export default function UserProfile() {
     }
   }, [router])
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('token')
-    router.push('/')
+  const handleLogout = async () => {
+    const result = await logout()
+    if (result) {
+      console.log(result)
+      router.push('/')
+    } else {
+      console.error('Logout failed')
+    }
   }
 
   if (hasToken === false) {
