@@ -14,7 +14,7 @@ export default async function logout(): Promise<LogoutResponse | null> {
       },
     })
 
-      if (res.ok) {
+    if (res.ok) {
       return { message: 'Logout succesfully' }
     }
 
