@@ -1,8 +1,6 @@
 import { LOGIN_URL } from '@/app/constants/api'
 import { NextResponse } from 'next/server'
 
-console.log(`${LOGIN_URL}`)
-
 export async function POST(req: Request) {
   try {
     const body = await req.json()
