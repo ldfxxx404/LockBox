@@ -19,7 +19,7 @@ var (
 	MinioSecretKey = getEnv("MINIO_SECRET_KEY", "minioadmin123")
 	MinioBucket    = getEnv("MINIO_BUCKET", "uploads")
 	LogLevel       = getEnv("LOG_LEVEL", "debug")
-	LogFilePath    = getEnv("BACK_LOG_FILE", "test.log")
+	LogFilePath    = getEnv("BACK_LOG_FILE", "/app/logs/")
 	MinioUseSSL    = getEnv("MINIO_USE_SSL", false)
 	FiberLimitBody = getEnv("BODY_LIMIT_MB", 20)
 	FiberLimitReq  = getEnv("FIBER_LIMIT_REQ", 5)
