@@ -1,8 +1,4 @@
-interface LogoutResponse {
-  message: string
-}
-
-export default async function logout(): Promise<LogoutResponse | null> {
+export default async function logout() {
   try {
     const token = sessionStorage.getItem('token')
 
@@ -15,12 +11,12 @@ export default async function logout(): Promise<LogoutResponse | null> {
     })
 
     if (res.ok) {
+      sessionStorage.clear();
       return { message: 'Logout succesfully' }
     }
+    
+    const data = (await res.json()) 
 
-    sessionStorage.removeItem('token')
-
-    const data = (await res.json()) as LogoutResponse
     return data
   } catch (err) {
     console.error('Logout error:', err)

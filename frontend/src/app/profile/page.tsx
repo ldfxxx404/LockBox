@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Forbidden from '@/app/preloader/page'
 import logout from '../lib/clientLogout'
+import { FileUploader } from '../lib/clientUpload'
 
 export default function UserProfile() {
   const [hasToken, setHasToken] = useState<boolean | null>(null)
   const router = useRouter()
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -38,6 +40,29 @@ export default function UserProfile() {
     }
   }
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setSelectedFile(file)
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!selectedFile) {
+      alert('Файл не выбран')
+      return
+    }
+
+    try {
+      await FileUploader(selectedFile)
+      alert('Файл загружен успешно')
+    } catch (error) {
+      console.error('Ошибка при загрузке файла:', error)
+      alert('Ошибка загрузки файла')
+    }
+  }
+
   if (hasToken === false) {
     return <Forbidden />
   }
@@ -61,9 +86,19 @@ export default function UserProfile() {
           </li>
         </ul>
         <div className='justify-center flex gap-5 mt-8 '>
-          <button className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'>
-            Upload
-          </button>
+          <form onSubmit={handleSubmit}>
+            <input
+              onChange={handleChange}
+              type='file'
+              className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'
+            />
+            <button
+              type='submit'
+              className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'
+            >
+              Upload
+            </button>
+          </form>
           <button className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'>
             Download
           </button>

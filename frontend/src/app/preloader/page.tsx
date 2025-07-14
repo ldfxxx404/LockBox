@@ -1,3 +1,5 @@
+'use client'
+
 import { Bar } from '@/app/components/ProgressBar'
 
 export default function Preloader() {
