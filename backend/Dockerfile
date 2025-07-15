@@ -30,7 +30,7 @@ RUN apk add --no-cache ca-certificates bash
 WORKDIR /app
 
 COPY --from=builder /app/backend .
-COPY --from=builder /go/bin/goose /usr/local/bin/goose
+COPY --from=builder /go/bin/ /usr/local/bin/
 COPY ./migrations /app/migrations
 
 EXPOSE 5000

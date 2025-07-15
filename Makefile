@@ -130,7 +130,4 @@ test_frontend:
 	docker exec $(FRONTEND_NAME) npm run build
 	make restart_frontend
 
-test_backend:
-	docker exec $(BACKEND_NAME) go test ./internal/services/ -v
-
 .PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs console_front test_backend  
