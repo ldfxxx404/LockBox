@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     if (!res.ok) {
       const error: ErrorResponse = {
         message: 'Upload file error',
-        detail: 'text',
+        detail: 'Token not found!',
         code: res.status,
       }
       const text = await res.text()
