@@ -1,8 +1,4 @@
-interface RegistrationPayload {
-  email: string
-  name: string
-  password: string
-}
+import { RegistrationPayload } from '@/app/types/client'
 
 export async function UserRegister(data: RegistrationPayload) {
   const res = await fetch('/api/register', {

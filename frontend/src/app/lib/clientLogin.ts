@@ -1,7 +1,4 @@
-interface loginPayload {
-  email: string
-  password: string
-}
+import { loginPayload } from '@/app/types/client'
 
 export async function UserLogin(data: loginPayload) {
   try {

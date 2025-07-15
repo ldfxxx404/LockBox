@@ -11,11 +11,11 @@ export default async function logout() {
     })
 
     if (res.ok) {
-      sessionStorage.clear();
+      sessionStorage.clear()
       return { message: 'Logout succesfully' }
     }
-    
-    const data = (await res.json()) 
+
+    const data = await res.json()
 
     return data
   } catch (err) {
