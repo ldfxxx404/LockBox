@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { ErrorResponse } from '@/app/types/api'
 
 export async function POST(req: Request) {
   try {
@@ -6,14 +7,20 @@ export async function POST(req: Request) {
     const token = authHeader?.split(' ')[1]
 
     if (!token) {
-      return NextResponse.json({ error: 'No token provided' }, { status: 401 })
+      const error: ErrorResponse = {
+        message: 'Unauthorized',
+        code: 401,
+      }
+      return NextResponse.json(error, { status: error.code })
     }
 
-    console.log('Logout token:', token)
-
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, message: 'Logout successfully' })
   } catch (error) {
+    const response: ErrorResponse = {
+      message: 'Logout failed',
+      code: 500,
+    }
     console.error('Logout error:', error)
-    return NextResponse.json({ error: 'Logout failed' }, { status: 500 })
+    return NextResponse.json(response, { status: response.code })
   }
 }
