@@ -55,8 +55,13 @@ export default function UserProfile() {
     }
 
     try {
-      await FileUploader(selectedFile)
-      alert('Файл загружен успешно')
+      const token = sessionStorage.getItem('token')
+      if (!token) {
+        alert('File upload error')
+      } else {
+        await FileUploader(selectedFile)
+        alert('Файл загружен успешно')
+      }
     } catch (error) {
       console.error('Ошибка при загрузке файла:', error)
       alert('Ошибка загрузки файла')
