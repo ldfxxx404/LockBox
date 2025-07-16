@@ -15,8 +15,12 @@ type ProfileHandler struct {
 	ProfileServ *services.ProfileService
 }
 
-func NewProfileHandler(profileServ *services.ProfileService) *ProfileHandler {
-	return &ProfileHandler{ProfileServ: profileServ}
+func NewProfileHandler(
+	profileServ *services.ProfileService,
+) *ProfileHandler {
+	return &ProfileHandler{
+		ProfileServ: profileServ,
+	}
 }
 
 // GetProfile godoc

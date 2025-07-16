@@ -4,6 +4,7 @@ import (
 	"back/config"
 	"back/internal/database"
 	"back/internal/handlers"
+	handlersv2 "back/internal/handlers_v2"
 	"back/internal/middleware"
 	"back/internal/repositories"
 	"back/internal/services"
@@ -64,6 +65,7 @@ func main() {
 	authHandler := handlers.NewAuthHandler(authService)
 	fileHandler := handlers.NewFileHandler(fileService)
 	profileHandler := handlers.NewProfileHandler(profileService)
+	profileHandlerV2 := handlersv2.NewProfileHandlerV2(profileService, fileService)
 	adminHandler := handlers.NewAdminHandler(adminService)
 	log.Info("init handlers")
 
@@ -81,6 +83,9 @@ func main() {
 	api.Get("/profile", profileHandler.GetProfile)
 	api.Post("/upload", fileHandler.Upload)
 	api.Delete("/delete/:filename", fileHandler.Delete)
+
+	api = app.Group("/api/v2", middleware.AdminRequired())
+	api.Get("/profile", profileHandlerV2.GetProfile)
 
 	admin := api.Group("/admin", middleware.AdminRequired())
 	admin.Get("/users", adminHandler.GetAllUsers)

@@ -76,6 +76,17 @@ definitions:
       name:
         type: string
     type: object
+  models.ProfileV2:
+    properties:
+      files:
+        items:
+          type: string
+        type: array
+      storage:
+        $ref: '#/definitions/models.ProfileStorage'
+      user:
+        $ref: '#/definitions/models.UserV2'
+    type: object
   models.RegisterDTO:
     properties:
       email:
@@ -116,6 +127,11 @@ definitions:
         type: string
       storage_limit:
         type: integer
+    type: object
+  models.UserV2:
+    properties:
+      name:
+        type: string
     type: object
 host: localhost:5000
 info:
@@ -424,6 +440,27 @@ paths:
       summary: Upload a file
       tags:
       - file
+  /v2/profile:
+    get:
+      consumes:
+      - application/json
+      description: Returns the current user's profile and storage usage info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProfileV2'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get user profile v2
+      tags:
+      - profile v2
 schemes:
 - http
 swagger: "2.0"
