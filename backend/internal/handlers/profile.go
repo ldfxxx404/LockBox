@@ -12,17 +12,14 @@ import (
 )
 
 type ProfileHandler struct {
-	ProfileServ     *services.ProfileService
-	ProfileFileServ *services.FileService
+	ProfileServ *services.ProfileService
 }
 
 func NewProfileHandler(
 	profileServ *services.ProfileService,
-	profileFileServ *services.FileService,
 ) *ProfileHandler {
 	return &ProfileHandler{
-		ProfileServ:     profileServ,
-		ProfileFileServ: profileFileServ,
+		ProfileServ: profileServ,
 	}
 }
 
@@ -58,53 +55,6 @@ func (h *ProfileHandler) GetProfile(c *fiber.Ctx) error {
 		Storage: &models.ProfileStorage{
 			Used:  usedMB,
 			Limit: limitMB,
-		},
-	})
-}
-
-// GetProfile godoc
-// @Summary Get user profile v2
-// @Description Returns the current user's profile and storage usage info
-// @Tags profile v2
-// @Accept json
-// @Produce json
-// @Security BearerAuth
-// @Success 200 {object} models.ProfileStorage1
-// @Failure 500 {object} models.ErrorResponse
-// @Router /v2/profile [get]
-func (h *ProfileHandler) GetV2profile(c *fiber.Ctx) error {
-	userID := utils.GetUserID(c)
-	user, usedMB, limitMB, err := h.ProfileServ.GetProfile(userID)
-	if err != nil {
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to get user profile",
-				Error:   err.Error(),
-			})
-	}
-	files, err := h.ProfileFileServ.ListFiles(userID)
-	if err != nil {
-		log.Error("ListFiles: failed to list files", "user_id", userID, "err", err)
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to list files",
-				Error:   err.Error(),
-			})
-	}
-
-	var filenames []string
-	for _, file := range files {
-		filenames = append(filenames, file.Filename)
-	}
-
-	return c.JSON(models.ProfileStorage1{
-		Storage: &models.ProfileStorage{
-			Used:  usedMB,
-			Limit: limitMB,
-		},
-		Files: filenames,
-		User: &models.ProfileUser1{
-			Name: user.Name,
 		},
 	})
 }

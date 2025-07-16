@@ -511,7 +511,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.ProfileStorage1"
+                            "$ref": "#/definitions/models.ProfileV2"
                         }
                     },
                     "500": {
@@ -630,23 +630,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.ProfileStorage1": {
-            "type": "object",
-            "properties": {
-                "files": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "storage": {
-                    "$ref": "#/definitions/models.ProfileStorage"
-                },
-                "user": {
-                    "$ref": "#/definitions/models.ProfileUser1"
-                }
-            }
-        },
         "models.ProfileUser": {
             "type": "object",
             "properties": {
@@ -661,11 +644,20 @@ const docTemplate = `{
                 }
             }
         },
-        "models.ProfileUser1": {
+        "models.ProfileV2": {
             "type": "object",
             "properties": {
-                "name": {
-                    "type": "string"
+                "files": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "storage": {
+                    "$ref": "#/definitions/models.ProfileStorage"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.UserV2"
                 }
             }
         },
@@ -730,6 +722,14 @@ const docTemplate = `{
                 },
                 "storage_limit": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.UserV2": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
                 }
             }
         }

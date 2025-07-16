@@ -67,17 +67,6 @@ definitions:
       used:
         type: integer
     type: object
-  models.ProfileStorage1:
-    properties:
-      files:
-        items:
-          type: string
-        type: array
-      storage:
-        $ref: '#/definitions/models.ProfileStorage'
-      user:
-        $ref: '#/definitions/models.ProfileUser1'
-    type: object
   models.ProfileUser:
     properties:
       email:
@@ -87,10 +76,16 @@ definitions:
       name:
         type: string
     type: object
-  models.ProfileUser1:
+  models.ProfileV2:
     properties:
-      name:
-        type: string
+      files:
+        items:
+          type: string
+        type: array
+      storage:
+        $ref: '#/definitions/models.ProfileStorage'
+      user:
+        $ref: '#/definitions/models.UserV2'
     type: object
   models.RegisterDTO:
     properties:
@@ -132,6 +127,11 @@ definitions:
         type: string
       storage_limit:
         type: integer
+    type: object
+  models.UserV2:
+    properties:
+      name:
+        type: string
     type: object
 host: localhost:5000
 info:
@@ -451,7 +451,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.ProfileStorage1'
+            $ref: '#/definitions/models.ProfileV2'
         "500":
           description: Internal Server Error
           schema:
