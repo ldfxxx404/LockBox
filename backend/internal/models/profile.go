@@ -15,3 +15,13 @@ type ProfileStorage struct {
 	Used  int64 `json:"used"`
 	Limit int   `json:"limit"`
 }
+
+type ProfileUser1 struct {
+	Name string `json:"name"`
+}
+
+type ProfileStorage1 struct {
+	Storage *ProfileStorage `json:"storage"`
+	Files   []string        `json:"files"`
+	User    *ProfileUser1   `json:"user"`
+}
