@@ -84,7 +84,7 @@ func main() {
 	api.Post("/upload", fileHandler.Upload)
 	api.Delete("/delete/:filename", fileHandler.Delete)
 
-	api = app.Group("/api/v2", middleware.AdminRequired())
+	api = app.Group("/api/v2", middleware.AuthRequired())
 	api.Get("/profile", profileHandlerV2.GetProfile)
 
 	admin := api.Group("/admin", middleware.AdminRequired())
