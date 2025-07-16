@@ -63,7 +63,7 @@ func main() {
 
 	authHandler := handlers.NewAuthHandler(authService)
 	fileHandler := handlers.NewFileHandler(fileService)
-	profileHandler := handlers.NewProfileHandler(profileService)
+	profileHandler := handlers.NewProfileHandler(profileService, fileService)
 	adminHandler := handlers.NewAdminHandler(adminService)
 	log.Info("init handlers")
 
@@ -82,6 +82,9 @@ func main() {
 	api.Post("/upload", fileHandler.Upload)
 	api.Delete("/delete/:filename", fileHandler.Delete)
 
+	api = app.Group("/api/v2", middleware.AdminRequired())
+	api.Get("/profile", profileHandler.GetV2profile)
+	
 	admin := api.Group("/admin", middleware.AdminRequired())
 	admin.Get("/users", adminHandler.GetAllUsers)
 	admin.Put("/update_limit", adminHandler.UpdateStorageLimit)

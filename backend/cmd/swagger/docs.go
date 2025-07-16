@@ -488,6 +488,40 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v2/profile": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns the current user's profile and storage usage info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "profile v2"
+                ],
+                "summary": "Get user profile v2",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ProfileStorage1"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -596,6 +630,23 @@ const docTemplate = `{
                 }
             }
         },
+        "models.ProfileStorage1": {
+            "type": "object",
+            "properties": {
+                "files": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "storage": {
+                    "$ref": "#/definitions/models.ProfileStorage"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.ProfileUser1"
+                }
+            }
+        },
         "models.ProfileUser": {
             "type": "object",
             "properties": {
@@ -605,6 +656,14 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProfileUser1": {
+            "type": "object",
+            "properties": {
                 "name": {
                     "type": "string"
                 }
