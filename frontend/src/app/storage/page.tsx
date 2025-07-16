@@ -19,7 +19,8 @@ export default function Storage() {
         setFiles(data.files || [])
         setLimit(data.storage?.limit || 0)
         setUsed(data.storage?.used || 0)
-      } catch (err: any) {
+      } catch (error) {
+        const err = error as Error
         setError(err?.message || 'Upload Error')
       } finally {
         setLoading(false)
