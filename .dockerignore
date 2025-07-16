@@ -1,10 +1,43 @@
-.github
-.vscode
-.idea
-Makefile
-README.md
-docker-compose.yml
-docker-compose.prod.yml
-todo.txt
+# Binaries
+*.exe
+*.out
+*.test
+*.log
+*.bin
+
+# OS / Editor trash
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Git
+.git
 .gitignore
-/backend/scripts
+
+# Dependencies
+vendor/
+
+# Docker
+Dockerfile*
+docker-compose.yml
+docker-compose.override.yml
+
+# Env / Secrets
+.env
+.env.*
+
+# Cache / build artifacts
+bin/
+build/
+dist/
+*tmp/
+.cache/
+/data
+
+# Tests / coverage
+coverage.out
+*.cov
+*.coverprofile
+*.bench
+*.prof
