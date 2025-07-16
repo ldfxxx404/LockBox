@@ -1,7 +1,7 @@
 'use client'
 
 export async function FileUploader(file: File) {
-  const token = sessionStorage.getItem('token')
+
   const uploadForm = new FormData()
   uploadForm.append('file', file)
 
@@ -10,7 +10,7 @@ export async function FileUploader(file: File) {
       method: 'POST',
       body: uploadForm,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
     if (!response.ok) {

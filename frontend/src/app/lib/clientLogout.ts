@@ -1,12 +1,11 @@
 export default async function logout() {
   try {
-    const token = sessionStorage.getItem('token')
-
+    
     const res = await fetch('/api/logout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
 
