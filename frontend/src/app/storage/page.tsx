@@ -37,8 +37,7 @@ export default function Storage() {
         <>
           <div className='mb-4'>
             <div>
-              <span className='font-semibold'>Uasge:</span> {used} /{' '}
-              {limit} MiB
+              <span className='font-semibold'>Uasge:</span> {used} / {limit} MiB
             </div>
             <div className='w-full bg-[#282a36] rounded h-3 mt-2'>
               <div

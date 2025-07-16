@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/app/types/api'
 
 export async function GET(req: Request) {
-  
-  
   try {
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]

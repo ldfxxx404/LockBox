@@ -1,7 +1,6 @@
 'use client'
 
 export async function FileUploader(file: File) {
-
   const uploadForm = new FormData()
   uploadForm.append('file', file)
 

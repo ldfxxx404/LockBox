@@ -1,6 +1,5 @@
 export default async function logout() {
   try {
-    
     const res = await fetch('/api/logout', {
       method: 'POST',
       headers: {
