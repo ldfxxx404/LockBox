@@ -16,12 +16,12 @@ type ProfileStorage struct {
 	Limit int   `json:"limit"`
 }
 
-type ProfileUser1 struct {
+type UserV2 struct {
 	Name string `json:"name"`
 }
 
-type ProfileStorage1 struct {
+type ProfileV2 struct {
 	Storage *ProfileStorage `json:"storage"`
 	Files   []string        `json:"files"`
-	User    *ProfileUser1   `json:"user"`
+	User    *UserV2         `json:"user"`
 }
