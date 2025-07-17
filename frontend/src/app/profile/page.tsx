@@ -1,34 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Forbidden from '@/app/preloader/page'
-import { FileUploader } from '../lib/clientUpload'
+import { useState } from 'react'
 import { useLogout } from '@/app/hooks/useLogout'
-
+import { FileUploader } from '@/app/lib/clientUpload'
+import Forbidden from '@/app/preloader/page'
+import { useRedirect } from '@/app/hooks/useRedirect'
 
 export default function UserProfile() {
-  const [hasToken, setHasToken] = useState<boolean | null>(null)
-  const router = useRouter()
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const handleLogout = useLogout();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (!sessionStorage.getItem('token')) {
-        setHasToken(false)
-        const timer = setTimeout(() => {
-          router.push('/404')
-        }, 5000)
-        return () => clearTimeout(timer)
-      } else {
-        setHasToken(true)
-        if (window.location.pathname !== '/profile') {
-          router.push('/profile')
-        }
-      }
-    }
-  }, [router])
+  const handleLogout = useLogout()
+  const hasToken = useRedirect()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -57,7 +38,7 @@ export default function UserProfile() {
     }
   }
 
-  if (hasToken === false  ) {
+  if (hasToken === false) {
     return <Forbidden />
   }
 
