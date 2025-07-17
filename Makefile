@@ -23,6 +23,8 @@ down_force:
 
 init: down_force build up
 	@echo "Инициализация завершена"
+	@echo "backend docs http://localhost:5000/docs/index.html"
+	@echo "frontend http://localhost:3000"
 
 init_prod: down_force 
 	$(DOCKER_COMPOSE) -f docker-compose.prod.yml build --no-cache
@@ -34,16 +36,16 @@ build:
 restart: down up
 
 console_bd:
-	docker exec -it ${POSTGRES_NAME} ${SHELL}
+	@docker exec -it ${POSTGRES_NAME} ${SHELL}
 
 console_backend:
-	docker exec -it ${BACKEND_NAME} ${SHELL}
+	@docker exec -it ${BACKEND_NAME} ${SHELL}
 
 console_minio:
-	docker exec -it ${MINIO_NAME} ${SHELL}
+	@docker exec -it ${MINIO_NAME} ${SHELL}
 
 console_front:
-	docker exec -it ${FRONTEND_NAME} ${SHELL}
+	@docker exec -it ${FRONTEND_NAME} ${SHELL}
 
 frontend_logs:
 	$(DOCKER_COMPOSE) logs -f frontend
@@ -58,13 +60,13 @@ minio_logs:
 	$(DOCKER_COMPOSE) logs -f minio
 
 migrate:
-	docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} up
+	@docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} up
 
 migrate_down:
-	docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} down
+	@docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} down
 
 migrate_status:
-	docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} status
+	@docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} status
 
 swag_generate:
 	swag init -g /cmd/lock_box/main.go --output /cmd/swagger/
@@ -109,7 +111,7 @@ restart_backend:
 	$(DOCKER_COMPOSE) rm -f backend
 	$(DOCKER_COMPOSE) build --no-cache backend
 	$(DOCKER_COMPOSE) up -d --no-deps backend
-	make restart_db
+	@make restart_db
 
 restart_minio:
 	$(DOCKER_COMPOSE) stop minio
@@ -124,10 +126,10 @@ restart_frontend:
 	$(DOCKER_COMPOSE) up -d --no-deps frontend
 
 test_frontend:
-	docker exec $(FRONTEND_NAME) npm run types:check
-	docker exec $(FRONTEND_NAME) npm run prettier:fix
-	docker exec $(FRONTEND_NAME) npm run eslint:check
-	docker exec $(FRONTEND_NAME) npm run build
-	make restart_frontend
+	@docker exec $(FRONTEND_NAME) npm run types:check
+	@docker exec $(FRONTEND_NAME) npm run prettier:fix
+	@docker exec $(FRONTEND_NAME) npm run eslint:check
+	@docker exec $(FRONTEND_NAME) npm run build
+	@make restart_frontend
 
 .PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs console_front test_backend  
