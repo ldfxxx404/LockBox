@@ -46,7 +46,7 @@ func (h *ProfileHandlerV2) GetProfile(c *fiber.Ctx) error {
 				Error:   err.Error(),
 			})
 	}
-
+	
 	files, err := h.ProfileFileServ.ListFiles(userID)
 	if err != nil {
 		log.Error("ListFiles: failed to list files", "user_id", userID, "err", err)
