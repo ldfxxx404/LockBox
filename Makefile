@@ -126,10 +126,10 @@ restart_frontend:
 	$(DOCKER_COMPOSE) up -d --no-deps frontend
 
 test_frontend:
-	@docker exec $(FRONTEND_NAME) npm run types:check
-	@docker exec $(FRONTEND_NAME) npm run prettier:fix
-	@docker exec $(FRONTEND_NAME) npm run eslint:check
-	@docker exec $(FRONTEND_NAME) npm run build
+	@docker exec $(FRONTEND_NAME) yarn run types:check
+	@docker exec $(FRONTEND_NAME) yarn run prettier:fix
+	@docker exec $(FRONTEND_NAME) yarn run eslint:check
+	@docker exec $(FRONTEND_NAME) yarn run build
 	@make restart_frontend
 
 .PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs console_front test_backend  
