@@ -3,19 +3,19 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Forbidden from '@/app/preloader/page'
-import logout from '../lib/clientLogout'
 import { FileUploader } from '../lib/clientUpload'
+import { useLogout } from '@/app/hooks/useLogout'
+
 
 export default function UserProfile() {
   const [hasToken, setHasToken] = useState<boolean | null>(null)
   const router = useRouter()
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const handleLogout = useLogout();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const token = sessionStorage.getItem('token')
-
-      if (!token) {
+      if (!sessionStorage.getItem('token')) {
         setHasToken(false)
         const timer = setTimeout(() => {
           router.push('/404')
@@ -29,16 +29,6 @@ export default function UserProfile() {
       }
     }
   }, [router])
-
-  const handleLogout = async () => {
-    const result = await logout()
-    if (result) {
-      console.log(result)
-      router.push('/')
-    } else {
-      console.error('Logout failed')
-    }
-  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -55,20 +45,19 @@ export default function UserProfile() {
     }
 
     try {
-      const token = sessionStorage.getItem('token')
-      if (!token) {
+      if (!sessionStorage.getItem('token')) {
         alert('File upload error')
       } else {
         await FileUploader(selectedFile)
-        alert('Файл загружен успешно')
+        alert('File successfully uploaded')
       }
     } catch (error) {
-      console.error('Ошибка при загрузке файла:', error)
+      console.error('File upload error:', error)
       alert('Ошибка загрузки файла')
     }
   }
 
-  if (hasToken === false) {
+  if (hasToken === false  ) {
     return <Forbidden />
   }
 
@@ -104,9 +93,6 @@ export default function UserProfile() {
               Upload
             </button>
           </form>
-          <button className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'>
-            Download
-          </button>
           <button
             className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'
             onClick={handleLogout}
