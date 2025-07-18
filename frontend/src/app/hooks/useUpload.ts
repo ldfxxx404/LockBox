@@ -1,20 +1,20 @@
-import { useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { FileUploader } from '../lib/clientUpload'
 
 export const useUpload = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       setSelectedFile(file)
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!selectedFile) {
-      alert('Файл не выбран')
+      alert('File not chosen')
       return
     }
 
@@ -27,7 +27,7 @@ export const useUpload = () => {
       }
     } catch (error) {
       console.error('File upload error:', error)
-      alert('Ошибка загрузки файла')
+      alert('File upload error')
     }
   }
   return { handleChange, handleSubmit }
