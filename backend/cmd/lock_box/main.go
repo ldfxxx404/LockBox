@@ -84,14 +84,14 @@ func main() {
 	api.Post("/upload", fileHandler.Upload)
 	api.Delete("/delete/:filename", fileHandler.Delete)
 
-	api = app.Group("/api/v2", middleware.AuthRequired())
-	api.Get("/profile", profileHandlerV2.GetProfile)
-
 	admin := api.Group("/admin", middleware.AdminRequired())
 	admin.Get("/users", adminHandler.GetAllUsers)
 	admin.Put("/update_limit", adminHandler.UpdateStorageLimit)
 	admin.Put("/make_admin/:user_id", adminHandler.MakeAdmin)
 	admin.Put("/revoke_admin/:user_id", adminHandler.RevokeAdmin)
+
+	api = app.Group("/api/v2", middleware.AuthRequired())
+	api.Get("/profile", profileHandlerV2.GetProfile)
 	log.Info("init routes")
 
 	log.Fatal(app.Listen(config.ServerPort))
