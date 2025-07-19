@@ -26,6 +26,14 @@ func (s *AdminService) GetAllUsers() ([]models.User, error) {
 	return users, nil
 }
 
+func (s *AdminService) GetAllAdminUsers() ([]models.User, error) {
+	admins, err := s.UserRepo.GetAllAdmins()
+	if err != nil {
+		log.Error("AdminService: faild to get all admin users", "err", err)
+	}
+	return admins, nil
+}
+
 func (s *AdminService) UpdateStorageLimit(userID, newLimit int) error {
 	if newLimit <= 0 {
 		err := errors.New("invalid storage limit: must be greater than zero")

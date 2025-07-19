@@ -22,7 +22,7 @@ import (
 )
 
 // @title        LockBox API
-// @version      0.2.0
+// @version      0.2.1
 // @description  This is the API documentation for LockBox SaaS app.
 // @host         localhost:5000
 // @BasePath     /api
@@ -86,6 +86,7 @@ func main() {
 
 	admin := api.Group("/admin", middleware.AdminRequired())
 	admin.Get("/users", adminHandler.GetAllUsers)
+	admin.Get("/admins", adminHandler.GetAllAdminUsers)
 	admin.Put("/update_limit", adminHandler.UpdateStorageLimit)
 	admin.Put("/make_admin/:user_id", adminHandler.MakeAdmin)
 	admin.Put("/revoke_admin/:user_id", adminHandler.RevokeAdmin)

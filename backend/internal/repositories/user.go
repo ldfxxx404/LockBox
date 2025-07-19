@@ -13,6 +13,7 @@ const (
 	GetUserByEmailSql     = `SELECT * FROM users WHERE email = $1`
 	GetUserByIdSql        = `SELECT * FROM users WHERE id = $1`
 	GetAllUsersSql        = `SELECT id, email, name, is_admin, storage_limit FROM users`
+	GetAllAdminUsersSql   = `SELECT id, email, name, is_admin, storage_limit FROM users WHERE is_admin = TRUE`
 	UpdateStorageLimitSql = `UPDATE users SET storage_limit = $1 WHERE id = $2`
 	UpdateAdminSql        = `UPDATE users SET is_admin = $1 WHERE id = $2`
 )
@@ -65,6 +66,17 @@ func (r *UserRepo) GetAll() ([]models.User, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func (r *UserRepo) GetAllAdmins() ([]models.User, error) {
+	var admins []models.User
+	err := r.DB.Select(&admins, GetAllAdminUsersSql)
+	if err != nil {
+		log.Debug(err)
+		log.Error("get all admins", "err", err)
+		return nil, err
+	}
+	return admins, nil
 }
 
 func (r *UserRepo) UpdateStorageLimit(userID, newLimit int) error {

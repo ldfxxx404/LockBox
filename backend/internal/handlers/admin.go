@@ -41,6 +41,29 @@ func (h *AdminHandler) GetAllUsers(c *fiber.Ctx) error {
 	return c.JSON(users)
 }
 
+// GetAllUsers godoc
+// @Summary      Get all users who are admins
+// @Description  Returns a list of all registered users
+// @Tags         admin
+// @Security     BearerAuth
+// @Produce      json
+// @Success      200  {array}   models.User
+// @Failure      500  {object}  models.ErrorResponse
+// @Router       /admin/admins [get]
+func (h *AdminHandler) GetAllAdminUsers(c *fiber.Ctx) error {
+	admins, err := h.AdminServ.GetAllAdminUsers()
+	if err != nil {
+		log.Error("Failed to get all users", "error", err)
+		return c.Status(http.StatusBadRequest).
+			JSON(models.ErrorResponse{
+				Message: "Model not found",
+				Error:   err.Error(),
+			})
+	}
+	log.Info("Successfully retrieved all users", "count", len(admins))
+	return c.JSON(admins)
+}
+
 // UpdateStorageLimit godoc
 // @Summary      Update user storage limit
 // @Description  Sets a new storage limit for a specific user
