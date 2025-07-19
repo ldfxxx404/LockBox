@@ -5,9 +5,9 @@ services:
     ports:
       - '5432'
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: lock_box
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
@@ -26,7 +26,7 @@ services:
       BODY_LIMIT_MB: 20
       STORAGE_LIMIT: 20
       JWT_SECRET: ${JWT_SECRET}
-      POSTGRES_URL: postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
+      POSTGRES_URL: ${POSTGRES_URL}
       MINIO_ENDPOINT: minio:9090
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
