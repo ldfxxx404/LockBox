@@ -7,6 +7,7 @@ type UserRepoInterface interface {
 	GetByEmail(email string) (*models.User, error)
 	GetByID(id int) (*models.User, error)
 	GetAll() ([]models.User, error)
+	GetAllAdmins() ([]models.User, error)
 	UpdateStorageLimit(userID, newLimit int) error
 	UpdateAdmin(userID int, isAdmin bool) error
 }
