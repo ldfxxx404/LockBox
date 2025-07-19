@@ -15,6 +15,10 @@ type fakeUserRepoAdmin struct {
 	GetAllFunc   func() ([]models.User, error)
 }
 
+func (f *fakeUserRepoAdmin) GetAllAdmins() ([]models.User, error) {
+	panic("unimplemented")
+}
+
 func (f *fakeUserRepoAdmin) Create(user *models.User) error {
 	panic("unimplemented")
 }

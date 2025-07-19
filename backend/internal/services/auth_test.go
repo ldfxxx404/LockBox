@@ -13,6 +13,10 @@ type fakeUserRepoAuth struct {
 	users map[string]*models.User
 }
 
+func (f *fakeUserRepoAuth) GetAllAdmins() ([]models.User, error) {
+	panic("unimplemented")
+}
+
 func (f *fakeUserRepoAuth) Create(user *models.User) error {
 	if user.Email == "error@example.com" {
 		return errors.New("create error")
