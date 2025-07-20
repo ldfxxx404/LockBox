@@ -7,3 +7,4 @@
 .env
 /data
 dump.dump
+node_modules

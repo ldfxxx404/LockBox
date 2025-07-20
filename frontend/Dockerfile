@@ -1,14 +1,14 @@
-FROM node:18-alpine AS builder
+FROM node:current-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm install
+COPY package.json yarn.lock ./
+RUN yarn install
 
 COPY . .
-RUN npm run build
+RUN yarn build
 
-FROM node:18-alpine AS runner
+FROM node:current-alpine AS runner
 
 WORKDIR /app
 
@@ -16,4 +16,4 @@ COPY --from=builder /app ./
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]

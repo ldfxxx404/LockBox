@@ -3,36 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start -H 0.0.0.0",
+    "start": "next start",
     "lint": "next lint",
-    "prettier:check": "npx prettier ./src --check",
-    "prettier:fix": "npx prettier ./src --write",
-    "eslint:check": "npx eslint",
-    "types:check": "npx tsc --build --noEmit"
+    "types:check": "tsc --noEmit",
+    "prettier:check": "prettier --check .",
+    "eslint:check": "eslint . --max-warnings=0"
   },
   "dependencies": {
-    "@tanstack/react-form": "^1.6.3",
-    "@tanstack/react-query": "^5.74.4",
-    "axios": "^1.8.4",
-    "bcrypt": "^5.1.1",
-    "jsonwebtoken": "^9.0.2",
-    "next": "^15.2.2",
+    "jwt-decode": "^4.0.0",
+    "next": "15.3.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwind-merge": "^3.2.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9",
-    "eslint-config-next": "15.2.2",
-    "tailwindcss": "^4",
+    "eslint-config-next": "15.3.4",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4.1.11",
     "typescript": "^5"
   }
 }
