@@ -38,11 +38,7 @@ func (h *ProfileHandler) GetProfile(c *fiber.Ctx) error {
 	user, usedMB, limitMB, err := h.ProfileServ.GetProfile(userID)
 	if err != nil {
 		log.Error("GetProfile: failed to retrieve profile", "user_id", userID, "error", err)
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to get user profile",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusInternalServerError, "Failed to get user profile", err)
 	}
 
 	log.Info("GetProfile: profile retrieved successfully", "user_id", userID, "email", user.Email)

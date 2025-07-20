@@ -4,7 +4,6 @@ import (
 	"back/internal/models"
 	"back/internal/services"
 	"net/http"
-	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
@@ -31,13 +30,8 @@ func (h *AdminHandler) GetAllUsers(c *fiber.Ctx) error {
 	users, err := h.AdminServ.GetAllUsers()
 	if err != nil {
 		log.Error("Failed to get all users", "error", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "Model not found",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusBadRequest, "Model not found", err)
 	}
-	log.Info("Successfully retrieved all users", "count", len(users))
 	return c.JSON(users)
 }
 
@@ -53,14 +47,9 @@ func (h *AdminHandler) GetAllUsers(c *fiber.Ctx) error {
 func (h *AdminHandler) GetAllAdminUsers(c *fiber.Ctx) error {
 	admins, err := h.AdminServ.GetAllAdminUsers()
 	if err != nil {
-		log.Error("Failed to get all users", "error", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "Model not found",
-				Error:   err.Error(),
-			})
+		log.Error("Failed to get all admin users", "error", err)
+		return JSONError(c, http.StatusBadRequest, "Model not found", err)
 	}
-	log.Info("Successfully retrieved all users", "count", len(admins))
 	return c.JSON(admins)
 }
 
@@ -77,27 +66,14 @@ func (h *AdminHandler) GetAllAdminUsers(c *fiber.Ctx) error {
 // @Router       /admin/update_limit [put]
 func (h *AdminHandler) UpdateStorageLimit(c *fiber.Ctx) error {
 	var req models.UpdateStorage
-
 	if err := c.BodyParser(&req); err != nil {
-		log.Error("Body parsing failed", "error", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "Invalid input",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusBadRequest, "Invalid input", err)
 	}
 
-	err := h.AdminServ.UpdateStorageLimit(req.UserID, req.NewLimit)
-	if err != nil {
-		log.Error("Failed to update storage limit", "user_id", req.UserID, "new_limit", req.NewLimit, "error", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "Error updating storage limit",
-				Error:   err.Error(),
-			})
+	if err := h.AdminServ.UpdateStorageLimit(req.UserID, req.NewLimit); err != nil {
+		return JSONError(c, http.StatusBadRequest, "Error updating storage limit", err)
 	}
-	log.Info("Storage limit updated", "user_id", req.UserID, "new_limit", req.NewLimit)
-	return c.JSON(models.SuccessResponse{Message: "Storage limit updated successfully"})
+	return JSONSuccess(c, "Storage limit updated successfully")
 }
 
 // MakeAdmin godoc
@@ -112,26 +88,15 @@ func (h *AdminHandler) UpdateStorageLimit(c *fiber.Ctx) error {
 // @Failure      500  {object}  models.ErrorResponse
 // @Router       /admin/make_admin/{user_id} [put]
 func (h *AdminHandler) MakeAdmin(c *fiber.Ctx) error {
-	userID, err := strconv.Atoi(c.Params("user_id"))
+	userID, err := ParamInt(c, "user_id")
 	if err != nil {
-		log.Error("Invalid user ID parameter", "param", c.Params("user_id"), "error", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "Invalid user id",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusBadRequest, "Invalid user id", err)
 	}
-	err = h.AdminServ.MakeAdmin(userID)
-	if err != nil {
-		log.Error("Failed to grant admin rights", "user_id", userID, "error", err)
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to grant admin rights",
-				Error:   err.Error(),
-			})
+
+	if err := h.AdminServ.MakeAdmin(userID); err != nil {
+		return JSONError(c, http.StatusInternalServerError, "Failed to grant admin rights", err)
 	}
-	log.Info("Granted admin rights", "user_id", userID)
-	return c.JSON(models.SuccessResponse{Message: "User is now an admin"})
+	return JSONSuccess(c, "User is now an admin")
 }
 
 // RevokeAdmin godoc
@@ -146,24 +111,13 @@ func (h *AdminHandler) MakeAdmin(c *fiber.Ctx) error {
 // @Failure      500  {object}  models.ErrorResponse
 // @Router       /admin/revoke_admin/{user_id} [put]
 func (h *AdminHandler) RevokeAdmin(c *fiber.Ctx) error {
-	userID, err := strconv.Atoi(c.Params("user_id"))
+	userID, err := ParamInt(c, "user_id")
 	if err != nil {
-		log.Error("Invalid user ID parameter", "param", c.Params("user_id"), "error", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "Invalid user id",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusBadRequest, "Invalid user id", err)
 	}
-	err = h.AdminServ.RevokeAdmin(userID)
-	if err != nil {
-		log.Error("Failed to revoke admin rights", "user_id", userID, "error", err)
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to revoke admin rights",
-				Error:   err.Error(),
-			})
+
+	if err := h.AdminServ.RevokeAdmin(userID); err != nil {
+		return JSONError(c, http.StatusInternalServerError, "Failed to revoke admin rights", err)
 	}
-	log.Info("Revoked admin rights", "user_id", userID)
-	return c.JSON(models.SuccessResponse{Message: "Admin rights revoked"})
+	return JSONSuccess(c, "Admin rights revoked")
 }
