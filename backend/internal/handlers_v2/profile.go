@@ -47,7 +47,7 @@ func (h *ProfileHandlerV2) GetProfile(c *fiber.Ctx) error {
 	files, err := h.ProfileFileServ.ListFiles(userID)
 	if err != nil {
 		log.Error("ListFiles: failed to list files", "user_id", userID, "err", err)
-		return hd.JSONError(c, http.StatusInternalServerError, "Failed to list files", err) 
+		return hd.JSONError(c, http.StatusInternalServerError, "Failed to list files", err)
 	}
 
 	var filenames []string
