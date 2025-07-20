@@ -69,7 +69,8 @@ migrate_status:
 	@docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} status
 
 swag_generate:
-	swag init -g /cmd/lock_box/main.go --output /cmd/swagger/
+	@cd backend && \
+	./scripts/swag.sh
 
 restart_db:
 	$(DOCKER_COMPOSE) stop postgres
@@ -131,5 +132,9 @@ test_frontend:
 	@docker exec $(FRONTEND_NAME) yarn run eslint:check
 	@docker exec $(FRONTEND_NAME) yarn run build
 	@make restart_frontend
+
+test_backend:
+	@cd backend && \
+	./scripts/check.sh
 
 .PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs console_front test_backend  

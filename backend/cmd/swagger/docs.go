@@ -29,7 +29,7 @@ const docTemplate = `{
                 "tags": [
                     "admin"
                 ],
-                "summary": "Get all users who is admins",
+                "summary": "Get all users who are admins",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -772,7 +772,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "0.2.0",
+	Version:          "0.2.1",
 	Host:             "localhost:5000",
 	BasePath:         "/api",
 	Schemes:          []string{"http"},

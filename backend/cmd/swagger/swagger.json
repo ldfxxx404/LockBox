@@ -7,7 +7,7 @@
         "description": "This is the API documentation for LockBox SaaS app.",
         "title": "LockBox API",
         "contact": {},
-        "version": "0.2.0"
+        "version": "0.2.1"
     },
     "host": "localhost:5000",
     "basePath": "/api",
@@ -26,7 +26,7 @@
                 "tags": [
                     "admin"
                 ],
-                "summary": "Get all users who is admins",
+                "summary": "Get all users who are admins",
                 "responses": {
                     "200": {
                         "description": "OK",
