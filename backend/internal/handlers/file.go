@@ -40,32 +40,21 @@ func (h *FileHandler) Upload(c *fiber.Ctx) error {
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
 		log.Error("Upload: missing file in form data", "user_id", userID, "err", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "File is required",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusBadRequest, "File is required", err)
 	}
 
 	err = utils.CheckSize(usedMB, fileHeader.Size, limitMB)
 	if err != nil {
 		log.Error("Upload: file size exceeds limit", "user_id", userID, "file_size", fileHeader.Size, "used_mb", usedMB, "limit_mb", limitMB, "err", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "File size exceeds storage limit",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusBadRequest, "File size exceeds storage limit", err)
 	}
 
 	err = h.FileServ.UploadFile(userID, fileHeader)
 	if err != nil {
 		log.Error("Upload: failed to upload file", "user_id", userID, "file_name", fileHeader.Filename, "err", err)
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to upload file",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusInternalServerError, "Failed to upload file", err)
 	}
+
 	log.Info("Upload: file uploaded successfully", "user_id", userID, "file_name", fileHeader.Filename)
 	return c.JSON(models.FileUpload{
 		Message:  "File uploaded successfully",
@@ -87,20 +76,13 @@ func (h *FileHandler) ListFiles(c *fiber.Ctx) error {
 	files, err := h.FileServ.ListFiles(userID)
 	if err != nil {
 		log.Error("ListFiles: failed to list files", "user_id", userID, "err", err)
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to list files",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusInternalServerError, "Failed to list files", err)
 	}
+
 	usedMB, limitMB, err := h.FileServ.GetStorageInfo(userID)
 	if err != nil {
 		log.Error("ListFiles: failed to get storage info", "user_id", userID, "err", err)
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to get storage info",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusInternalServerError, "Failed to get storage info", err)
 	}
 
 	var filenames []string
@@ -136,21 +118,13 @@ func (h *FileHandler) Download(c *fiber.Ctx) error {
 	decodedFilename, err := url.QueryUnescape(filename)
 	if err != nil {
 		log.Error("Download: invalid filename parameter", "user_id", userID, "filename", filename, "err", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "Invalid filename",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusBadRequest, "Invalid filename", err)
 	}
 
 	data, err := h.FileServ.GetFile(userID, decodedFilename)
 	if err != nil {
 		log.Error("Download: file not found or inaccessible", "user_id", userID, "filename", decodedFilename, "err", err)
-		return c.Status(http.StatusNotFound).
-			JSON(models.ErrorResponse{
-				Message: "File not found",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusNotFound, "File not found", err)
 	}
 
 	log.Info("Download: file served successfully", "user_id", userID, "filename", decodedFilename)
@@ -177,11 +151,7 @@ func (h *FileHandler) Delete(c *fiber.Ctx) error {
 	err := h.FileServ.DeleteFile(userID, filename)
 	if err != nil {
 		log.Error("Delete: failed to delete file", "user_id", userID, "filename", filename, "err", err)
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to delete file",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusInternalServerError, "Fald to delete file", err)
 	}
 	log.Info("Delete: file deleted successfully", "user_id", userID, "filename", filename)
 	return c.JSON(models.SuccessResponse{Message: "File deleted"})

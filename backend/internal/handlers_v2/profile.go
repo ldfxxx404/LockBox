@@ -1,6 +1,7 @@
 package handlersv2
 
 import (
+	hd "back/internal/handlers"
 	"back/internal/models"
 	"back/internal/services"
 	"back/internal/utils"
@@ -40,20 +41,13 @@ func (h *ProfileHandlerV2) GetProfile(c *fiber.Ctx) error {
 	user, usedMB, limitMB, err := h.ProfileServ.GetProfile(userID)
 	if err != nil {
 		log.Error("GetProfile: failed to retrieve profile", "user_id", userID, "error", err)
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to get user profile",
-				Error:   err.Error(),
-			})
+		return hd.JSONError(c, http.StatusInternalServerError, "Failed to get user profile", err)
+
 	}
 	files, err := h.ProfileFileServ.ListFiles(userID)
 	if err != nil {
 		log.Error("ListFiles: failed to list files", "user_id", userID, "err", err)
-		return c.Status(http.StatusInternalServerError).
-			JSON(models.ErrorResponse{
-				Message: "Failed to list files",
-				Error:   err.Error(),
-			})
+		return hd.JSONError(c, http.StatusInternalServerError, "Failed to list files", err) 
 	}
 
 	var filenames []string

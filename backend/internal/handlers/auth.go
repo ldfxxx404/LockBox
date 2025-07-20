@@ -28,36 +28,26 @@ func NewAuthHandler(authServ *services.AuthService) *AuthHandler {
 // @Success      201   {object}  models.RegisterMessage
 // @Failure      400   {object}  models.ErrorResponse
 // @Router       /register [post]
+
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var dto models.RegisterDTO
 	if err := c.BodyParser(&dto); err != nil {
-		log.Error("Register: invalid input", "error", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "Invalid input",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusBadRequest, "Invalid input", err)
 	}
 
 	user, err := h.AuthServ.Register(dto)
 	if err != nil {
-		log.Error("Register: failed to register new user", "email", dto.Email, "error", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "Registration error",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusBadRequest, "Registration error", err)
 	}
 
-	log.Info("Register: new user registration successful", "user_id", user.ID, "email", user.Email)
-	return c.Status(http.StatusCreated).
-		JSON(models.RegisterMessage{
-			Message: "Registration successful",
-			User: &models.MessageDTO{
-				Id:    user.ID,
-				Email: user.Email,
-			},
-		})
+	log.Info("User registered", "user_id", user.ID, "email", user.Email)
+	return c.Status(http.StatusCreated).JSON(models.RegisterMessage{
+		Message: "Registration successful",
+		User: &models.MessageDTO{
+			Id:    user.ID,
+			Email: user.Email,
+		},
+	})
 }
 
 // Login godoc
@@ -74,25 +64,15 @@ func (h *AuthHandler) Register(c *fiber.Ctx) error {
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var dto models.LoginDTO
 	if err := c.BodyParser(&dto); err != nil {
-		log.Error("Login: failed to parse request body", "error", err)
-		return c.Status(http.StatusBadRequest).
-			JSON(models.ErrorResponse{
-				Message: "Invalid input",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusBadRequest, "Invalid input", err)
 	}
 
 	token, user, err := h.AuthServ.Login(dto)
 	if err != nil {
-		log.Error("Login: authentication failed", "email", dto.Email, "error", err)
-		return c.Status(http.StatusUnauthorized).
-			JSON(models.ErrorResponse{
-				Message: "Authentication failed",
-				Error:   err.Error(),
-			})
+		return JSONError(c, http.StatusUnauthorized, "Authentication failed", err)
 	}
 
-	log.Info("Login: successful", "user_id", user.ID, "email", user.Email)
+	log.Info("Login successful", "user_id", user.ID, "email", user.Email)
 	return c.JSON(models.LoginMessage{
 		Message: "Login successful",
 		User: &models.MessageDTO{
@@ -111,9 +91,6 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 // @Success      200  {object}  models.SuccessResponse
 // @Router       /logout [post]
 func (h *AuthHandler) Logout(c *fiber.Ctx) error {
-	// JWT logout обычно реализуется на клиенте, сервер может лишь предложить blacklist (если есть)
-	log.Warn("Logout endpoint hit - client should remove token")
-	return c.JSON(models.SuccessResponse{
-		Message: "Logout successful (client-side token removal required)",
-	})
+	log.Warn("Logout called — client should remove token")
+	return JSONSuccess(c, "Logout successful (client-side token removal required)")
 }
