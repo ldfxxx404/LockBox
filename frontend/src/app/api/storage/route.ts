@@ -10,7 +10,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
-    const res = await fetch(STORAGE_URL, {
+    const res = await fetch(PROFILE_URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
