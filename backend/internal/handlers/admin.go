@@ -42,7 +42,7 @@ func (h *AdminHandler) GetAllUsers(c *fiber.Ctx) error {
 }
 
 // GetAllUsers godoc
-// @Summary      Get all users who is admins
+// @Summary      Get all users who are admins
 // @Description  Returns a list of all registered users
 // @Tags         admin
 // @Security     BearerAuth
