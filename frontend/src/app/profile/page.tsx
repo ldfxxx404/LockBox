@@ -6,6 +6,7 @@ import { useRedirect } from '@/app/hooks/useRedirect'
 import { useUpload } from '../hooks/useUpload'
 import { useEffect, useState } from 'react'
 import { getProfile } from '../lib/clientProfile'
+import { FileDownload } from '../lib/clientDownload'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -38,6 +39,14 @@ export default function UserProfile() {
     }
     fetchProfile()
   }, [])
+
+  // Можно добавить обработчик для скачивания
+  const handleDownload = async (filename: string) => {
+    const result = await FileDownload(filename)
+    if (result?.error) {
+      alert('Ошибка скачивания файла')
+    }
+  }
 
   if (isChecking || !hasToken) {
     return <Forbidden />
@@ -77,7 +86,16 @@ export default function UserProfile() {
                 <ul className='list-disc pl-5'>
                   {files.map((file, idx) => (
                     <li key={idx} className='break-all'>
-                      {file}
+                      <a
+                        href='#'
+                        className='text-indigo-400 hover:underline'
+                        onClick={e => {
+                          e.preventDefault()
+                          handleDownload(file)
+                        }}
+                      >
+                        {file}
+                      </a>
                     </li>
                   ))}
                 </ul>

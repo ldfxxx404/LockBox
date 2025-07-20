@@ -1,4 +1,4 @@
-import { STORAGE_URL } from '@/app/constants/api'
+import { PROFILE_URL } from '@/app/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/app/types/api'
 
