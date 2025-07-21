@@ -118,7 +118,7 @@ export default function UserProfile() {
             </button>
           </form>
           <button
-            className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'
+            className='bg-indigo-500 hover:bg-[#FF5555] transition text-white font-semibold py-2 px-6 rounded-lg'
             onClick={handleLogout}
           >
             Logout
