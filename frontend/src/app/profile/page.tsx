@@ -40,7 +40,6 @@ export default function UserProfile() {
     fetchProfile()
   }, [])
 
-  // Можно добавить обработчик для скачивания
   const handleDownload = async (filename: string) => {
     const result = await FileDownload(filename)
     if (result?.error) {
@@ -104,8 +103,8 @@ export default function UserProfile() {
           )}
         </div>
 
-        <div className='justify-center flex gap-5 mt-8 '>
-          <form onSubmit={handleSubmit}>
+        <div className='justify-center flex gap-4 mt-8'>
+          <form onSubmit={handleSubmit} className='flex gap-4'>
             <input
               onChange={handleChange}
               type='file'
