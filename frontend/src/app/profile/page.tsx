@@ -74,7 +74,9 @@ export default function UserProfile() {
         </div>
 
         <div className='overflow-y-auto h-96'>
-          <h2 className='text-lg font-semibold mb-2 sticky top-0 bg-[#2D2F44]'>Files:</h2>
+          <h2 className='text-lg font-semibold mb-2 sticky top-0 bg-[#2D2F44]'>
+            Files:
+          </h2>
           {loading && <div>Loading...</div>}
           {error && <div className='text-red-500 mb-4'>{error}</div>}
           {!loading && !error && (
