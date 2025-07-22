@@ -19,6 +19,21 @@ export default function UserProfile() {
   const [userName, setUserName] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  
+  const sortFiles = () => {
+    const newOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+    setSortOrder(newOrder)
+    
+    setFiles(prevFiles => {
+      const sorted = [...prevFiles].sort((a, b) => {
+        return newOrder === 'asc' 
+          ? a.localeCompare(b)
+          : b.localeCompare(a)
+      })
+      return sorted
+    })
+  }
 
   useEffect(() => {
     async function fetchProfile() {
@@ -74,9 +89,15 @@ export default function UserProfile() {
         </div>
 
         <div className='overflow-y-auto h-96'>
-          <h2 className='text-lg font-semibold mb-2 sticky top-0 bg-[#2D2F44]'>
-            Files:
-          </h2>
+          <div className='flex justify-between items-center sticky top-0 bg-[#2D2F44]'>
+            <h2 className='text-lg font-semibold mb-2'>Files:</h2>
+            <button 
+              onClick={sortFiles}
+              className='bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded text-sm mr-2'
+            >
+              Sort {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}
+            </button>
+          </div>
           {loading && <div>Loading...</div>}
           {error && <div className='text-red-500 mb-4'>{error}</div>}
           {!loading && !error && (
