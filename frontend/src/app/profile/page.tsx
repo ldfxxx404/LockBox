@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { getProfile } from '../lib/clientProfile'
 import { FileDownload } from '../lib/clientDownload'
 import { FileDelete } from '../lib/clientDelete'
+import { DeleteButton } from '../components/DeleteButton'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -58,13 +59,6 @@ export default function UserProfile() {
     const result = await FileDownload(filename)
     if (result?.error) {
       alert('Download file error')
-    }
-  }
-
-  const handleDelete = async (filename: string) => {
-    const result = await FileDelete(filename)
-    if (result?.error) {
-      alert('Delete file error')
     }
   }
 
@@ -127,15 +121,10 @@ export default function UserProfile() {
                       >
                         {file}
                       </a>
-                      <button
-                        className='text-red-500 hover:text-red-700 hover:underline ml-4 whitespace-nowrap'
-                        onClick={e => {
-                          e.preventDefault
-                          handleDelete(file)
-                        }}
-                      >
-                        Delete
-                      </button>
+                      <DeleteButton
+                        filename={file}
+                        onDelete={() => setFiles(files.filter(f => f !== file))}
+                      />
                     </li>
                   ))}
                 </ul>
