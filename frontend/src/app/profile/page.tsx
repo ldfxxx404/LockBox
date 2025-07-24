@@ -7,6 +7,7 @@ import { useUpload } from '../hooks/useUpload'
 import { useEffect, useState } from 'react'
 import { getProfile } from '../lib/clientProfile'
 import { FileDownload } from '../lib/clientDownload'
+import { FileDelete } from '../lib/clientDelete'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -20,16 +21,14 @@ export default function UserProfile() {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-  
+
   const sortFiles = () => {
     const newOrder = sortOrder === 'asc' ? 'desc' : 'asc'
     setSortOrder(newOrder)
-    
+
     setFiles(prevFiles => {
       const sorted = [...prevFiles].sort((a, b) => {
-        return newOrder === 'asc' 
-          ? a.localeCompare(b)
-          : b.localeCompare(a)
+        return newOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a)
       })
       return sorted
     })
@@ -58,7 +57,14 @@ export default function UserProfile() {
   const handleDownload = async (filename: string) => {
     const result = await FileDownload(filename)
     if (result?.error) {
-      alert('Ошибка скачивания файла')
+      alert('Download file error')
+    }
+  }
+
+  const handleDelete = async (filename: string) => {
+    const result = await FileDelete(filename)
+    if (result?.error) {
+      alert('Delete file error')
     }
   }
 
@@ -91,7 +97,7 @@ export default function UserProfile() {
         <div className='overflow-y-auto h-96'>
           <div className='flex justify-between items-center sticky top-0 bg-[#2D2F44]'>
             <h2 className='text-lg font-semibold mb-2'>Files:</h2>
-            <button 
+            <button
               onClick={sortFiles}
               className='bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded text-sm mr-2'
             >
@@ -107,7 +113,10 @@ export default function UserProfile() {
               ) : (
                 <ul className='list-disc pl-5'>
                   {files.map((file, idx) => (
-                    <li key={idx} className='break-all'>
+                    <li
+                      key={idx}
+                      className='break-all flex justify-between items-baseline'
+                    >
                       <a
                         href='#'
                         className='text-indigo-400 hover:underline'
@@ -118,6 +127,15 @@ export default function UserProfile() {
                       >
                         {file}
                       </a>
+                      <button
+                        className='text-red-500 hover:text-red-700 hover:underline ml-4 whitespace-nowrap'
+                        onClick={e => {
+                          e.preventDefault
+                          handleDelete(file)
+                        }}
+                      >
+                        Delete
+                      </button>
                     </li>
                   ))}
                 </ul>

@@ -6,3 +6,4 @@ export const PROFILE_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/v2/profile`
 export const LOGOUT_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/logout`
 export const UPLOAD_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/upload`
 export const DOWNLOAD_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/storage/{filename}`
+export const DELETE_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/delete/{filename}`
