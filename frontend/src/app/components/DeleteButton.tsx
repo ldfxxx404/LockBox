@@ -1,6 +1,7 @@
 'use client'
 
 import { FileDelete } from '@/app/lib/clientDelete'
+import { MouseEvent } from 'react'
 
 interface DeleteButtonProps {
   filename: string
@@ -9,7 +10,7 @@ interface DeleteButtonProps {
 }
 
 export const DeleteButton = ({ filename, onDelete }: DeleteButtonProps) => {
-  const handleClick = async (e: React.MouseEvent) => {
+  const handleClick = async (e: MouseEvent) => {
     e.preventDefault()
     const result = await FileDelete(filename)
     if (result?.error) {
