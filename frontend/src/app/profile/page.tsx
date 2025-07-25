@@ -88,7 +88,7 @@ export default function UserProfile() {
           </div>
         </div>
 
-        <div className='overflow-y-auto h-96'>
+        <div className='overflow-y-auto h-96 scrollbar-hidden'>
           <div className='flex justify-between items-center sticky top-0 bg-[#2D2F44]'>
             <h2 className='text-lg font-semibold mb-2'>Files:</h2>
             <button
