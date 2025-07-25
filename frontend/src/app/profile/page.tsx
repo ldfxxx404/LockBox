@@ -7,8 +7,8 @@ import { useUpload } from '../hooks/useUpload'
 import { useEffect, useState } from 'react'
 import { getProfile } from '../lib/clientProfile'
 import { FileDownload } from '../lib/clientDownload'
-import { FileDelete } from '../lib/clientDelete'
 import { DeleteButton } from '../components/DeleteButton'
+import { Upload } from '../components/UploadFile'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -134,19 +134,7 @@ export default function UserProfile() {
         </div>
 
         <div className='justify-center flex gap-4 mt-8'>
-          <form onSubmit={handleSubmit} className='flex gap-4'>
-            <input
-              onChange={handleChange}
-              type='file'
-              className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'
-            />
-            <button
-              type='submit'
-              className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'
-            >
-              Upload
-            </button>
-          </form>
+          <Upload onSubmit={handleSubmit} onChange={handleChange} />
           <button
             className='bg-indigo-500 hover:bg-[#FF5555] transition text-white font-semibold py-2 px-6 rounded-lg'
             onClick={handleLogout}
