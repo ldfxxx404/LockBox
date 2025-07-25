@@ -23,7 +23,9 @@ export const useUpload = () => {
         alert('File upload error')
       } else {
         await FileUploader(selectedFile)
-        alert('File successfully uploaded')
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
       }
     } catch (error) {
       console.error('File upload error:', error)
