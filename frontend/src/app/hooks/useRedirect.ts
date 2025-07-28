@@ -10,6 +10,7 @@ export const useRedirect = () => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return
+
     const token = sessionStorage.getItem('token')
     setHasToken(!!token)
     setIsChecking(false)
@@ -19,11 +20,12 @@ export const useRedirect = () => {
         router.push('/404')
       }, 5000)
       return () => clearTimeout(timer)
-    } else if (window.location.pathname !== '/profile') {
-      router.push('/profile')
     }
-    if (window.location.pathname === '/admin') {
-      router.push('/admin')
+
+    // не редиректим с admin на profile
+    const currentPath = window.location.pathname
+    if (currentPath !== '/profile' && currentPath !== '/dashboard') {
+      router.push('/profile')
     }
   }, [router])
 
