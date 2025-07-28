@@ -22,6 +22,9 @@ export const useRedirect = () => {
     } else if (window.location.pathname !== '/profile') {
       router.push('/profile')
     }
+    if (window.location.pathname === '/admin') {
+      router.push('/admin')
+    }
   }, [router])
 
   return { hasToken, isChecking }
