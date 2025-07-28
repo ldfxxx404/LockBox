@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     const res = await fetch(GET_USERS_URL, {
       method: 'GET',
       headers: {
-        'Content-Type': 'Application/json',
+        'Content-Type': 'application/json',
         authorization: `Bearer ${token}`,
       },
     })
