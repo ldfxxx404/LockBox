@@ -86,7 +86,7 @@ export default function Admin() {
       {filteredUsers.length === 0 ? (
         <p>Users not found</p>
       ) : (
-        <ul className='bg-[#2d2f44] mt-8 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl space-y-3 h-[43rem] overflow-auto'>
+        <ul className='bg-[#2d2f44] mt-8 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl space-y-3 h-[40rem] overflow-auto scrollbar-hidden'>
           {filteredUsers.map((user: User) => (
             <li key={user.id} className='border p-2 rounded'>
               <p>
