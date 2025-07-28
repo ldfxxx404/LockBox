@@ -4,12 +4,22 @@ import { useRedirect } from '@/app/hooks/useRedirect'
 import Forbidden from '@/app/preloader/page'
 import { adminGetUsers } from '@/app/lib/adminGetUsers'
 import { useState, useEffect } from 'react'
+import { UserInput } from '../components/InputForm'
+
+interface User {
+  id: number
+  name: string
+  email: string
+  is_admin: boolean
+  storage_limit: number
+}
 
 export default function Admin() {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState<User[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const { hasToken, isChecking } = useRedirect()
+  const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -43,7 +53,7 @@ export default function Admin() {
   if (isLoading) {
     return (
       <div className='flex flex-col items-center py-20'>
-        <h1 className='text-2xl font-bold mb-6'>Загрузка...</h1>
+        <h1 className='text-2xl font-bold mb-6'>Loading...</h1>
       </div>
     )
   }
@@ -51,29 +61,42 @@ export default function Admin() {
   if (error) {
     return (
       <div className='flex flex-col items-center py-20'>
-        <h1 className='text-2xl font-bold mb-6'>Ошибка</h1>
+        <h1 className='text-2xl font-bold mb-6'>Error</h1>
         <p className='text-red-500'>{error}</p>
       </div>
     )
   }
 
+  const filteredUsers = users.filter(
+    user =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   return (
     <div className='flex flex-col items-center py-20'>
       <h1 className='text-2xl font-bold mb-6'>Admin Panel</h1>
-      {users.length === 0 ? (
-        <p>Нет пользователей</p>
+
+      <UserInput
+        placeholder='Search'
+        type='text'
+        onChange={e => setSearchTerm(e.target.value)}
+      />
+
+      {filteredUsers.length === 0 ? (
+        <p>Users not found</p>
       ) : (
-        <ul className='w-full max-w-md space-y-3'>
-          {users.map((user: any) => (
-            <li key={user.id} className='border p-4 rounded shadow'>
+        <ul className='bg-[#2d2f44] mt-8 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl space-y-3 h-[43rem] overflow-auto'>
+          {filteredUsers.map((user: User) => (
+            <li key={user.id} className='border p-2 rounded'>
               <p>
-                <strong>Имя:</strong> {user.name}
+                <strong>User name:</strong> {user.name}
               </p>
               <p>
                 <strong>Email:</strong> {user.email}
               </p>
               <p>
-                <strong>Admin:</strong> {user.is_admin ? 'Да' : 'Нет'}
+                <strong>Admin:</strong> {user.is_admin ? 'Yes' : 'No'}
               </p>
               <p>
                 <strong>Limit:</strong> {user.storage_limit} MB

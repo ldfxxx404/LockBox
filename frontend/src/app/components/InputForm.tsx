@@ -2,8 +2,8 @@ import { ChangeEvent, InputHTMLAttributes } from 'react'
 
 interface InputFormProps extends InputHTMLAttributes<HTMLInputElement> {
   value?: string
-  type?: 'email' | 'password' | 'name'
-  placeholder?: 'Email' | 'Password' | 'Name'
+  type?: 'email' | 'password' | 'name' | 'text'
+  placeholder?: 'Email' | 'Password' | 'Name' | 'Search'
   required?: boolean
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void
 }
