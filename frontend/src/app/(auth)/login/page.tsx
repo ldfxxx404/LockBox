@@ -18,7 +18,7 @@ export default function LoginPage() {
       await UserLogin({ email, password })
       router.push('/profile')
     } catch (err) {
-      console.log('Login failed URL: ', LOGIN_URL, err)
+      console.log(err)
     }
   }
 
