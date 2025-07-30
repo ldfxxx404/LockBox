@@ -19,7 +19,7 @@ export const Upload = ({ onSubmit, onChange, ...props }: UploadProps) => {
 
         <label
           htmlFor='file_upload'
-          className='bg-indigo-500 hover:bg-indigo-600 transition text-white font-semibold py-2 px-6 rounded-lg'
+          className='bg-[#6272a4] hover:bg-[#5861a0] transition text-white font-medium py-2 px-6 rounded-lg'
         >
           <button type='submit'>Upload</button>
         </label>

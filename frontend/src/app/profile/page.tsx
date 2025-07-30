@@ -9,6 +9,7 @@ import { getProfile } from '../lib/clientProfile'
 import { FileDownload } from '../lib/clientDownload'
 import { DeleteButton } from '../components/DeleteButton'
 import { Upload } from '../components/UploadFile'
+import { Button } from '../components/ActionButton'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -67,9 +68,9 @@ export default function UserProfile() {
   }
 
   return (
-    <div className='min-h-screen bg-[#232536] flex flex-col items-center py-10'>
-      <div className='bg-[#2d2f44] mt-8 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl'>
-        <h3 className='text-indigo-400 text-lg font-semibold mb-4'>
+    <div className='min-h-screen bg-background flex flex-col items-center py-10'>
+      <div className='bg-[#343746] mt-8 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl'>
+        <h3 className='dracula-green text-lg font-semibold mb-4'>
           User storage information
         </h3>
         <div className='mb-2 text-white'>
@@ -89,11 +90,11 @@ export default function UserProfile() {
         </div>
 
         <div className='overflow-y-auto h-96 scrollbar-hidden'>
-          <div className='flex justify-between items-center sticky top-0 bg-[#2D2F44]'>
+          <div className='flex justify-between items-center sticky top-0 bg-[#343746]'>
             <h2 className='text-lg font-semibold mb-2'>Files:</h2>
             <button
               onClick={sortFiles}
-              className='bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded text-sm mr-2'
+              className='bg-[#6272a4] hover:bg-[#5861a0] text-white px-3 py-1 rounded text-sm mr-2' // TODO: change to button component
             >
               Sort {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}
             </button>
@@ -134,13 +135,11 @@ export default function UserProfile() {
         </div>
 
         <div className='justify-center flex gap-4 mt-8'>
+          <div className='flex gap-4 w-full justify-center'>
+
           <Upload onSubmit={handleSubmit} onChange={handleChange} />
-          <button
-            className='bg-indigo-500 hover:bg-[#FF5555] transition text-white font-semibold py-2 px-6 rounded-lg'
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
+          <Button label='Logout' type='submit' onClick={handleLogout}/>
+            </div>
         </div>
       </div>
     </div>

@@ -2,7 +2,6 @@
 
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LOGIN_URL } from '../../constants/api'
 import { UserLogin } from '../../lib/clientLogin'
 import { Button } from '../../components/ActionButton'
 import { UserInput } from '../../components/InputForm'
