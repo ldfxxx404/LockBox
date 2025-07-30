@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes } from 'react'
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string
   type: 'button' | 'submit'
-  onClick?: () => void 
+  onClick?: () => void
 }
 
 export const Button = ({ label, type, onClick }: ButtonProps) => {
