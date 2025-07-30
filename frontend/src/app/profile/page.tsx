@@ -10,6 +10,7 @@ import { FileDownload } from '../lib/clientDownload'
 import { DeleteButton } from '../components/DeleteButton'
 import { Upload } from '../components/UploadFile'
 import { Button } from '../components/ActionButton'
+import { Sort } from '../components/SortButton'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -92,12 +93,11 @@ export default function UserProfile() {
         <div className='overflow-y-auto h-96 scrollbar-hidden'>
           <div className='flex justify-between items-center sticky top-0 bg-[#343746]'>
             <h2 className='text-lg font-semibold mb-2'>Files:</h2>
-            <button
+
+            <Sort
               onClick={sortFiles}
-              className='bg-[#6272a4] hover:bg-[#5861a0] text-white px-3 py-1 rounded text-sm mr-2' // TODO: change to button component
-            >
-              Sort {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}
-            </button>
+              label={`Sort ${sortOrder === 'asc' ? 'A-Z' : 'Z-A'}`}
+            />
           </div>
           {loading && <div>Loading...</div>}
           {error && <div className='text-red-500 mb-4'>{error}</div>}
@@ -136,10 +136,9 @@ export default function UserProfile() {
 
         <div className='justify-center flex gap-4 mt-8'>
           <div className='flex gap-4 w-full justify-center'>
-
-          <Upload onSubmit={handleSubmit} onChange={handleChange} />
-          <Button label='Logout' type='submit' onClick={handleLogout}/>
-            </div>
+            <Upload onSubmit={handleSubmit} onChange={handleChange} />
+            <Button label='Logout' type='submit' onClick={handleLogout} />
+          </div>
         </div>
       </div>
     </div>
