@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, useState } from 'react'
+import { ButtonHTMLAttributes } from 'react'
 
 interface SortButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   onClick: () => void
