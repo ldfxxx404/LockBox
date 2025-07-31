@@ -1,3 +1,4 @@
+# --- env --- 
 SHELL := /bin/bash
 
 DOCKER_COMPOSE := @docker compose
@@ -11,6 +12,7 @@ MIGRATIONS_DIR=migrations
 DB_URL=postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
 DB_CONTAINER_URL=postgres://postgres:postgres@${POSTGRES_NAME}:5432/lock_box?sslmode=disable
 
+# --- misc ---
 up:
 	$(DOCKER_COMPOSE) up -d
 
@@ -33,8 +35,9 @@ init_prod: down_force
 build:
 	$(DOCKER_COMPOSE) build --no-cache
 
-restart: down up
+restart: restart_backend restart_db restart_frontend restart_minio
 
+# --- console ---
 console_bd:
 	@docker exec -it ${POSTGRES_NAME} ${SHELL}
 
@@ -47,6 +50,7 @@ console_minio:
 console_front:
 	@docker exec -it ${FRONTEND_NAME} ${SHELL}
 
+# --- logs ---
 frontend_logs:
 	$(DOCKER_COMPOSE) logs -f frontend
 
@@ -59,6 +63,7 @@ db_logs:
 minio_logs:
 	$(DOCKER_COMPOSE) logs -f minio
 
+# --- db, migrate ---
 migrate:
 	@docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} up
 
@@ -68,21 +73,16 @@ migrate_down:
 migrate_status:
 	@docker exec ${BACKEND_NAME} goose -dir migrations postgres ${DB_URL} status
 
-swag_generate:
-	@cd backend && \
-	./scripts/swag.sh
-
-restart_db:
-	$(DOCKER_COMPOSE) stop postgres
-	$(DOCKER_COMPOSE) rm -f postgres
-	$(DOCKER_COMPOSE) build --no-cache postgres
-	$(DOCKER_COMPOSE) up -d --no-deps postgres
-
 dump:
 	./backend/scripts/dump.sh 
 
 restore: 
 	./backend/scripts/restore_dump.sh 
+
+# --- docs ---
+swag_generate:
+	@cd backend && \
+	./scripts/swag.sh
 
 help:
 	@echo "make up                              - Запуск всех сервисов в фоне"
@@ -107,6 +107,7 @@ help:
 	@echo "make restart_db                      - Перезапуск БД (down + up + wait)"
 	@echo "make help                            - Показать это сообщение"
 
+# --- restarts ---
 restart_backend:
 	$(DOCKER_COMPOSE) stop backend
 	$(DOCKER_COMPOSE) rm -f backend
@@ -126,6 +127,13 @@ restart_frontend:
 	$(DOCKER_COMPOSE) build --no-cache frontend
 	$(DOCKER_COMPOSE) up -d --no-deps frontend
 
+restart_db:
+	$(DOCKER_COMPOSE) stop postgres
+	$(DOCKER_COMPOSE) rm -f postgres
+	$(DOCKER_COMPOSE) build --no-cache postgres
+	$(DOCKER_COMPOSE) up -d --no-deps postgres
+
+# --- tests ---
 test_frontend:
 	@docker exec $(FRONTEND_NAME) yarn run types:check
 	@docker exec $(FRONTEND_NAME) yarn run prettier:fix
@@ -136,5 +144,6 @@ test_frontend:
 test_backend:
 	@cd backend && \
 	./scripts/check.sh
+
 
 .PHONY: up down down_force init build restart console_backend frontend_logs backend_logs migrate migrate_down migrate_status restart_db help restart_frontend restart_backend test_frontend restart_minio minio_logs console_front test_backend  
