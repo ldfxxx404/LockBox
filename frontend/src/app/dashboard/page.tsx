@@ -5,6 +5,7 @@ import Forbidden from '@/app/preloader/page'
 import { adminGetUsers } from '@/app/lib/adminGetUsers'
 import { useState, useEffect } from 'react'
 import { UserInput } from '../components/InputForm'
+import { adminMakeAdmin } from '../lib/adminMakeAdmin'
 
 interface User {
   id: number
@@ -21,6 +22,15 @@ export default function Admin() {
   const { hasToken, isChecking } = useRedirect()
   const [searchTerm, setSearchTerm] = useState('')
 
+  const handleClick = async (userId: number) => {
+    const res = await adminMakeAdmin({user_id: userId})
+    if(!res) {
+      console.log('failed make admin',)
+    } else {
+      console.log('success')
+    }
+  }
+  
   useEffect(() => {
     const fetchUsers = async () => {
       if (!hasToken) return
@@ -89,6 +99,7 @@ export default function Admin() {
         <ul className='bg-[#2d2f44] mt-8 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl space-y-3 h-[40rem] overflow-auto scrollbar-hidden'>
           {filteredUsers.map((user: User) => (
             <li key={user.id} className='border p-2 rounded'>
+              <button onClick={() => handleClick(user.id)}>make</button>
               <p>
                 <strong>User name:</strong> {user.name}
               </p>
@@ -97,6 +108,8 @@ export default function Admin() {
               </p>
               <p>
                 <strong>Admin:</strong> {user.is_admin ? 'Yes' : 'No'}
+                
+                
               </p>
               <p>
                 <strong>Limit:</strong> {user.storage_limit} MB
