@@ -8,4 +8,4 @@ export const UPLOAD_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/upload`
 export const DOWNLOAD_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/storage/{filename}`
 export const DELETE_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/delete/{filename}`
 export const GET_USERS_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/admin/users`
-export const MAKE_ADMIN_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/admin/make_admin/{user_id}`
+export const MAKE_ADMIN_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/admin/make_admin`

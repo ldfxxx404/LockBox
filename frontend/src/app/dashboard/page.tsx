@@ -6,6 +6,7 @@ import { adminGetUsers } from '@/app/lib/adminGetUsers'
 import { useState, useEffect } from 'react'
 import { UserInput } from '../components/InputForm'
 import { adminMakeAdmin } from '../lib/adminMakeAdmin'
+import { Button } from '../components/ActionButton'
 
 interface User {
   id: number
@@ -22,15 +23,18 @@ export default function Admin() {
   const { hasToken, isChecking } = useRedirect()
   const [searchTerm, setSearchTerm] = useState('')
 
-  const handleClick = async (userId: number) => {
-    const res = await adminMakeAdmin({user_id: userId})
-    if(!res) {
-      console.log('failed make admin',)
+  const makeAdmin = async (userId: number) => {
+    const res = await adminMakeAdmin({ user_id: userId })
+    if (!res) {
+      console.log('failed make admin')
     } else {
       console.log('success')
     }
   }
-  
+  const revokeAdmin = () => {
+    alert('revoke')
+  }
+
   useEffect(() => {
     const fetchUsers = async () => {
       if (!hasToken) return
@@ -43,7 +47,7 @@ export default function Admin() {
         setUsers(usersData)
       } catch (err) {
         console.error('Failed to fetch users:', err)
-        setError(err instanceof Error ? err.message : 'Неизвестная ошибка')
+        setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
         setIsLoading(false)
       }
@@ -98,8 +102,20 @@ export default function Admin() {
       ) : (
         <ul className='bg-[#2d2f44] mt-8 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl space-y-3 h-[40rem] overflow-auto scrollbar-hidden'>
           {filteredUsers.map((user: User) => (
-            <li key={user.id} className='border p-2 rounded'>
-              <button onClick={() => handleClick(user.id)}>make</button>
+            <li
+              key={user.id}
+              className='border p-4 rounded-lg relative transition-colors'
+            >
+              <div className='absolute right-1.5 mt-2 mr-4'>
+                <Button
+                  onClick={() =>
+                    user.is_admin ? revokeAdmin() : makeAdmin(user.id)
+                  }
+                  label={user.is_admin ? 'Revoke admin' : 'Make admin'}
+                  type='submit'
+                  className={user.is_admin ? '' : 'pr-7'}
+                />
+              </div>
               <p>
                 <strong>User name:</strong> {user.name}
               </p>
@@ -108,8 +124,6 @@ export default function Admin() {
               </p>
               <p>
                 <strong>Admin:</strong> {user.is_admin ? 'Yes' : 'No'}
-                
-                
               </p>
               <p>
                 <strong>Limit:</strong> {user.storage_limit} MB

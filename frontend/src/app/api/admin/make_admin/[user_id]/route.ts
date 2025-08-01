@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server'
 import { MAKE_ADMIN_URL } from '@/app/constants/api'
 
-export async function PUT(req: Request) {
+export async function PUT(
+  req: Request,
+  { params }: { params: { user_id: string } }
+) {
   try {
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
@@ -13,7 +16,14 @@ export async function PUT(req: Request) {
       )
     }
 
-    const res = await fetch(MAKE_ADMIN_URL, {
+    const user_id = Number(params.user_id)
+    if (isNaN(user_id)) {
+      return NextResponse.json(
+        { error: 'Invalid user ID format' },
+        { status: 400 }
+      )
+    }
+    const res = await fetch(`${MAKE_ADMIN_URL}/${user_id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -22,7 +32,6 @@ export async function PUT(req: Request) {
     })
 
     const data = await res.json()
-    
     if (!res.ok) {
       console.error('Upstream error:', data)
       return NextResponse.json(
@@ -31,7 +40,6 @@ export async function PUT(req: Request) {
       )
     }
     return NextResponse.json(data)
-
   } catch (err) {
     console.error(err)
     return NextResponse.json(
