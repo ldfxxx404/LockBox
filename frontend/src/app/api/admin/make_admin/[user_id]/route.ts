@@ -3,7 +3,7 @@ import { MAKE_ADMIN_URL } from '@/app/constants/api'
 
 export async function PUT(
   req: NextRequest,
-  context:  { params: { user_id: string } }
+  context: { params: { user_id: string } }
 ) {
   try {
     const authHeader = req.headers.get('authorization')
