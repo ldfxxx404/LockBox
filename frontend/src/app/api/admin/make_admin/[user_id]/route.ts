@@ -6,13 +6,6 @@ export async function PUT(req: NextRequest) {
   const user_id_str = segments[segments.length - 1]
   const user_id = Number(user_id_str)
 
-  if (isNaN(user_id)) {
-    return NextResponse.json(
-      { error: 'Invalid user ID format' },
-      { status: 400 }
-    )
-  }
-
   try {
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
