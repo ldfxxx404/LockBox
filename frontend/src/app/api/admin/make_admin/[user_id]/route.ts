@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { MAKE_ADMIN_URL } from '@/app/constants/api'
 
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { user_id: string } }
 ) {
   try {
