@@ -1,4 +1,5 @@
 'use client'
+
 export async function adminGetUsers() {
   try {
     const res = await fetch('/api/admin/users', {
