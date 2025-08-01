@@ -3,7 +3,7 @@ import { MAKE_ADMIN_URL } from '@/app/constants/api'
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { user_id: string } }
+  context:  { params: { user_id: string } }
 ) {
   try {
     const authHeader = req.headers.get('authorization')
@@ -16,7 +16,7 @@ export async function PUT(
       )
     }
 
-    const user_id = Number(params.user_id)
+    const user_id = Number(context.params.user_id)
     if (isNaN(user_id)) {
       return NextResponse.json(
         { error: 'Invalid user ID format' },
