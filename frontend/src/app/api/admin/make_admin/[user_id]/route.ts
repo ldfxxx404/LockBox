@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MAKE_ADMIN_URL } from '@/app/constants/api'
 
-export async function PUT(
-  req: NextRequest,
-  context: { params: { user_id: string } }
-) {
+export async function PUT(req: NextRequest) {
+  const segments = req.nextUrl.pathname.split('/')
+  const user_id_str = segments[segments.length - 1]
+  const user_id = Number(user_id_str)
+
+  if (isNaN(user_id)) {
+    return NextResponse.json(
+      { error: 'Invalid user ID format' },
+      { status: 400 }
+    )
+  }
+
   try {
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
@@ -16,13 +24,6 @@ export async function PUT(
       )
     }
 
-    const user_id = Number(context.params.user_id)
-    if (isNaN(user_id)) {
-      return NextResponse.json(
-        { error: 'Invalid user ID format' },
-        { status: 400 }
-      )
-    }
     const res = await fetch(`${MAKE_ADMIN_URL}/${user_id}`, {
       method: 'PUT',
       headers: {
