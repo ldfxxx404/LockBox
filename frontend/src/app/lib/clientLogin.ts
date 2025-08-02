@@ -1,32 +1,37 @@
-import { loginPayload } from '@/app/types/client'
+'use client'
 
-export async function UserLogin(data: loginPayload) {
+import { loginPayload } from '@/app/types/client'
+import { ErrorResponse } from '@/app/types/api'
+
+export async function UserLogin(loginPayload: loginPayload) {
   try {
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(loginPayload),
     })
-
-    const json = await res.json().catch(() => ({}))
+    const data = await res.json()
 
     if (!res.ok) {
-      const message =
-        typeof json.message === 'string'
-          ? json.message
-          : `Login failed (${res.status})`
-      throw new Error(message || 'Login failed')
+      const error: ErrorResponse = {
+        code: 401,
+        message: 'Login error!',
+        detail: 'Check your credentials',
+      }
+      return console.error(error, { status: error.code })
     }
     try {
-      const token = json.token
+      const token = data.token
       sessionStorage.setItem('token', token)
     } catch (error) {
-      console.log('Error get token', error)
+      console.error('Error get token', error)
     }
-
-    return json
+    return data
   } catch (err) {
-    const error = err as Error
-    throw new Error(error?.message || 'Network Error')
+    const error: ErrorResponse = {
+      code: 500,
+      message: 'Eternal server error',
+    }
+    return console.error(error, { status: error.code }, err)
   }
 }

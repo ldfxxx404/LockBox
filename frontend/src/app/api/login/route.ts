@@ -31,6 +31,6 @@ export async function POST(request: Request) {
       detail: err.message,
       code: 500,
     }
-    return NextResponse.json(serverError, { status: 500 })
+    return NextResponse.json(serverError, { status: serverError.code })
   }
 }
