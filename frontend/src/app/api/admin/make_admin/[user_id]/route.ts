@@ -1,21 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MAKE_ADMIN_URL } from '@/app/constants/api'
+import { ErrorResponse } from '@/app/types/api'
 
 export async function PUT(req: NextRequest) {
-  const segments = req.nextUrl.pathname.split('/')
-  const user_id_str = segments[segments.length - 1]
-  const user_id = Number(user_id_str)
-
   try {
+    const segments = req.nextUrl.pathname.split('/')
+    const user_id_str = segments[segments.length - 1]
+    const user_id = Number(user_id_str)
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Unauthorized: Token is missing' },
-        { status: 401 }
-      )
-    }
 
     const res = await fetch(`${MAKE_ADMIN_URL}/${user_id}`, {
       method: 'PUT',
@@ -24,14 +17,16 @@ export async function PUT(req: NextRequest) {
         authorization: `Bearer ${token}`,
       },
     })
-
     const data = await res.json()
-    if (!res.ok) {
-      console.error('Upstream error:', data)
-      return NextResponse.json(
-        { error: 'Failed to make admin' },
-        { status: res.status }
-      )
+
+    if (!res.ok || !token) {
+      const error: ErrorResponse = {
+        message: 'Authtentication required',
+        detail:
+          'Missing or invalid authorization token. Please log in and try again.',
+        code: 401,
+      }
+      return NextResponse.json(error, { status: error.code })
     }
     return NextResponse.json(data)
   } catch (err) {
