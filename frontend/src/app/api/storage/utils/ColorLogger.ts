@@ -1,8 +1,8 @@
 class ColorLogger {
-  private red = '\x1b[30m'
+  private red = '\x1b[31m'
   private green = '\x1b[32m'
-  private blue = '\x1b[34m'
   private yellow = '\x1b[33m'
+  private blue = '\x1b[34m'
   private reset = '\x1b[0m'
 
   fatal(message: string | undefined) {
@@ -11,6 +11,10 @@ class ColorLogger {
 
   info(message: string) {
     console.info(`${this.green}[INFO]: ${this.reset} ${message}`)
+  }
+
+  error(message: string) {
+    console.error(`${this.red}[ERROR]: ${this.reset} ${message}`)
   }
 
   debug(message: string) {
