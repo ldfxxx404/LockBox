@@ -28,7 +28,7 @@ export async function adminMakeAdmin(param: Payload) {
     }
     const data = await res.json()
     return data
-  } catch (err) {
+  } catch {
     const error: ErrorResponse = {
       code: 500,
       message: 'Eternal server error',
