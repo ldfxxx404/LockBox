@@ -1,6 +1,7 @@
 import { PROFILE_URL } from '@/app/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/app/types/api'
+import { clogger } from '@/utils/ColorLogger'
 
 export async function GET(req: Request) {
   try {
@@ -24,8 +25,14 @@ export async function GET(req: Request) {
         message: errData.message || 'Unknown error',
         code: errData.status || res.status,
       }
+      clogger.error(
+        'Cannot get /profile. Missing or invalid authorization token. Please log in and try again.'
+      )
       return NextResponse.json(error, { status: res.status })
+    } else {
+      clogger.info('Everything is fine redirect to /profile')
     }
+
     const data = await res.json()
     return NextResponse.json(data)
   } catch (error) {

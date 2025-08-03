@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MAKE_ADMIN_URL } from '@/app/constants/api'
 import { ErrorResponse } from '@/app/types/api'
+import { clogger } from '@/utils/ColorLogger'
 
 export async function PUT(req: NextRequest) {
   try {
@@ -26,7 +27,14 @@ export async function PUT(req: NextRequest) {
           'Missing or invalid authorization token. Please log in and try again.',
         code: 401,
       }
+      clogger.error(
+        'Missing or invalid authorization token. Please log in and try again.'
+      )
       return NextResponse.json(error, { status: error.code })
+    } else {
+      clogger.info(
+        'The user has been successfully granted administrator rights.'
+      )
     }
     return NextResponse.json(data)
   } catch (err) {

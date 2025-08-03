@@ -1,6 +1,7 @@
 import { REGISTER_URL } from '@/app/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/app/types/api'
+import { clogger } from '../../../utils/ColorLogger'
 
 export async function POST(req: Request) {
   try {
@@ -19,9 +20,12 @@ export async function POST(req: Request) {
           'This user already exists, please use other details to register.',
         code: 409,
       }
-      console.log('dfa')
+      clogger.warning(error.detail as string)
       return NextResponse.json(error, { status: error.code })
+    } else {
+      clogger.info('User has registered successfully')
     }
+
     const responseData = await res.json()
     return NextResponse.json(responseData)
   } catch (error) {

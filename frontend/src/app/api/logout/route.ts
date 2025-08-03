@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/app/types/api'
+import { clogger } from '@/utils/ColorLogger'
 
 export async function POST(req: Request) {
   try {
@@ -11,7 +12,12 @@ export async function POST(req: Request) {
         message: 'Unauthorized',
         code: 401,
       }
+      clogger.error(
+        'Missing or invalid authorization token. Please log in and try again.'
+      )
       return NextResponse.json(error, { status: error.code })
+    } else {
+      clogger.info('Logout successfully')
     }
 
     return NextResponse.json({ success: true, message: 'Logout successfully' })
