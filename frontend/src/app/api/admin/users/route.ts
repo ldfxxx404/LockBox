@@ -1,4 +1,5 @@
 import { GET_USERS_URL } from '@/app/constants/api'
+import { clogger } from '@/utils/ColorLogger'
 import { NextResponse } from 'next/server'
 
 export async function GET(req: Request) {
@@ -24,10 +25,15 @@ export async function GET(req: Request) {
 
     if (!res.ok) {
       console.error('Error fetching users:', data)
+      clogger.error(
+        'You dont have rights for visit this page or invalid authorization token. Please log in and try again.'
+      )
       return NextResponse.json(
         { error: 'Failed to fetch users' },
         { status: res.status }
       )
+    } else {
+      clogger.info('Verification passed. User list recived')
     }
 
     return NextResponse.json(data)

@@ -1,6 +1,7 @@
 import { LOGIN_URL } from '@/app/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/app/types/api'
+import { clogger } from '../../../utils/ColorLogger'
 
 export async function POST(request: Request) {
   try {
@@ -18,7 +19,10 @@ export async function POST(request: Request) {
         detail: errData.message || 'Unknown error',
         code: res.status,
       }
+      clogger.error('Login failed! Check your credentials')
       return NextResponse.json(error, { status: res.status })
+    } else {
+      clogger.info('Login completed successfully')
     }
     const responseData = await res.json()
     return NextResponse.json(responseData)
@@ -31,6 +35,6 @@ export async function POST(request: Request) {
       detail: err.message,
       code: 500,
     }
-    return NextResponse.json(serverError, { status: 500 })
+    return NextResponse.json(serverError, { status: serverError.code })
   }
 }

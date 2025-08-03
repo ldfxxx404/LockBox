@@ -1,6 +1,7 @@
 import { DELETE_URL } from '@/app/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/app/types/api'
+import { clogger } from '@/utils/ColorLogger'
 
 export async function DELETE(req: Request) {
   const authHeader = req.headers.get('authorization')
@@ -14,7 +15,10 @@ export async function DELETE(req: Request) {
         message: !token ? 'Unauthorized' : 'Filename required',
         code: !token ? 403 : 400,
       }
+      clogger.error('Unauthorized! Token not found')
       return NextResponse.json(error, { status: error.code })
+    } else {
+      clogger.info('File successfully deleted')
     }
 
     const res = await fetch(

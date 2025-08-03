@@ -20,7 +20,7 @@ export const useUpload = () => {
 
     try {
       if (!sessionStorage.getItem('token')) {
-        alert('File upload error')
+        alert('Error uploading file, unauthorized')
       } else {
         await FileUploader(selectedFile)
         setTimeout(() => {
@@ -28,8 +28,8 @@ export const useUpload = () => {
         }, 1000)
       }
     } catch (error) {
-      console.error('File upload error:', error)
-      alert('File upload error')
+      console.error('Error uploading file: ', error)
+      alert('Error uploading file, unauthorized')
     }
   }
   return { handleChange, handleSubmit }

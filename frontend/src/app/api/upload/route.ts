@@ -1,6 +1,7 @@
 import { UPLOAD_URL } from '@/app/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/app/types/api'
+import { clogger } from '@/utils/ColorLogger'
 
 export async function POST(req: Request) {
   const formData = await req.formData()
@@ -18,7 +19,12 @@ export async function POST(req: Request) {
             : 'Invalid request',
         code: !token ? 403 : 400,
       }
+      clogger.error(
+        'Error uploading file. Missing or invalid authorization token. Please log in and try again.'
+      )
       return NextResponse.json(error, { status: error.code })
+    } else {
+      clogger.info('File uploaded successfully')
     }
 
     const uploadForm = new FormData()
