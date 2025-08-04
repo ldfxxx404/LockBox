@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { UserInput } from '../components/InputForm'
 import { adminMakeAdmin } from '../lib/adminMakeAdmin'
 import { Button } from '../components/ActionButton'
+import { adminRevokeAdmin } from '../lib/adminRevokeAdmin'
 
 interface User {
   id: number
@@ -24,6 +25,7 @@ export default function Admin() {
   const [searchTerm, setSearchTerm] = useState('')
 
   const makeAdmin = async (userId: number) => {
+    //TODO: move userId: number to types.ts
     const res = await adminMakeAdmin({ user_id: userId })
     if (!res) {
       console.log('failed make admin')
@@ -31,8 +33,14 @@ export default function Admin() {
       console.log('success')
     }
   }
-  const revokeAdmin = () => {
-    alert('revoke')
+  const revokeAdmin = async (userId: number) => {
+    //TODO: move userId: number to types.ts
+    const res = await adminRevokeAdmin({ user_id: userId })
+    if (!res) {
+      console.log('failed make admin')
+    } else {
+      console.log('success')
+    }
   }
 
   useEffect(() => {
@@ -109,7 +117,7 @@ export default function Admin() {
               <div className='absolute right-1.5 mt-2 mr-4'>
                 <Button
                   onClick={() =>
-                    user.is_admin ? revokeAdmin() : makeAdmin(user.id)
+                    user.is_admin ? revokeAdmin(user.id) : makeAdmin(user.id)
                   }
                   label={user.is_admin ? 'Revoke admin' : 'Make admin'}
                   type='submit'
