@@ -6,7 +6,7 @@ import { ErrorResponse } from '@/app/types/api'
 export async function PUT(req: NextRequest) {
   try {
     const segments = req.nextUrl.pathname.split('/')
-    const user_id_str = segments[segments.length - 1] 
+    const user_id_str = segments[segments.length - 1]
     const user_id = Number(user_id_str)
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
