@@ -8,6 +8,7 @@ import { UserInput } from '../components/InputForm'
 import { adminMakeAdmin } from '../lib/adminMakeAdmin'
 import { Button } from '../components/ActionButton'
 import { adminRevokeAdmin } from '../lib/adminRevokeAdmin'
+import { UpdateLimit } from '../lib/adminUpdateLimit'
 
 interface User {
   id: number
@@ -23,6 +24,34 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(false)
   const { hasToken, isChecking } = useRedirect()
   const [searchTerm, setSearchTerm] = useState('')
+  const [limitInputs, setLimitInputs] = useState<Record<number, number | ''>>(
+    {}
+  )
+  const [limitMessages, setLimitMessages] = useState<Record<number, string>>({})
+
+  const handleLimitChange = (userId: number, value: number | '') => {
+    setLimitInputs(prev => ({ ...prev, [userId]: value }))
+  }
+
+  const handleLimitUpdate = async (userId: number) => {
+    const limit = limitInputs[userId]
+
+    if (limit === '' || isNaN(Number(limit))) {
+      setLimitMessages(prev => ({ ...prev, [userId]: 'Inser limut value' }))
+      return
+    }
+
+    const res = await UpdateLimit(userId, Number(limit))
+
+    if (res?.error) {
+      setLimitMessages(prev => ({ ...prev, [userId]: 'Error while upd limit' }))
+    } else {
+      setLimitMessages(prev => ({
+        ...prev,
+        [userId]: 'Limit successfuly updated',
+      }))
+    }
+  }
 
   const makeAdmin = async (userId: number) => {
     //TODO: move userId: number to types.ts
@@ -115,6 +144,28 @@ export default function Admin() {
               className='border p-4 rounded-lg relative transition-colors'
             >
               <div className='absolute right-1.5 mt-2 mr-4'>
+                <div className='mt-2 space-y-2'>
+                  <input
+                    type='number'
+                    value={limitInputs[user.id] ?? ''}
+                    onChange={e =>
+                      handleLimitChange(user.id, Number(e.target.value))
+                    }
+                    placeholder='New limit (MB)'
+                    className='w-32 rounded-md px-2 py-1 text-black'
+                  />
+                  <Button
+                    onClick={() => handleLimitUpdate(user.id)}
+                    label='Update Limit'
+                    type='button'
+                  />
+                  {limitMessages[user.id] && (
+                    <p className='text-xs text-white'>
+                      {limitMessages[user.id]}
+                    </p>
+                  )}
+                </div>
+
                 <Button
                   onClick={() =>
                     user.is_admin ? revokeAdmin(user.id) : makeAdmin(user.id)

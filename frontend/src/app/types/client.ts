@@ -14,3 +14,8 @@ export interface RegistrationPayload {
   name: string
   password: string
 }
+
+export interface UpdateStoragePayload {
+  new_limit: number
+  user_id: number
+}
