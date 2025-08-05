@@ -35,5 +35,11 @@ export async function PUT(req: Request) {
     }
     const data = await res.json()
     return NextResponse.json(data)
-  } catch (error) {}
+  } catch (err) {
+    console.error(err)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
 }
