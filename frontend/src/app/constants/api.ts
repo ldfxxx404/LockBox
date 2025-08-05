@@ -10,3 +10,4 @@ export const DELETE_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/delete/{filename}`
 export const GET_USERS_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/admin/users`
 export const MAKE_ADMIN_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/admin/make_admin`
 export const REVOKE_ADMIN_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/admin/revoke_admin`
+export const UPDATE_LIMIT_URL = `${NEXT_PUBLIC_API_BASE_URL}/api/admin/update_limit`
