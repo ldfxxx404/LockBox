@@ -1,16 +1,20 @@
 import { GET_USERS_URL } from '@/app/constants/api'
 import { clogger } from '@/utils/ColorLogger'
 import { NextResponse } from 'next/server'
+import { ErrorResponse } from '@/app/types/api'
 
 export async function GET(req: Request) {
   try {
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
+
     if (!token) {
-      return NextResponse.json(
-        { error: 'Unauthorized: Token is missing' },
-        { status: 401 }
-      )
+      const error: ErrorResponse = {
+        code: 401,
+        message: 'Unauthorized',
+      }
+      clogger.error('Missing or invalid authorization token.')
+      return NextResponse.json(error, { status: error.code })
     }
 
     const res = await fetch(GET_USERS_URL, {
@@ -24,24 +28,27 @@ export async function GET(req: Request) {
     const data = await res.json()
 
     if (!res.ok) {
-      console.error('Error fetching users:', data)
-      clogger.error(
-        'You dont have rights for visit this page or invalid authorization token. Please log in and try again.'
-      )
+      const message = data?.message || 'Failed to fetch users.'
+      clogger.error(`Fetch failed: ${res.status} - ${message}`)
       return NextResponse.json(
-        { error: 'Failed to fetch users' },
+        {
+          code: res.status,
+          message: 'Failed to fetch users',
+          detail: message,
+        },
         { status: res.status }
       )
-    } else {
-      clogger.info('Verification passed. User list recived')
     }
 
+    clogger.info('Authorized. User list received.')
     return NextResponse.json(data)
   } catch (err) {
     console.error('Internal server error:', err)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    const error: ErrorResponse = {
+      code: 500,
+      message: 'Internal server error',
+      detail: (err as Error).message,
+    }
+    return NextResponse.json(error, { status: error.code })
   }
 }

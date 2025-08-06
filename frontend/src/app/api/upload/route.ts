@@ -4,31 +4,28 @@ import { ErrorResponse } from '@/app/types/api'
 import { clogger } from '@/utils/ColorLogger'
 
 export async function POST(req: Request) {
-  const formData = await req.formData()
-  const file = formData.get('file')
-  const authHeader = req.headers.get('authorization')
-  const token = authHeader?.split(' ')[1]
-
   try {
+    const formData = await req.formData()
+    const file = formData.get('file')
+    const authHeader = req.headers.get('authorization')
+    const token = authHeader?.split(' ')[1]
+
     if (!token || !file) {
       const error: ErrorResponse = {
-        message: !token
-          ? 'Unauthorized'
-          : !file
-            ? 'File not upload'
-            : 'Invalid request',
+        message: !token ? 'Unauthorized' : 'File not uploaded',
         code: !token ? 403 : 400,
       }
       clogger.error(
-        'Error uploading file. Missing or invalid authorization token. Please log in and try again.'
+        !token
+          ? 'Missing or invalid authorization token. Please log in and try again.'
+          : 'File not provided in the request.'
       )
       return NextResponse.json(error, { status: error.code })
-    } else {
-      clogger.info('File uploaded successfully')
     }
 
     const uploadForm = new FormData()
     uploadForm.append('file', file)
+
     const res = await fetch(UPLOAD_URL, {
       method: 'POST',
       body: uploadForm,
@@ -38,26 +35,27 @@ export async function POST(req: Request) {
     })
 
     if (!res.ok) {
+      const errorText = await res.text()
+      clogger.error(`Upload failed: ${errorText}`)
       const error: ErrorResponse = {
         message: 'Upload file error',
-        detail: 'Token not found!',
+        detail: errorText || 'Unknown error',
         code: res.status,
       }
-      const text = await res.text()
-      console.error('UPLOAD_URL error:', text)
       return NextResponse.json(error, { status: error.code })
     }
-    const data = await res.json()
 
+    clogger.info('File uploaded successfully')
+    const data = await res.json()
     return NextResponse.json(data)
   } catch (err) {
     const error = err as Error
+    clogger.error(`Internal server error during file upload: ${error.message}`)
     const response: ErrorResponse = {
       message: 'Internal server error',
       detail: error.message,
       code: 500,
     }
-    console.error('Error:', error)
     return NextResponse.json(response, { status: response.code })
   }
 }

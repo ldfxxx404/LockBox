@@ -8,8 +8,20 @@ export async function PUT(req: NextRequest) {
     const segments = req.nextUrl.pathname.split('/')
     const user_id_str = segments[segments.length - 1]
     const user_id = Number(user_id_str)
+
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
+
+    if (!token) {
+      const error: ErrorResponse = {
+        code: 401,
+        message: 'Authentication required',
+      }
+      clogger.error(
+        'Missing or invalid authorization token. Please log in and try again.'
+      )
+      return NextResponse.json(error, { status: error.code })
+    }
 
     const res = await fetch(`${REVOKE_ADMIN_URL}/${user_id}`, {
       method: 'PUT',
@@ -18,31 +30,26 @@ export async function PUT(req: NextRequest) {
         authorization: `Bearer ${token}`,
       },
     })
+
     const data = await res.json()
 
-    if (!res.ok || !token) {
-      const error: ErrorResponse = {
-        code: 401,
-        message: 'Authtentication required',
-        detail:
-          'Missing or invalid authorization token. Please log in and try again.',
-      }
+    if (!res.ok) {
       clogger.error(
-        'Missing or invalid authorization token. Please log in and try again.'
+        `API error: ${res.status} - ${data?.message || res.statusText}`
       )
-      return NextResponse.json(error, { status: error.code })
-    } else {
-      clogger.info(
-        "You've been demoted from the privileged caste, please go fuck yourself"
-      )
+      return NextResponse.json(data, { status: res.status })
     }
+
+    clogger.info('Admin rights successfully revoked from the user.')
 
     return NextResponse.json(data)
   } catch (err) {
     console.error(err)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    const error: ErrorResponse = {
+      code: 500,
+      message: 'Internal server error',
+      detail: (err as Error).message,
+    }
+    return NextResponse.json(error, { status: error.code })
   }
 }

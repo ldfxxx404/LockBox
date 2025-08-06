@@ -1,12 +1,14 @@
 import { PROFILE_URL } from '@/app/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/app/types/api'
+import { clogger } from '@/utils/ColorLogger'
 
 export async function GET(req: Request) {
   try {
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
     if (!token) {
+      clogger.error('Unauthorized request to /profile: missing token')
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
@@ -18,19 +20,23 @@ export async function GET(req: Request) {
       },
     })
 
-    if (!res.ok) {
-      const errData = await res.json()
+    const data = await res.json()
 
+    if (!res.ok) {
+      clogger.error(
+        `Failed to fetch profile: ${data.message || 'Unknown error'}`
+      )
       const error: ErrorResponse = {
-        message: errData.message || 'Unknown error',
-        code: errData.status || res.status,
+        message: data.message || 'Unknown error',
+        code: data.status || res.status,
       }
       return NextResponse.json(error, { status: res.status })
     }
-    const data = await res.json()
+
+    clogger.info('Profile fetched successfully')
     return NextResponse.json(data)
   } catch (error) {
-    console.error('Storage API error:', error)
+    clogger.error(`Storage API error: ${(error as Error).message}`)
     const response: ErrorResponse = {
       message: 'Internal server error',
       code: 500,

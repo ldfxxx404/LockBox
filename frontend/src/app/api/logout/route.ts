@@ -4,7 +4,7 @@ import { clogger } from '@/utils/ColorLogger'
 
 export async function POST(req: Request) {
   try {
-    const authHeader = req.headers.get('Authorization')
+    const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
 
     if (!token) {
@@ -16,9 +16,9 @@ export async function POST(req: Request) {
         'Missing or invalid authorization token. Please log in and try again.'
       )
       return NextResponse.json(error, { status: error.code })
-    } else {
-      clogger.info('Logout successfully')
     }
+
+    clogger.info('Logout successfully')
 
     return NextResponse.json({ success: true, message: 'Logout successfully' })
   } catch (error) {

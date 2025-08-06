@@ -8,6 +8,18 @@ export async function PUT(req: Request) {
   try {
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
+
+    if (!token) {
+      const error: ErrorResponse = {
+        code: 401,
+        message: 'Authentication required',
+      }
+      clogger.error(
+        'Missing or invalid authorization token. Please log in and try again.'
+      )
+      return NextResponse.json(error, { status: error.code })
+    }
+
     const body = (await req.json()) as UpdateStoragePayload
 
     const res = await fetch(UPDATE_LIMIT_URL, {
@@ -19,27 +31,24 @@ export async function PUT(req: Request) {
       body: JSON.stringify(body),
     })
 
-    if (!res.ok || !token) {
-      const error: ErrorResponse = {
-        code: 401,
-        message: 'Authtentication required',
-        detail:
-          'Missing or invalid authorization token. Please log in and try again.',
-      }
-      clogger.error(
-        'Missing or invalid authorization token. Please log in and try again.'
-      )
-      return NextResponse.json(error, { status: error.code })
-    } else {
-      clogger.info('New limit set successfully')
-    }
     const data = await res.json()
+
+    if (!res.ok) {
+      clogger.error(
+        `API error: ${res.status} - ${data?.message || res.statusText}`
+      )
+      return NextResponse.json(data, { status: res.status })
+    }
+
+    clogger.info('New limit set successfully')
     return NextResponse.json(data)
   } catch (err) {
     console.error(err)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    const error: ErrorResponse = {
+      code: 500,
+      message: 'Internal server error',
+      detail: (err as Error).message,
+    }
+    return NextResponse.json(error, { status: error.code })
   }
 }

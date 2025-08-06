@@ -13,10 +13,16 @@ export async function GET(req: Request) {
     if (!token || !filename) {
       const error: ErrorResponse = {
         message: !token ? 'Unauthorized' : 'Filename required',
-        code: !token ? 403 : 400,
+        code: !token ? 401 : 400,
       }
+      clogger.error(
+        !token
+          ? 'Authorization token is missing.'
+          : 'Filename query parameter is required.'
+      )
       return NextResponse.json(error, { status: error.code })
     }
+
     const res = await fetch(
       DOWNLOAD_URL.replace('{filename}', encodeURIComponent(filename)),
       {
@@ -29,21 +35,18 @@ export async function GET(req: Request) {
     )
 
     if (!res.ok) {
+      const text = await res.text()
       const error: ErrorResponse = {
         message: 'Download file error',
-        detail: 'File not found or token invalid!',
+        detail: text || 'File not found or token invalid!',
         code: res.status,
       }
-      clogger.error(
-        'File not found or invalid authorization token. Please log in and try again.'
-      )
-      const text = await res.text()
+      clogger.error(`Download failed for "${filename}": ${error.detail}`)
       console.error('DOWNLOAD_URL error:', text)
       return NextResponse.json(error, { status: error.code })
-    } else {
-      clogger.info('File downloaded successfully')
     }
 
+    clogger.info(`File "${filename}" downloaded successfully`)
     return new NextResponse(res.body)
   } catch (err) {
     const error = err as Error
