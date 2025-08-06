@@ -13,12 +13,12 @@ export async function DELETE(req: Request) {
     if (!token || !filename) {
       const error: ErrorResponse = {
         message: !token ? 'Unauthorized' : 'Filename required',
-        code: !token ? 403 : 400,
+        code: !token ? 401 : 400,
       }
-      clogger.error('Unauthorized! Token not found')
+      clogger.error(
+        'Authorization token is missing or the required filename parameter is not provided.'
+      )
       return NextResponse.json(error, { status: error.code })
-    } else {
-      clogger.info('File successfully deleted')
     }
 
     const res = await fetch(
@@ -33,17 +33,18 @@ export async function DELETE(req: Request) {
     )
 
     if (!res.ok) {
+      const text = await res.text()
       const error: ErrorResponse = {
         message: 'Delete file error',
-        detail: 'File not found or token invalid!',
+        detail: text || 'File not found or token invalid!',
         code: res.status,
       }
-      const text = await res.text()
-      console.error('DELETE_URL error:', text)
+      clogger.error(`Failed to delete "${filename}": ${error.detail}`)
       return NextResponse.json(error, { status: error.code })
     }
 
     const data = await res.json()
+    clogger.info(`File "${filename}" successfully deleted`)
     return NextResponse.json(data, { status: 200 })
   } catch (err) {
     const error = err as Error

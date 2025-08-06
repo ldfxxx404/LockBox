@@ -11,6 +11,17 @@ export async function PUT(req: NextRequest) {
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
 
+    if (!token) {
+      const error: ErrorResponse = {
+        message: 'Authentication required',
+        code: 401,
+      }
+      clogger.error(
+        'Missing or invalid authorization token. Please log in and try again.'
+      )
+      return NextResponse.json(error, { status: error.code })
+    }
+
     const res = await fetch(`${MAKE_ADMIN_URL}/${user_id}`, {
       method: 'PUT',
       headers: {
@@ -20,17 +31,11 @@ export async function PUT(req: NextRequest) {
     })
     const data = await res.json()
 
-    if (!res.ok || !token) {
-      const error: ErrorResponse = {
-        message: 'Authtentication required',
-        detail:
-          'Missing or invalid authorization token. Please log in and try again.',
-        code: 401,
-      }
+    if (!res.ok) {
       clogger.error(
-        'Missing or invalid authorization token. Please log in and try again.'
+        `API error: ${res.status} - ${data?.message || res.statusText}`
       )
-      return NextResponse.json(error, { status: error.code })
+      return NextResponse.json(data, { status: res.status })
     } else {
       clogger.info(
         'The user has been successfully granted administrator rights.'

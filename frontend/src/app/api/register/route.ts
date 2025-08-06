@@ -1,7 +1,7 @@
 import { REGISTER_URL } from '@/app/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/app/types/api'
-import { clogger } from '../../../utils/ColorLogger'
+import { clogger } from '@/utils/ColorLogger'
 
 export async function POST(req: Request) {
   try {
@@ -13,20 +13,20 @@ export async function POST(req: Request) {
       body: JSON.stringify(body),
     })
 
+    const responseData = await res.json()
+
     if (!res.ok) {
       const error: ErrorResponse = {
         message: 'Registration failed!',
-        detail:
-          'This user already exists, please use other details to register.',
-        code: 409,
+        code: res.status,
       }
-      clogger.warning(error.detail as string)
+      clogger.warning(
+        'This user already exists, please use other details to register.'
+      )
       return NextResponse.json(error, { status: error.code })
-    } else {
-      clogger.info('User has registered successfully')
     }
 
-    const responseData = await res.json()
+    clogger.info('User has registered successfully')
     return NextResponse.json(responseData)
   } catch (error) {
     console.error('Registration error', error)

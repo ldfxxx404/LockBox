@@ -8,7 +8,12 @@ export async function GET(req: Request) {
     const authHeader = req.headers.get('authorization')
     const token = authHeader?.split(' ')[1]
     if (!token) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+      const error: ErrorResponse = {
+        message: 'Unauthorized',
+        code: 401,
+      }
+      clogger.error('Authorization token is missing for /profile request.')
+      return NextResponse.json(error, { status: error.code })
     }
 
     const res = await fetch(PROFILE_URL, {
@@ -19,21 +24,20 @@ export async function GET(req: Request) {
       },
     })
 
+    const data = await res.json()
+
     if (!res.ok) {
-      const errData = await res.json()
       const error: ErrorResponse = {
-        message: errData.message || 'Unknown error',
-        code: errData.status || res.status,
+        message: data.message || 'Unknown error',
+        code: data.status || res.status,
       }
       clogger.error(
         'Cannot get /profile. Missing or invalid authorization token. Please log in and try again.'
       )
       return NextResponse.json(error, { status: res.status })
-    } else {
-      clogger.info('Everything is fine redirect to /profile')
     }
 
-    const data = await res.json()
+    clogger.info('Profile fetched successfully.')
     return NextResponse.json(data)
   } catch (error) {
     console.error('Profile API error:', error)
