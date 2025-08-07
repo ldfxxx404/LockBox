@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
-import { FileUploader } from '../lib/clientUpload'
+import { FileUploader } from '@/lib/clientUpload'
 
 export const useUpload = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)

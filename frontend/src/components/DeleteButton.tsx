@@ -1,6 +1,6 @@
 'use client'
 
-import { FileDelete } from '@/app/lib/clientDelete'
+import { FileDelete } from '@/lib/clientDelete'
 import { MouseEvent } from 'react'
 
 interface DeleteButtonProps {

@@ -1,4 +1,4 @@
-import { RegistrationPayload } from '@/app/types/client'
+import { RegistrationPayload } from '@/types/userTypes'
 
 export async function UserRegister(RegistrationPayload: RegistrationPayload) {
   const res = await fetch('/api/register', {
