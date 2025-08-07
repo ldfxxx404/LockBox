@@ -25,7 +25,7 @@ func SetupRoutes(app *fiber.App, c *registry.Container) {
 	api.Post("/upload", c.FileHandler.Upload)
 	api.Delete("/delete/:filename", c.FileHandler.Delete)
 
-	admin := api.Group("/admin", middleware.AdminRequired())
+	admin := api.Group("/admin", middleware.AdminRequired(c.AdminHandler.AdminServ))
 	admin.Get("/users", c.AdminHandler.GetAllUsers)
 	admin.Get("/admins", c.AdminHandler.GetAllAdminUsers)
 	admin.Put("/update_limit", c.AdminHandler.UpdateStorageLimit)
