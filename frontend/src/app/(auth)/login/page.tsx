@@ -2,9 +2,9 @@
 
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { UserLogin } from '../../lib/clientLogin'
-import { Button } from '../../components/ActionButton'
-import { UserInput } from '../../components/InputForm'
+import { UserLogin } from '@/lib/clientLogin'
+import { Button } from '@/components/ActionButton'
+import { UserInput } from '@/components/InputForm'
 
 export default function LoginPage() {
   const router = useRouter()

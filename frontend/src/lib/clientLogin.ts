@@ -1,9 +1,9 @@
 'use client'
 
-import { loginPayload } from '@/app/types/client'
-import { ErrorResponse } from '@/app/types/api'
+import { LoginPayload } from '@/types/userTypes'
+import { ErrorResponse } from '@/types/errorResponse'
 
-export async function UserLogin(loginPayload: loginPayload) {
+export async function UserLogin(loginPayload: LoginPayload) {
   try {
     const res = await fetch('/api/login', {
       method: 'POST',

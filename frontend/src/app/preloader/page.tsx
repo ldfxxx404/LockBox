@@ -1,6 +1,6 @@
 'use client'
 
-import { Bar } from '@/app/components/ProgressBar'
+import { Bar } from '@/components/ProgressBar'
 
 export default function Preloader() {
   return (

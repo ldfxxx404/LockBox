@@ -1,6 +1,6 @@
-import { DOWNLOAD_URL } from '@/app/constants/api'
+import { DOWNLOAD_URL } from '@/constants/api'
 import { NextResponse } from 'next/server'
-import { ErrorResponse } from '@/app/types/api'
+import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
 
 export async function GET(req: Request) {

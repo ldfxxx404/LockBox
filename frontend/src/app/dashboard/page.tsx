@@ -1,14 +1,14 @@
 'use client'
 
-import { useRedirect } from '@/app/hooks/useRedirect'
+import { useRedirect } from '@/hooks/useRedirect'
 import Forbidden from '@/app/preloader/page'
-import { adminGetUsers } from '@/app/lib/adminGetUsers'
+import { adminGetUsers } from '@/lib/adminGetUsers'
 import { useState, useEffect } from 'react'
-import { UserInput } from '../components/InputForm'
-import { adminMakeAdmin } from '../lib/adminMakeAdmin'
-import { Button } from '../components/ActionButton'
-import { adminRevokeAdmin } from '../lib/adminRevokeAdmin'
-import { UpdateLimit } from '../lib/adminUpdateLimit'
+import { UserInput } from '@/components/InputForm'
+import { adminMakeAdmin } from '@/lib/adminMakeAdmin'
+import { Button } from '@/components/ActionButton'
+import { adminRevokeAdmin } from '@/lib/adminRevokeAdmin'
+import { UpdateLimit } from '@/lib/adminUpdateLimit'
 
 interface User {
   id: number

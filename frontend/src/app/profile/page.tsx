@@ -1,16 +1,16 @@
 'use client'
 
-import { useLogout } from '@/app/hooks/useLogout'
+import { useLogout } from '@/hooks/useLogout'
 import Forbidden from '@/app/preloader/page'
-import { useRedirect } from '@/app/hooks/useRedirect'
-import { useUpload } from '../hooks/useUpload'
+import { useRedirect } from '@/hooks/useRedirect'
+import { useUpload } from '@/hooks/useUpload'
 import { useEffect, useState } from 'react'
-import { getProfile } from '../lib/clientProfile'
-import { FileDownload } from '../lib/clientDownload'
-import { DeleteButton } from '../components/DeleteButton'
-import { Upload } from '../components/UploadFile'
-import { Button } from '../components/ActionButton'
-import { Sort } from '../components/SortButton'
+import { getProfile } from '@/lib/clientProfile'
+import { FileDownload } from '@/lib/clientDownload'
+import { DeleteButton } from '@/components/DeleteButton'
+import { Upload } from '@/components/UploadFile'
+import { Button } from '@/components/ActionButton'
+import { Sort } from '@/components/SortButton'
 
 export default function UserProfile() {
   const handleLogout = useLogout()

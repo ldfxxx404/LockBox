@@ -1,11 +1,11 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { UserRegister } from '../../lib/clientRegister'
-import { REGISTER_URL } from '../../constants/api'
+import { UserRegister } from '@/lib/clientRegister'
+import { REGISTER_URL } from '@/constants/api'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/app/components/ActionButton'
-import { UserInput } from '@/app/components/InputForm'
+import { Button } from '@/components/ActionButton'
+import { UserInput } from '@/components/InputForm'
 
 export default function RegisterPage() {
   const router = useRouter()

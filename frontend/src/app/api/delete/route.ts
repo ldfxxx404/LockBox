@@ -1,6 +1,6 @@
-import { DELETE_URL } from '@/app/constants/api'
+import { DELETE_URL } from '@/constants/api'
 import { NextResponse } from 'next/server'
-import { ErrorResponse } from '@/app/types/api'
+import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
 
 export async function DELETE(req: Request) {

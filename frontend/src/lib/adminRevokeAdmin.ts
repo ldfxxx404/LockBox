@@ -1,14 +1,11 @@
 'use client'
 
-import { ErrorResponse } from '@/app/types/api'
+import { ErrorResponse } from '@/types/errorResponse'
+import { AdminActionPayload } from '@/types/userTypes'
 
-interface Payload {
-  user_id: number
-}
-
-export async function adminMakeAdmin(param: Payload) {
+export async function adminRevokeAdmin(param: AdminActionPayload) {
   try {
-    const res = await fetch(`/api/admin/make_admin/${param.user_id}`, {
+    const res = await fetch(`/api/admin/revoke_admin/${param.user_id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

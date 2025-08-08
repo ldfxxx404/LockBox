@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation'
-import logout from '@/app/lib/clientLogout'
+import logout from '@/lib/clientLogout'
 
 export const useLogout = () => {
   const router = useRouter()

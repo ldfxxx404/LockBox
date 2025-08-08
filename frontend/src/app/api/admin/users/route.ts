@@ -1,7 +1,7 @@
-import { GET_USERS_URL } from '@/app/constants/api'
+import { GET_USERS_URL } from '@/constants/api'
 import { clogger } from '@/utils/ColorLogger'
 import { NextResponse } from 'next/server'
-import { ErrorResponse } from '@/app/types/api'
+import { ErrorResponse } from '@/types/errorResponse'
 
 export async function GET(req: Request) {
   try {
@@ -43,7 +43,7 @@ export async function GET(req: Request) {
     clogger.info('Authorized. User list received.')
     return NextResponse.json(data)
   } catch (err) {
-    console.error('Internal server error:', err)
+    clogger.error('Internal server error')
     const error: ErrorResponse = {
       code: 500,
       message: 'Internal server error',
