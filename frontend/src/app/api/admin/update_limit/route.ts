@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import { UPDATE_LIMIT_URL } from '@/app/constants/api'
-import { ErrorResponse } from '@/app/types/api'
-import { UpdateStoragePayload } from '@/app/types/client'
+import { UPDATE_LIMIT_URL } from '@/constants/api'
+import { ErrorResponse } from '@/types/errorResponse'
+import { UpdateStoragePayload } from '@/types/userTypes'
 import { clogger } from '@/utils/ColorLogger'
 
 export async function PUT(req: Request) {

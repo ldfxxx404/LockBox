@@ -1,7 +1,7 @@
-import { REVOKE_ADMIN_URL } from '@/app/constants/api'
+import { REVOKE_ADMIN_URL } from '@/constants/api'
 import { NextResponse, NextRequest } from 'next/server'
 import { clogger } from '@/utils/ColorLogger'
-import { ErrorResponse } from '@/app/types/api'
+import { ErrorResponse } from '@/types/errorResponse'
 
 export async function PUT(req: NextRequest) {
   try {

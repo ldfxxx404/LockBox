@@ -1,7 +1,7 @@
-import { GET_USERS_URL } from '@/constants/api'
-import { clogger } from '@/utils/ColorLogger'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/types/errorResponse'
+import { clogger } from '@/utils/ColorLogger'
+import { GET_ADMINS_URL } from '@/constants/api'
 
 export async function GET(req: Request) {
   try {
@@ -17,14 +17,13 @@ export async function GET(req: Request) {
       return NextResponse.json(error, { status: error.code })
     }
 
-    const res = await fetch(GET_USERS_URL, {
+    const res = await fetch(GET_ADMINS_URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         authorization: `Bearer ${token}`,
       },
     })
-
     const data = await res.json()
 
     if (!res.ok) {

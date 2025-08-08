@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { MAKE_ADMIN_URL } from '@/app/constants/api'
-import { ErrorResponse } from '@/app/types/api'
+import { MAKE_ADMIN_URL } from '@/constants/api'
+import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
 
 export async function PUT(req: NextRequest) {
