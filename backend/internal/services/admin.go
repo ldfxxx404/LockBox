@@ -72,3 +72,11 @@ func (s *AdminService) RevokeAdmin(userID int) error {
 	log.Info("AdminService: admin rights revoked", "user_id", userID)
 	return nil
 }
+
+func (s *AdminService) IsAdmin(userID int) (bool, error) {
+	user, err := s.UserRepo.GetByID(userID)
+	if err != nil {
+		return false, err
+	}
+	return user.IsAdmin, nil
+}

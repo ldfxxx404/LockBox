@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/data:z
     restart: unless-stopped
     networks:
       - lockbox-net
@@ -66,7 +66,7 @@ services:
       - '9090'
       - '9091:9091'
     volumes:
-      - miniodata:/data
+      - ./data/minio:/data:z
     environment:
       MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
       MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
