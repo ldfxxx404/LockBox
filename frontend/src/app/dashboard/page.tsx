@@ -166,7 +166,10 @@ export default function Admin() {
       ) : (
         <ul className='bg-[#2d2f44] mt-4 px-6 py-6 rounded-2xl shadow-2xl w-full max-w-3xl space-y-4 h-[40rem] overflow-y-auto  scrollbar-hidden'>
           {filteredUsers.map((user: UserPayload) => (
-            <li className='bg-[#1f2133] border border-[#3c3f5e] p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 relative'>
+            <li
+              key={user.id}
+              className='bg-[#1f2133] border border-[#3c3f5e] p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 relative'
+            >
               <div className='absolute top-4 right-4 w-60 space-y-2'>
                 <input
                   type='number'
