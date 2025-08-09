@@ -6,24 +6,21 @@ import { adminGetUsers } from '@/lib/adminGetUsers'
 import { useState, useEffect } from 'react'
 import { UserInput } from '@/components/InputForm'
 import { adminMakeAdmin } from '@/lib/adminMakeAdmin'
-import { Button } from '@/components/ActionButton'
+import { Switcher } from '@/components/Switcher'
 import { adminRevokeAdmin } from '@/lib/adminRevokeAdmin'
 import { UpdateLimit } from '@/lib/adminUpdateLimit'
-
-interface User {
-  id: number
-  name: string
-  email: string
-  is_admin: boolean
-  storage_limit: number
-}
+import { UserPayload } from '@/types/userTypes'
+import { adminGetAdmins } from '@/lib/adminGetAdmins'
 
 export default function Admin() {
-  const [users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<UserPayload[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const { hasToken, isChecking } = useRedirect()
   const [searchTerm, setSearchTerm] = useState('')
+  const [activeTab, setActiveTab] = useState('Users')
+  const [admins, setAdmins] = useState<UserPayload[]>([])
+
   const [limitInputs, setLimitInputs] = useState<Record<number, number | ''>>(
     {}
   )
@@ -54,7 +51,6 @@ export default function Admin() {
   }
 
   const makeAdmin = async (userId: number) => {
-    //TODO: move userId: number to types.ts
     const res = await adminMakeAdmin({ user_id: userId })
     if (!res) {
       console.log('failed make admin')
@@ -63,7 +59,6 @@ export default function Admin() {
     }
   }
   const revokeAdmin = async (userId: number) => {
-    //TODO: move userId: number to types.ts
     const res = await adminRevokeAdmin({ user_id: userId })
     if (!res) {
       console.log('failed make admin')
@@ -93,6 +88,32 @@ export default function Admin() {
     fetchUsers()
   }, [hasToken])
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!hasToken) return
+
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        if (activeTab === 'Users') {
+          const usersData = await adminGetUsers()
+          setUsers(usersData)
+        } else {
+          const adminsData = await adminGetAdmins()
+          setAdmins(adminsData)
+        }
+      } catch (err) {
+        console.error('Failed to fetch data:', err)
+        setError(err instanceof Error ? err.message : 'Unknown error')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [hasToken, activeTab])
+
   if (isChecking) {
     return <Forbidden />
   }
@@ -118,63 +139,77 @@ export default function Admin() {
     )
   }
 
-  const filteredUsers = users.filter(
+  const filteredUsers = (activeTab === 'Users' ? users : admins).filter(
     user =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      (activeTab === 'Users' ? !user.is_admin : user.is_admin) &&
+      (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()))
   )
 
   return (
-    <div className='flex flex-col items-center py-20'>
-      <h1 className='text-2xl font-bold mb-6'>Admin Panel</h1>
+    <div className='flex flex-col items-center px-4 py-16 min-h-screen bg-[#282a36] text-white'>
+      <h1 className='text-4xl font-extrabold mb-8 tracking-wide'>
+        Admin Panel
+      </h1>
+
+      <Switcher activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <UserInput
         placeholder='Search'
         type='text'
         onChange={e => setSearchTerm(e.target.value)}
+        className='mb-6 w-full max-w-md px-4 py-2 rounded-lg bg-[#2d2f44] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition'
       />
 
       {filteredUsers.length === 0 ? (
         <p>Users not found</p>
       ) : (
-        <ul className='bg-[#2d2f44] mt-8 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl space-y-3 h-[40rem] overflow-auto scrollbar-hidden'>
-          {filteredUsers.map((user: User) => (
+        <ul className='bg-[#2d2f44] mt-4 px-6 py-6 rounded-2xl shadow-2xl w-full max-w-3xl space-y-4 h-[40rem] overflow-y-auto  scrollbar-hidden'>
+          {filteredUsers.map((user: UserPayload) => (
             <li
               key={user.id}
-              className='border p-4 rounded-lg relative transition-colors'
+              className='bg-[#1f2133] border border-[#3c3f5e] p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 relative'
             >
-              <div className='absolute right-1.5 mt-2 mr-4'>
-                <div className='mt-2 space-y-2'>
-                  <input
-                    type='number'
-                    value={limitInputs[user.id] ?? ''}
-                    onChange={e =>
-                      handleLimitChange(user.id, Number(e.target.value))
-                    }
-                    placeholder='New limit (MB)'
-                    className='w-32 rounded-md px-2 py-1 text-black'
-                  />
-                  <Button
-                    onClick={() => handleLimitUpdate(user.id)}
-                    label='Update Limit'
-                    type='button'
-                  />
-                  {limitMessages[user.id] && (
-                    <p className='text-xs text-white'>
-                      {limitMessages[user.id]}
-                    </p>
-                  )}
-                </div>
+              <div className='absolute top-4 right-4 w-60 space-y-2'>
+                <input
+                  type='number'
+                  value={limitInputs[user.id] ?? ''}
+                  onChange={e =>
+                    handleLimitChange(user.id, Number(e.target.value))
+                  }
+                  placeholder='New limit (MB)'
+                  className='w-full bg-[#3c3f5e] text-white border-none rounded-lg py-2 px-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition'
+                />
 
-                <Button
+                <button
+                  onClick={() => handleLimitUpdate(user.id)}
+                  type='button'
+                  className='w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-1.5 px-2 rounded-md transition duration-200'
+                >
+                  Update Limit
+                </button>
+
+                {limitMessages[user.id] && (
+                  <p className='text-xs text-gray-300 italic'>
+                    {limitMessages[user.id]}
+                  </p>
+                )}
+
+                <button
                   onClick={() =>
                     user.is_admin ? revokeAdmin(user.id) : makeAdmin(user.id)
                   }
-                  label={user.is_admin ? 'Revoke admin' : 'Make admin'}
-                  type='submit'
-                  className={user.is_admin ? '' : 'pr-7'}
-                />
+                  type='button'
+                  className={`w-full text-white text-sm font-medium py-1.5 px-2 rounded-md transition duration-200 ${
+                    user.is_admin
+                      ? 'bg-red-500 hover:bg-red-600'
+                      : 'bg-green-600 hover:bg-green-700'
+                  }`}
+                >
+                  {user.is_admin ? 'Revoke admin' : 'Make admin'}
+                </button>
               </div>
+
               <p>
                 <strong>User name:</strong> {user.name}
               </p>
