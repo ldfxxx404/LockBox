@@ -10,6 +10,7 @@ import { Switcher } from '@/components/Switcher'
 import { adminRevokeAdmin } from '@/lib/adminRevokeAdmin'
 import { UpdateLimit } from '@/lib/adminUpdateLimit'
 import { UserPayload } from '@/types/userTypes'
+import { adminGetAdmins } from '@/lib/adminGetAdmins'
 
 export default function Admin() {
   const [users, setUsers] = useState<UserPayload[]>([])
@@ -17,6 +18,9 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(false)
   const { hasToken, isChecking } = useRedirect()
   const [searchTerm, setSearchTerm] = useState('')
+  const [activeTab, setActiveTab] = useState('Users')
+  const [admins, setAdmins] = useState<UserPayload[]>([])
+
   const [limitInputs, setLimitInputs] = useState<Record<number, number | ''>>(
     {}
   )
@@ -84,6 +88,32 @@ export default function Admin() {
     fetchUsers()
   }, [hasToken])
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!hasToken) return
+
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        if (activeTab === 'Users') {
+          const usersData = await adminGetUsers()
+          setUsers(usersData)
+        } else {
+          const adminsData = await adminGetAdmins()
+          setAdmins(adminsData)
+        }
+      } catch (err) {
+        console.error('Failed to fetch data:', err)
+        setError(err instanceof Error ? err.message : 'Unknown error')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [hasToken, activeTab])
+
   if (isChecking) {
     return <Forbidden />
   }
@@ -109,9 +139,9 @@ export default function Admin() {
     )
   }
 
-  const filteredUsers = users.filter(
+  const filteredUsers = (activeTab === 'Users' ? users : admins).filter(
     user =>
-      !user.is_admin &&
+      (activeTab === 'Users' ? !user.is_admin : user.is_admin) &&
       (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase()))
   )
@@ -122,7 +152,7 @@ export default function Admin() {
         Admin Panel
       </h1>
 
-      <Switcher />
+      <Switcher activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <UserInput
         placeholder='Search'

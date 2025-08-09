@@ -1,13 +1,16 @@
 'use client'
 
-import React, { SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 
-const tabs = ['Users', 'Admins']
+const tabs = ['Users', 'Admins'] as const
 
-export const Switcher = () => {
-  const [activeTab, setActiveTab] = useState('Users')
+interface SwitcherProps {
+  activeTab: string
+  setActiveTab: Dispatch<SetStateAction<string>>
+}
 
-  const handleTabClick = (tabName: SetStateAction<string>) => {
+export const Switcher = ({ activeTab, setActiveTab }: SwitcherProps) => {
+  const handleTabClick = (tabName: string) => {
     setActiveTab(tabName)
   }
 
@@ -28,11 +31,6 @@ export const Switcher = () => {
             {tab}
           </button>
         ))}
-      </div>
-
-      <div className='mt-4 text-center text-lg font-semibold text-white'>
-        {activeTab === 'Users' && <p>Users</p>}
-        {activeTab === 'Admins' && <p>Admins</p>}
       </div>
     </div>
   )
