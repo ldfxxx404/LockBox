@@ -1,4 +1,4 @@
-import { GET_ADMINS_URL, GET_USERS_URL } from '@/constants/api'
+import { GET_ADMINS_URL } from '@/constants/api'
 import { clogger } from '@/utils/ColorLogger'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/types/errorResponse'
