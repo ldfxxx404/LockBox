@@ -11,6 +11,7 @@ export const Upload = ({ onSubmit, onChange, ...props }: UploadProps) => {
       <form onSubmit={onSubmit} className='flex gap-4'>
         <input
           type='file'
+          multiple
           onChange={onChange}
           id='file_upload'
           className='hidden'

@@ -2,19 +2,19 @@ import { ChangeEvent, FormEvent, useState } from 'react'
 import { FileUploader } from '@/lib/clientUpload'
 
 export const useUpload = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setSelectedFile(file)
+    const files = e.target.files
+    if (files) {
+      setSelectedFiles(Array.from(files))
     }
   }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!selectedFile) {
-      alert('File not chosen')
+    if (selectedFiles.length === 0) {
+      alert('Files not chosen')
       return
     }
 
@@ -22,14 +22,14 @@ export const useUpload = () => {
       if (!sessionStorage.getItem('token')) {
         alert('Error uploading file, unauthorized')
       } else {
-        await FileUploader(selectedFile)
+        await Promise.all(selectedFiles.map(file => FileUploader(file)))
         setTimeout(() => {
           window.location.reload()
         }, 1000)
       }
     } catch (error) {
       console.error('Error uploading file: ', error)
-      alert('Error uploading file, unauthorized')
+      alert('Error uploading file')
     }
   }
   return { handleChange, handleSubmit }
