@@ -28,7 +28,6 @@ func NewAuthHandler(authServ *services.AuthService) *AuthHandler {
 // @Success      201   {object}  models.RegisterMessage
 // @Failure      400   {object}  models.ErrorResponse
 // @Router       /register [post]
-
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
 	var dto models.RegisterDTO
 	if err := c.BodyParser(&dto); err != nil {
