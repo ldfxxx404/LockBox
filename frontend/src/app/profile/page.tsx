@@ -11,6 +11,7 @@ import { DeleteButton } from '@/components/DeleteButton'
 import { Upload } from '@/components/UploadFile'
 import { Button } from '@/components/ActionButton'
 import { Sort } from '@/components/SortButton'
+import { UserInput } from '@/components/InputForm'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -24,6 +25,7 @@ export default function UserProfile() {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [searchTerm, setSearchTerm] = useState('')
 
   const sortFiles = () => {
     const newOrder = sortOrder === 'asc' ? 'desc' : 'asc'
@@ -64,13 +66,16 @@ export default function UserProfile() {
     }
   }
 
+  const filteredFiles = files.filter(filename =>
+    filename.toLowerCase().includes(searchTerm.toLowerCase())
+  )
   if (isChecking || !hasToken) {
     return <Forbidden />
   }
 
   return (
     <div className='min-h-screen bg-background flex flex-col items-center py-10'>
-      <div className='bg-[#343746] mt-8 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl'>
+      <div className='bg-[#343746] mt-20 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl'>
         <h3 className='dracula-green text-lg font-semibold mb-4'>
           User storage information
         </h3>
@@ -92,8 +97,15 @@ export default function UserProfile() {
 
         <div className='overflow-y-auto h-96 scrollbar-hidden'>
           <div className='flex justify-between items-center sticky top-0 bg-[#343746]'>
-            <h2 className='text-lg font-semibold mb-2'>Files:</h2>
-
+            <h2 className='text-lg font-semibold'>Files:</h2>
+            <div className='mb-0.5'>
+              <UserInput
+                placeholder='Search'
+                type='text'
+                onChange={e => setSearchTerm(e.target.value)}
+                className='mt-0.5 w-full max-w-md px-4 py-2 rounded-lg bg-[#2d2f44] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition'
+              />
+            </div>
             <Sort
               onClick={sortFiles}
               label={`Sort ${sortOrder === 'asc' ? 'A-Z' : 'Z-A'}`}
@@ -107,7 +119,7 @@ export default function UserProfile() {
                 <div className='text-gray-500'>No files</div>
               ) : (
                 <ul className='list-disc pl-5'>
-                  {files.map((file, idx) => (
+                  {filteredFiles.map((file, idx) => (
                     <li
                       key={idx}
                       className='break-all flex justify-between items-baseline'
