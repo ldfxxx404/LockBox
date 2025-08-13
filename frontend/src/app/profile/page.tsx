@@ -75,14 +75,14 @@ export default function UserProfile() {
 
   return (
     <div className='min-h-screen bg-background flex flex-col items-center py-10'>
-      <div className='bg-[#343746] mt-20 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl'>
+      <div className='bg-[#343746] mt-20 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl max-sm:max-w-full max-sm:mt-0'>
+        {' '}
         <h3 className='dracula-green text-lg font-semibold mb-4'>
           User storage information
         </h3>
         <div className='mb-2 text-white'>
           <span className='font-semibold'>User:</span> {userName}
         </div>
-
         <div className='mb-4'>
           <div>
             <span className='font-semibold'>Usage:</span> {used} / {limit} MiB
@@ -94,16 +94,21 @@ export default function UserProfile() {
             ></div>
           </div>
         </div>
+        <div className='overflow-y-auto h-96 scrollbar-hidden max-sm:h-[60vh]'>
+          <div
+            className='flex justify-between items-center sticky top-0 bg-[#343746] 
+    max-sm:flex-col max-sm:items-stretch max-sm:gap-2 max-sm:p-2'
+          >
+            <h2 className='text-lg font-semibold max-sm:text-lg'>Files:</h2>
 
-        <div className='overflow-y-auto h-96 scrollbar-hidden'>
-          <div className='flex justify-between items-center sticky top-0 bg-[#343746]'>
-            <h2 className='text-lg font-semibold'>Files:</h2>
-            <div className='mb-0.5'>
+            <div className='mb-0.5 max-sm:w-full'>
               <UserInput
                 placeholder='Search'
                 type='text'
                 onChange={e => setSearchTerm(e.target.value)}
-                className='mt-0.5 w-full max-w-md px-4 py-2 rounded-lg bg-[#2d2f44] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition'
+                className='mt-0.5 w-full px-4 py-2 rounded-lg bg-[#2d2f44] text-white 
+       placeholder-gray-400 focus:outline-none focus:ring-2 
+       focus:ring-purple-500 transition'
               />
             </div>
             <Sort
@@ -145,7 +150,6 @@ export default function UserProfile() {
             </>
           )}
         </div>
-
         <div className='justify-center flex gap-4 mt-8'>
           <div className='flex gap-4 w-full justify-center'>
             <Upload onSubmit={handleSubmit} onChange={handleChange} />
