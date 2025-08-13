@@ -164,64 +164,68 @@ export default function Admin() {
       {filteredUsers.length === 0 ? (
         <p>Users not found</p>
       ) : (
-        <ul className='bg-[#2d2f44] mt-4 px-6 py-6 rounded-2xl shadow-2xl w-full max-w-3xl space-y-4 h-[40rem] overflow-y-auto  scrollbar-hidden'>
+        <ul className='bg-[#2d2f44] mt-4 px-6 py-6 rounded-2xl shadow-2xl w-full max-w-3xl space-y-4 h-[40rem] overflow-y-auto scrollbar-hidden'>
           {filteredUsers.map((user: UserPayload) => (
             <li
               key={user.id}
-              className='bg-[#1f2133] border border-[#3c3f5e] p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 relative'
+              className='bg-[#1f2133] border border-[#3c3f5e] p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 relative max-sm:p-4 max-sm:text-sm'
             >
-              <div className='absolute top-4 right-4 w-60 space-y-2'>
-                <input
-                  type='number'
-                  value={limitInputs[user.id] ?? ''}
-                  onChange={e =>
-                    handleLimitChange(user.id, Number(e.target.value))
-                  }
-                  placeholder='New limit (MB)'
-                  className='w-full bg-[#3c3f5e] text-white border-none rounded-lg py-2 px-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition'
-                />
-
-                <button
-                  onClick={() => handleLimitUpdate(user.id)}
-                  type='button'
-                  className='w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-1.5 px-2 rounded-md transition duration-200'
-                >
-                  Update Limit
-                </button>
-
-                {limitMessages[user.id] && (
-                  <p className='text-xs text-gray-300 italic'>
-                    {limitMessages[user.id]}
+              <div className='flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4'>
+                <div className='flex-1 space-y-1'>
+                  <p>
+                    <strong>User name:</strong> {user.name}
                   </p>
-                )}
+                  <p>
+                    <strong>Email:</strong> {user.email}
+                  </p>
+                  <p>
+                    <strong>Admin:</strong> {user.is_admin ? 'Yes' : 'No'}
+                  </p>
+                  <p>
+                    <strong>Limit:</strong> {user.storage_limit} MB
+                  </p>
+                </div>
 
-                <button
-                  onClick={() =>
-                    user.is_admin ? revokeAdmin(user.id) : makeAdmin(user.id)
-                  }
-                  type='button'
-                  className={`w-full text-white text-sm font-medium py-1.5 px-2 rounded-md transition duration-200 ${
-                    user.is_admin
-                      ? 'bg-red-500 hover:bg-red-600'
-                      : 'bg-green-600 hover:bg-green-700'
-                  }`}
-                >
-                  {user.is_admin ? 'Revoke admin' : 'Make admin'}
-                </button>
+                <div className='w-full sm:w-60 space-y-2'>
+                  <input
+                    type='number'
+                    value={limitInputs[user.id] ?? ''}
+                    onChange={e =>
+                      handleLimitChange(user.id, Number(e.target.value))
+                    }
+                    placeholder='New limit (MB)'
+                    className='w-full bg-[#3c3f5e] text-white border-none rounded-lg py-2 px-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition'
+                  />
+
+                  <button
+                    onClick={() => handleLimitUpdate(user.id)}
+                    type='button'
+                    className='w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-1.5 px-2 rounded-md transition duration-200'
+                  >
+                    Update Limit
+                  </button>
+
+                  {limitMessages[user.id] && (
+                    <p className='text-xs text-gray-300 italic'>
+                      {limitMessages[user.id]}
+                    </p>
+                  )}
+
+                  <button
+                    onClick={() =>
+                      user.is_admin ? revokeAdmin(user.id) : makeAdmin(user.id)
+                    }
+                    type='button'
+                    className={`w-full text-white text-sm font-medium py-1.5 px-2 rounded-md transition duration-200 ${
+                      user.is_admin
+                        ? 'bg-red-500 hover:bg-red-600'
+                        : 'bg-green-600 hover:bg-green-700'
+                    }`}
+                  >
+                    {user.is_admin ? 'Revoke admin' : 'Make admin'}
+                  </button>
+                </div>
               </div>
-
-              <p>
-                <strong>User name:</strong> {user.name}
-              </p>
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
-              <p>
-                <strong>Admin:</strong> {user.is_admin ? 'Yes' : 'No'}
-              </p>
-              <p>
-                <strong>Limit:</strong> {user.storage_limit} MB
-              </p>
             </li>
           ))}
         </ul>
