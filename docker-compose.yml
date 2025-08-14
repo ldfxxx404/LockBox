@@ -1,7 +1,7 @@
 services:
   postgres:
     container_name: lockbox-postgres
-    image: postgres:17-alpine
+    image: postgres:15-alpine
     ports:
       - '6969:5432'
     environment:
