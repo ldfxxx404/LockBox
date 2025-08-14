@@ -9,6 +9,7 @@
     "lint": "next lint",
     "types:check": "tsc --noEmit",
     "prettier:check": "prettier --check .",
+    "prettier:fix": "prettier --write .",
     "eslint:check": "eslint . --max-warnings=0"
   },
   "dependencies": {
