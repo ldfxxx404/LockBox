@@ -6,6 +6,7 @@ import { REGISTER_URL } from '@/constants/api'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ActionButton'
 import { UserInput } from '@/components/InputForm'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -19,7 +20,7 @@ export default function RegisterPage() {
       await UserRegister({ email, name, password })
       router.push('/login')
     } catch (err) {
-      console.log('Registration fault URL:', REGISTER_URL, err)
+      toast.error('User with this email already exists')
     }
   }
 
@@ -55,6 +56,15 @@ export default function RegisterPage() {
           <Button label='Sign Up' type='submit' />
         </form>
       </div>
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: '#343746',
+            color: '#fff',
+          },
+        }}
+      />
     </main>
   )
 }
