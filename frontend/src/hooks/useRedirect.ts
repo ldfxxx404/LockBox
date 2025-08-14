@@ -22,7 +22,6 @@ export const useRedirect = () => {
       return () => clearTimeout(timer)
     }
 
-    // не редиректим с admin на profile
     const currentPath = window.location.pathname
     if (currentPath !== '/profile' && currentPath !== '/dashboard') {
       router.push('/profile')
