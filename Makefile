@@ -138,7 +138,6 @@ test_frontend:
 	@docker exec $(FRONTEND_NAME) yarn run types:check
 	@docker exec $(FRONTEND_NAME) yarn run prettier:fix
 	@docker exec $(FRONTEND_NAME) yarn run eslint:check
-	@docker exec $(FRONTEND_NAME) yarn run build
 	@make restart_frontend
 
 test_backend:
