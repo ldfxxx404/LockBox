@@ -24,7 +24,7 @@ services:
     environment:
       SERVER_PORT: 0.0.0.0:5000
       STORAGE_LIMIT: 20
-      BODY_LIMIT_MB: 20
+      BODY_LIMIT_MB: ${BODY_LIMIT_MB}
       JWT_SECRET: 82026ea3dfe8af4dbefc8db9495e442870b4408415d2ced47ab8d50b97dd9da203bfae35e9df9f527de3ae117d3af950cc57ae77967aacc9039130b86895a4ae
       POSTGRES_URL: postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
       MINIO_ENDPOINT: minio:9090
