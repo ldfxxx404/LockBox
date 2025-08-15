@@ -23,7 +23,7 @@ services:
       - '5000'
     environment:
       SERVER_PORT: 0.0.0.0:5000
-      BODY_LIMIT_MB: 20
+      BODY_LIMIT_MB: ${BODY_LIMIT_MB}
       STORAGE_LIMIT: 20
       JWT_SECRET: ${JWT_SECRET}
       POSTGRES_URL: ${POSTGRES_URL}

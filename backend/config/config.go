@@ -21,7 +21,7 @@ var (
 	LogLevel       = getEnv("LOG_LEVEL", "debug")
 	LogFilePath    = getEnv("BACK_LOG_FILE", "/app/logs/")
 	MinioUseSSL    = getEnv("MINIO_USE_SSL", false)
-	FiberLimitBody = getEnv("BODY_LIMIT_MB", 20)
+	FiberLimitBody = getEnv("BODY_LIMIT_MB", 500)
 	FiberLimitReq  = getEnv("FIBER_LIMIT_REQ", 100)
 )
 
