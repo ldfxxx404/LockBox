@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { FileUploader } from '@/lib/clientUpload'
+import toast from 'react-hot-toast'
 
 export const useUpload = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
@@ -14,7 +15,7 @@ export const useUpload = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (selectedFiles.length === 0) {
-      alert('Files not chosen')
+      toast.error('File not chosen')
       return
     }
 
@@ -25,8 +26,11 @@ export const useUpload = () => {
         await Promise.all(selectedFiles.map(file => FileUploader(file)))
         setTimeout(() => {
           window.location.reload()
-        }, 1000)
+        }, 2000)
       }
+      return selectedFiles.forEach(file => {
+        toast.success(`File ${file.name} uploaded succesfully`)
+      })
     } catch (error) {
       console.error('Error uploading file: ', error)
       alert('Error uploading file')
