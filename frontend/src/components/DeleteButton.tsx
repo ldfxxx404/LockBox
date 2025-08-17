@@ -23,7 +23,7 @@ export const DeleteButton = ({ filename, onDelete }: DeleteButtonProps) => {
   return (
     <button
       onClick={handleClick}
-      className='text-red-500 hover:text-red-700 rounded-lg border mt-1.5 whitespace-nowrap ml-4 mr-4 pr-2 pl-2 '
+      className='text-red-500 hover:text-red-700 rounded-lg border mt-1.5 whitespace-nowrap ml-4 mr-4 pr-2 pl-2 cursor-pointer'
     >
       Delete
     </button>
