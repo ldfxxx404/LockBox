@@ -16,7 +16,7 @@ import { UserInput } from '@/components/InputForm'
 export default function UserProfile() {
   const handleLogout = useLogout()
   const { hasToken, isChecking } = useRedirect()
-  const { handleChange, handleSubmit } = useUpload()
+  const { handleChange } = useUpload()
 
   const [files, setFiles] = useState<string[]>([])
   const [limit, setLimit] = useState<number>(0)
@@ -152,7 +152,7 @@ export default function UserProfile() {
         </div>
         <div className='justify-center flex gap-4 mt-8'>
           <div className='flex gap-4 w-full justify-center'>
-            <Upload onSubmit={handleSubmit} onChange={handleChange} />
+            <Upload onChange={handleChange} />
             <Button label='Logout' type='submit' onClick={handleLogout} />
           </div>
         </div>
