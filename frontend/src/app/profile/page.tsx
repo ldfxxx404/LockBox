@@ -12,6 +12,7 @@ import { Upload } from '@/components/UploadFile'
 import { Button } from '@/components/ActionButton'
 import { Sort } from '@/components/SortButton'
 import { UserInput } from '@/components/InputForm'
+import { Toaster } from 'react-hot-toast'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -157,6 +158,15 @@ export default function UserProfile() {
           </div>
         </div>
       </div>
+      <Toaster
+        position='top-center'
+        toastOptions={{
+          style: {
+            background: '#343746',
+            color: '#fff',
+          },
+        }}
+      />
     </div>
   )
 }
