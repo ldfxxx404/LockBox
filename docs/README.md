@@ -19,6 +19,10 @@ make init_prod
 ```bash
 make init
 ```
+#### Develop misc info
+[Backend info](BackendArch.md)
+[Log manifest](LogManifest.md)
+
 ## Project deps 
 - docker 
 - docker compose 
