@@ -21,7 +21,7 @@ make init
 ```
 #### Develop misc info
 [Backend info](BackendArch.md)
-[Log manifest](LogManifest.md)
+[Log manifest](LogManifets.md)
 
 ## Project deps 
 - docker 
