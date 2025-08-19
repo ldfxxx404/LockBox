@@ -1,5 +1,7 @@
 'use client'
 
+import toast from 'react-hot-toast'
+
 export async function FileUploader(file: File) {
   const uploadForm = new FormData()
   uploadForm.append('file', file)
@@ -13,8 +15,13 @@ export async function FileUploader(file: File) {
       },
     })
     if (!response.ok) {
-      return { error: 'error' }
+      toast.error(
+        'Upload failed – not enough disk space or unsupported file format.'
+      )
+      return { error: true }
     }
+    toast.success(`${file.name} uploaded successfully`)
+    return await response.json()
   } catch (err) {
     return console.error('Error: ', err)
   }

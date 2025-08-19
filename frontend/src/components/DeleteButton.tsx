@@ -2,6 +2,7 @@
 
 import { FileDelete } from '@/lib/clientDelete'
 import { MouseEvent } from 'react'
+import toast from 'react-hot-toast'
 
 interface DeleteButtonProps {
   filename: string
@@ -17,6 +18,7 @@ export const DeleteButton = ({ filename, onDelete }: DeleteButtonProps) => {
       alert('Delete file error')
     } else {
       onDelete?.()
+      toast.success(`${filename} deleted`)
     }
   }
 
