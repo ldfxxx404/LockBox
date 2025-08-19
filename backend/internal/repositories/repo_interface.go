@@ -16,4 +16,5 @@ type FileRepoInterface interface {
 	Create(file *models.File) error
 	GetFilesByUser(userID int) ([]models.File, error)
 	DeleteFile(userID int, filename string) error
+	Exists(userID int, filename string) (bool, error)
 }
