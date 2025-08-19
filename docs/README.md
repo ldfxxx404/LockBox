@@ -20,9 +20,8 @@ make init_prod
 make init
 ```
 #### Develop misc info
-[Backend info](BackendArch.md)
-
-[Log manifest](LogManifets.md)
+- [Backend info](BackendArch.md)
+- [Log manifest](LogManifets.md)
 
 ## Project deps 
 - docker 
