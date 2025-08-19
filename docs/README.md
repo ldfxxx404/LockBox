@@ -21,6 +21,7 @@ make init
 ```
 #### Develop misc info
 [Backend info](BackendArch.md)
+
 [Log manifest](LogManifets.md)
 
 ## Project deps 
@@ -32,3 +33,6 @@ make init
 ## Connect
 connect to frontend 
 `http://localhost:3000`
+
+## License 
+[LICENSE](../LICENSE)
