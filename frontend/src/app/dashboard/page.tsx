@@ -11,6 +11,7 @@ import { adminRevokeAdmin } from '@/lib/adminRevokeAdmin'
 import { UpdateLimit } from '@/lib/adminUpdateLimit'
 import { UserPayload } from '@/types/userTypes'
 import { adminGetAdmins } from '@/lib/adminGetAdmins'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function Admin() {
   const [users, setUsers] = useState<UserPayload[]>([])
@@ -34,36 +35,39 @@ export default function Admin() {
     const limit = limitInputs[userId]
 
     if (limit === '' || isNaN(Number(limit))) {
-      setLimitMessages(prev => ({ ...prev, [userId]: 'Inser limut value' }))
+      setLimitMessages(prev => ({ ...prev, [userId]: '' }))
+      toast.error('Please, insert limit value')
       return
     }
 
     const res = await UpdateLimit(userId, Number(limit))
 
     if (res?.error) {
-      setLimitMessages(prev => ({ ...prev, [userId]: 'Error while upd limit' }))
+      setLimitMessages(prev => ({ ...prev, [userId]: '' }))
+      toast.error('Error updating limit. Incorrect value entered.')
     } else {
       setLimitMessages(prev => ({
         ...prev,
-        [userId]: 'Limit successfuly updated',
+        [userId]: '',
       }))
+      toast.success('Limit successfuly updated')
     }
   }
 
   const makeAdmin = async (userId: number) => {
     const res = await adminMakeAdmin({ user_id: userId })
     if (!res) {
-      console.log('failed make admin')
+      toast.error('Failed to grant admin rights')
     } else {
-      console.log('success')
+      toast.success('Administrator privileges granted successfully')
     }
   }
   const revokeAdmin = async (userId: number) => {
     const res = await adminRevokeAdmin({ user_id: userId })
     if (!res) {
-      console.log('failed make admin')
+      toast.error('Failed to revoke admin rights')
     } else {
-      console.log('success')
+      toast.success('Admin rights revoked successfully')
     }
   }
 
@@ -230,6 +234,15 @@ export default function Admin() {
           ))}
         </ul>
       )}
+      <Toaster
+        position='top-center'
+        toastOptions={{
+          style: {
+            background: '#343746',
+            color: '#fff',
+          },
+        }}
+      />
     </div>
   )
 }
