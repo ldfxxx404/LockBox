@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"io"
 	"mime/multipart"
+	"path/filepath"
+	"strings"
 
 	"github.com/gofiber/fiber/v2/log"
 
@@ -73,6 +75,21 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 		}
 	}()
 
+	filename := fileHeader.Filename
+	base := strings.TrimSuffix(filename, filepath.Ext(filename))
+	ext := filepath.Ext(filename)
+
+	newName := filename
+	counter := 1
+	for {
+		exists, _ := s.FileRepo.Exists(userID, newName)
+		if !exists {
+			break
+		}
+		newName = fmt.Sprintf("%s(%d)%s", base, counter, ext)
+		counter++
+	}
+
 	objectName := fmt.Sprintf("%d/%s", userID, fileHeader.Filename)
 	contentType := fileHeader.Header.Get("Content-Type")
 
@@ -92,7 +109,7 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 
 	meta := &models.File{
 		UserID:       userID,
-		Filename:     fileHeader.Filename,
+		Filename:     newName,
 		OriginalName: fileHeader.Filename,
 		Size:         fileHeader.Size,
 		MimeType:     contentType,
