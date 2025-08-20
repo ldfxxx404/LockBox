@@ -11,6 +11,7 @@ const (
 	CreateFileSql = `INSERT INTO files (user_id, filename, original_name, size, mime_type) VALUES ($1, $2, $3, $4, $5)`
 	GetFileSql    = `SELECT * FROM files WHERE user_id = $1`
 	DeleteFileSql = `DELETE FROM files WHERE user_id = $1 AND filename = $2`
+	ExistsFileSql = `SELECT COUNT(*) FROM files WHERE user_id = $1 AND filename = $2`
 )
 
 type FileRepo struct {
@@ -29,6 +30,14 @@ func (r *FileRepo) Create(file *models.File) error {
 		return err
 	}
 	return nil
+}
+
+func (r *FileRepo) Exists(userID int, filename string) (bool, error) {
+	var count int64
+	if err := r.DB.Get(&count, ExistsFileSql, userID, filename); err != nil {
+		return false, err
+	}
+	return count > 0, nil
 }
 
 func (r *FileRepo) GetFilesByUser(userID int) ([]models.File, error) {
