@@ -545,7 +545,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.ProfileV2"
+                            "$ref": "#/definitions/models.Profile"
                         }
                     },
                     "500": {
@@ -645,6 +645,12 @@ const docTemplate = `{
         "models.Profile": {
             "type": "object",
             "properties": {
+                "files": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "storage": {
                     "$ref": "#/definitions/models.ProfileStorage"
                 },
@@ -675,23 +681,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                }
-            }
-        },
-        "models.ProfileV2": {
-            "type": "object",
-            "properties": {
-                "files": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "storage": {
-                    "$ref": "#/definitions/models.ProfileStorage"
-                },
-                "user": {
-                    "$ref": "#/definitions/models.UserV2"
                 }
             }
         },
@@ -756,14 +745,6 @@ const docTemplate = `{
                 },
                 "storage_limit": {
                     "type": "integer"
-                }
-            }
-        },
-        "models.UserV2": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
                 }
             }
         }

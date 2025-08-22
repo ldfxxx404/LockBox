@@ -55,6 +55,10 @@ definitions:
     type: object
   models.Profile:
     properties:
+      files:
+        items:
+          type: string
+        type: array
       storage:
         $ref: '#/definitions/models.ProfileStorage'
       user:
@@ -75,17 +79,6 @@ definitions:
         type: integer
       name:
         type: string
-    type: object
-  models.ProfileV2:
-    properties:
-      files:
-        items:
-          type: string
-        type: array
-      storage:
-        $ref: '#/definitions/models.ProfileStorage'
-      user:
-        $ref: '#/definitions/models.UserV2'
     type: object
   models.RegisterDTO:
     properties:
@@ -127,11 +120,6 @@ definitions:
         type: string
       storage_limit:
         type: integer
-    type: object
-  models.UserV2:
-    properties:
-      name:
-        type: string
     type: object
 host: localhost:5000
 info:
@@ -472,7 +460,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.ProfileV2'
+            $ref: '#/definitions/models.Profile'
         "500":
           description: Internal Server Error
           schema:
