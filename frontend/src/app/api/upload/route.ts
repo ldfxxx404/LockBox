@@ -36,7 +36,9 @@ export async function POST(req: Request) {
 
     if (!res.ok) {
       const errorText = await res.text()
-      clogger.error(`Upload failed: ${errorText}`)
+      clogger.error(
+        'Upload failed: File size exceeds storage limit or file is to large'
+      )
       const error: ErrorResponse = {
         message: 'Upload file error',
         detail: errorText || 'Unknown error',
@@ -44,9 +46,9 @@ export async function POST(req: Request) {
       }
       return NextResponse.json(error, { status: error.code })
     }
-
-    clogger.info('File uploaded successfully')
     const data = await res.json()
+    const filename = data.filename
+    clogger.info(`File "${filename}" uploaded successfully`)
     return NextResponse.json(data)
   } catch (err) {
     const error = err as Error
