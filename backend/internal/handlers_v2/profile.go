@@ -33,7 +33,7 @@ func NewProfileHandlerV2(
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Success 200 {object} models.ProfileV2
+// @Success 200 {object} models.Profile
 // @Failure 500 {object} models.ErrorResponse
 // @Router /v2/profile [get]
 func (h *ProfileHandlerV2) GetProfile(c *fiber.Ctx) error {
@@ -56,14 +56,16 @@ func (h *ProfileHandlerV2) GetProfile(c *fiber.Ctx) error {
 	}
 
 	log.Info("GetProfileV2: profile retrieved successfully", "user_id", userID, "email", user.Email)
-	return c.JSON(models.ProfileV2{
+	return c.JSON(models.Profile{
 		Storage: &models.ProfileStorage{
 			Used:  usedMB,
 			Limit: limitMB,
 		},
 		Files: filenames,
-		User: &models.UserV2{
-			Name: user.Name,
+		User: &models.ProfileUser{
+			Name:  user.Name,
+			Email: user.Email,
+			Id:    user.ID,
 		},
 	})
 }

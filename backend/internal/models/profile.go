@@ -1,10 +1,5 @@
 package models
 
-type Profile struct {
-	User    *ProfileUser    `json:"user"`
-	Storage *ProfileStorage `json:"storage"`
-}
-
 type ProfileUser struct {
 	Id    int    `json:"id"`
 	Email string `json:"email"`
@@ -16,12 +11,8 @@ type ProfileStorage struct {
 	Limit int   `json:"limit"`
 }
 
-type UserV2 struct {
-	Name string `json:"name"`
-}
-
-type ProfileV2 struct {
+type Profile struct {
 	Storage *ProfileStorage `json:"storage"`
 	Files   []string        `json:"files"`
-	User    *UserV2         `json:"user"`
+	User    *ProfileUser    `json:"user"`
 }
