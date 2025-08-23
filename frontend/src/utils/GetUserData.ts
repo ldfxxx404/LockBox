@@ -15,27 +15,24 @@ export async function GetData(req: Request) {
       clogger.error('Authorization token is missing for /profile request.')
       return NextResponse.json(error, { status: error.code })
     }
-      const res = await fetch(PROFILE_URL, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: `Bearer ${token}`,
-        },
-      })
+    const res = await fetch(PROFILE_URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+    })
 
-      if (!res.ok) {
-        clogger.error('Error requesting profile')
-        return null
-      }
+    if (!res.ok) {
+      clogger.error('Error requesting profile')
+      return null
+    }
 
-      const data = await res.json()
-      const email = <string>data.user.email
-      const name = <string>data.user.name
-      const id = <number>data.user.id
-      return { email, name, id }
-
-    
-    
+    const data = await res.json()
+    const email = <string>data.user.email
+    const name = <string>data.user.name
+    const id = <number>data.user.id
+    return { email, name, id }
   } catch (error) {
     console.error('Profile API error:', error)
     const response: ErrorResponse = {
