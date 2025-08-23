@@ -24,9 +24,10 @@ down_force:
 	$(DOCKER_COMPOSE) down --rmi all --volumes --remove-orphans
 
 init: down_force build up
-	@echo "Инициализация завершена"
+	@echo "=================================================="
 	@echo "backend docs http://localhost:5000/docs/index.html"
 	@echo "frontend http://localhost:3000"
+	@echo "=================================================="
 
 init_prod: down_force 
 	$(DOCKER_COMPOSE) -f docker-compose.prod.yml build --no-cache

@@ -25,6 +25,7 @@ services:
       SERVER_PORT: 0.0.0.0:5000
       STORAGE_LIMIT: 20
       BODY_LIMIT_MB: ${BODY_LIMIT_MB}
+      FIBER_LIMIT_REQ: ${FIBER_LIMIT_REQ}
       JWT_SECRET: 82026ea3dfe8af4dbefc8db9495e442870b4408415d2ced47ab8d50b97dd9da203bfae35e9df9f527de3ae117d3af950cc57ae77967aacc9039130b86895a4ae
       POSTGRES_URL: postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
       MINIO_ENDPOINT: minio:9090
@@ -33,7 +34,6 @@ services:
       MINIO_BUCKET: uploads
       LOG_LEVEL: debug
       BACK_LOG_FILE: ${BACK_LOG_FILE}
-      FIBER_LIMIT_REQ: 100
     volumes:
       - ./data/logs/backend:/app/logs/:z
     depends_on:
