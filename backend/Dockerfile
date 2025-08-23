@@ -21,7 +21,7 @@ COPY . .
 
 RUN go install github.com/pressly/goose/v3/cmd/goose@latest
 
-RUN go build -o backend ./cmd/lock_box/main.go
+RUN go build -o backend -ldflags="-s -w" -trimpath ./cmd/lock_box/main.go
 
 FROM alpine:latest
 
