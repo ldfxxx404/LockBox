@@ -90,7 +90,7 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 		counter++
 	}
 
-	objectName := fmt.Sprintf("%d/%s", userID, fileHeader.Filename)
+	objectName := fmt.Sprintf("%d/%s", userID, newName)
 	contentType := fileHeader.Header.Get("Content-Type")
 
 	uploadInfo, err := s.Minio.PutObject(context.Background(),

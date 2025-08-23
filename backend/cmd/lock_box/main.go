@@ -10,7 +10,7 @@ import (
 )
 
 // @title        LockBox API
-// @version      0.2.1
+// @version      0.2.2
 // @description  This is the API documentation for LockBox SaaS app.
 // @host         localhost:5000
 // @BasePath     /api

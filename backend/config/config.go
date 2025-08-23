@@ -22,7 +22,7 @@ var (
 	LogFilePath    = getEnv("BACK_LOG_FILE", "/app/logs/")
 	MinioUseSSL    = getEnv("MINIO_USE_SSL", false)
 	FiberLimitBody = getEnv("BODY_LIMIT_MB", 500)
-	FiberLimitReq  = getEnv("FIBER_LIMIT_REQ", 100)
+	FiberLimitReq  = getEnv("FIBER_LIMIT_REQ", 500)
 )
 
 func getEnv[T any](key string, fallback T) T {

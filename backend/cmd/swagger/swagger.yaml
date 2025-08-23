@@ -126,7 +126,7 @@ info:
   contact: {}
   description: This is the API documentation for LockBox SaaS app.
   title: LockBox API
-  version: 0.2.1
+  version: 0.2.2
 paths:
   /admin/admins:
     get:
