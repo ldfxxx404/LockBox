@@ -34,7 +34,6 @@ services:
       MINIO_BUCKET: uploads
       LOG_LEVEL: debug
       BACK_LOG_FILE: ${BACK_LOG_FILE}
-      FIBER_LIMIT_REQ: 100
     volumes:
       - ./data/logs/backend:/app/logs/:z
     depends_on:
