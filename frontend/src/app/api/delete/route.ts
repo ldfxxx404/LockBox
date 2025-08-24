@@ -42,27 +42,27 @@ export async function DELETE(req: Request) {
       }
       clogger.error(`Failed to delete "${filename}": ${error.detail}`)
       return NextResponse.json(error, { status: error.code })
+    } else {
+      const user = await GetData(req)
+      if (
+        user &&
+        typeof user === 'object' &&
+        'name' in user &&
+        'email' in user &&
+        'id' in user
+      ) {
+        clogger.info(
+          `User "${user.name}" deleted file "${filename}". Additional info: UID: ${user.id}, Email: ${user.email}`
+        )
+      } else {
+        clogger.warning(
+          `Could not retrieve user info for the upload. User: ${JSON.stringify(user)}`
+        )
+      }
     }
 
     const data = await res.json()
 
-    const user = await GetData(req)
-
-    if (
-      user &&
-      typeof user === 'object' &&
-      'name' in user &&
-      'email' in user &&
-      'id' in user
-    ) {
-      clogger.info(
-        `User "${user.name}" deleted file "${filename}". Additional info: UID: ${user.id}, Email: ${user.email}`
-      )
-    } else {
-      clogger.warning(
-        `Could not retrieve user info for the upload. User: ${JSON.stringify(user)}`
-      )
-    }
     return NextResponse.json(data, { status: 200 })
   } catch (err) {
     const error = err as Error

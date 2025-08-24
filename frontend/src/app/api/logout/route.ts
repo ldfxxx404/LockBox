@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
+import { GetData } from '@/utils/GetUserData'
 
 export async function POST(req: Request) {
   try {
@@ -18,7 +19,10 @@ export async function POST(req: Request) {
       return NextResponse.json(error, { status: error.code })
     }
 
-    clogger.info('Logout successfully')
+    const user = await GetData(req)
+    if (user && typeof user === 'object' && 'email' in user) {
+      clogger.info(`Validation successful — user "${user.email}" logged out`)
+    }
 
     return NextResponse.json({ success: true, message: 'Logout successfully' })
   } catch (error) {

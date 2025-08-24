@@ -42,8 +42,9 @@ export async function GET(req: Request) {
         detail: text || 'File not found or token invalid!',
         code: res.status,
       }
-      clogger.error(`Download failed for "${filename}": ${error.detail}`)
-      console.error('DOWNLOAD_URL error:', text)
+      clogger.error(
+        `Download failed for "${filename}": Unauthorized, missing or invalid token`
+      )
       return NextResponse.json(error, { status: error.code })
     }
 
