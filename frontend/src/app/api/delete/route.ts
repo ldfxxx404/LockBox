@@ -45,7 +45,6 @@ export async function DELETE(req: Request) {
     }
 
     const data = await res.json()
-    clogger.info(`File "${filename}" successfully deleted`)
 
     const user = await GetData(req)
 

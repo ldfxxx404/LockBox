@@ -2,6 +2,7 @@ import { DOWNLOAD_URL } from '@/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
+import { GetData } from '@/utils/GetUserData'
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get('authorization')
@@ -46,7 +47,19 @@ export async function GET(req: Request) {
       return NextResponse.json(error, { status: error.code })
     }
 
-    clogger.info(`File "${filename}" downloaded successfully`)
+    const user = await GetData(req)
+    if (
+      user &&
+      typeof user === 'object' &&
+      'email' in user &&
+      'name' in user &&
+      'id' in user
+    ) {
+      clogger.info(
+        `User: "${user.name}" downloaded file "${filename}" successfully. Additional info: UID: ${user.id}, Email: ${user.email}`
+      )
+    }
+
     return new NextResponse(res.body)
   } catch (err) {
     const error = err as Error
