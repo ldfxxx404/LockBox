@@ -60,11 +60,11 @@ export async function POST(req: Request) {
       'email' in user
     ) {
       clogger.info(
-        `User: "${user.name}" uploaded "${filename}". Additional information: UID: ${user.id}, Email: ${user.email}`
+        `User "${user.name}" uploaded file "${filename}". Additional info: UID: ${user.id}, Email: ${user.email}`
       )
     } else {
       clogger.warning(
-        `Could not get user info for upload. User: ${JSON.stringify(user)}`
+        `Could not retrieve user info for the upload. User: ${JSON.stringify(user)}`
       )
     }
     return NextResponse.json(data)

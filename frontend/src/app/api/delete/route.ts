@@ -2,6 +2,7 @@ import { DELETE_URL } from '@/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
+import { GetData } from '@/utils/GetUserData'
 
 export async function DELETE(req: Request) {
   const authHeader = req.headers.get('authorization')
@@ -45,6 +46,24 @@ export async function DELETE(req: Request) {
 
     const data = await res.json()
     clogger.info(`File "${filename}" successfully deleted`)
+
+    const user = await GetData(req)
+
+    if (
+      user &&
+      typeof user === 'object' &&
+      'name' in user &&
+      'email' in user &&
+      'id' in user
+    ) {
+      clogger.info(
+        `User "${user.name}" deleted file "${filename}". Additional info: UID: ${user.id}, Email: ${user.email}`
+      )
+    } else {
+      clogger.warning(
+        `Could not retrieve user info for the upload. User: ${JSON.stringify(user)}`
+      )
+    }
     return NextResponse.json(data, { status: 200 })
   } catch (err) {
     const error = err as Error
