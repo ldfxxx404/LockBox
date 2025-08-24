@@ -61,25 +61,11 @@ func NewFileService(
 	}, nil
 }
 
-func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) error {
-	log.Info("Starting file upload:", "user_id", userID, "filename", fileHeader.Filename, "size", fileHeader.Size)
+func (s *FileService) incrementNewName(fileHeader *multipart.FileHeader, userID int) (string, string) {
+	base := strings.TrimSuffix(fileHeader.Filename, filepath.Ext(fileHeader.Filename))
+	ext := filepath.Ext(fileHeader.Filename)
 
-	file, err := fileHeader.Open()
-	if err != nil {
-		log.Error("Failed to open file header:", err)
-		return err
-	}
-	defer func() {
-		if cerr := file.Close(); cerr != nil {
-			log.Error("Failed to close file:", cerr)
-		}
-	}()
-
-	filename := fileHeader.Filename
-	base := strings.TrimSuffix(filename, filepath.Ext(filename))
-	ext := filepath.Ext(filename)
-
-	newName := filename
+	newName := fileHeader.Filename
 	counter := 1
 	for {
 		exists, _ := s.FileRepo.Exists(userID, newName)
@@ -89,8 +75,24 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 		newName = fmt.Sprintf("%s(%d)%s", base, counter, ext)
 		counter++
 	}
+	return fmt.Sprintf("%d/%s", userID, newName), newName
+}
 
-	objectName := fmt.Sprintf("%d/%s", userID, newName)
+func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) error {
+	log.Info("Starting file upload:", "user_id", userID, "filename", fileHeader.Filename, "size", fileHeader.Size)
+
+	file, err := fileHeader.Open()
+	if err != nil {
+		log.Error("Failed to open file header:", err)
+		return err
+	}
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Error("Failed to close file:", err)
+		}
+	}()
+
+	objectName, newName := s.incrementNewName(fileHeader, userID)
 	contentType := fileHeader.Header.Get("Content-Type")
 
 	uploadInfo, err := s.Minio.PutObject(context.Background(),
