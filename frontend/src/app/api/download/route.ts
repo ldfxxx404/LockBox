@@ -2,6 +2,7 @@ import { DOWNLOAD_URL } from '@/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
+import { GetData } from '@/utils/GetUserData'
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get('authorization')
@@ -41,12 +42,25 @@ export async function GET(req: Request) {
         detail: text || 'File not found or token invalid!',
         code: res.status,
       }
-      clogger.error(`Download failed for "${filename}": ${error.detail}`)
-      console.error('DOWNLOAD_URL error:', text)
+      clogger.error(
+        `Download failed for "${filename}": Unauthorized, missing or invalid token`
+      )
       return NextResponse.json(error, { status: error.code })
     }
 
-    clogger.info(`File "${filename}" downloaded successfully`)
+    const user = await GetData(req)
+    if (
+      user &&
+      typeof user === 'object' &&
+      'email' in user &&
+      'name' in user &&
+      'id' in user
+    ) {
+      clogger.info(
+        `User: "${user.name}" downloaded file "${filename}" successfully. Additional info: UID: ${user.id}, Email: ${user.email}`
+      )
+    }
+
     return new NextResponse(res.body)
   } catch (err) {
     const error = err as Error

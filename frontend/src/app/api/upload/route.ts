@@ -2,6 +2,7 @@ import { UPLOAD_URL } from '@/constants/api'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
+import { GetData } from '@/utils/GetUserData'
 
 export async function POST(req: Request) {
   try {
@@ -48,7 +49,24 @@ export async function POST(req: Request) {
     }
     const data = await res.json()
     const filename = data.filename
-    clogger.info(`File "${filename}" uploaded successfully`)
+
+    const user = await GetData(req)
+
+    if (
+      user &&
+      typeof user === 'object' &&
+      'name' in user &&
+      'id' in user &&
+      'email' in user
+    ) {
+      clogger.info(
+        `User "${user.name}" uploaded file "${filename}". Additional info: UID: ${user.id}, Email: ${user.email}`
+      )
+    } else {
+      clogger.warning(
+        `Could not retrieve user info for the upload. User: ${JSON.stringify(user)}`
+      )
+    }
     return NextResponse.json(data)
   } catch (err) {
     const error = err as Error

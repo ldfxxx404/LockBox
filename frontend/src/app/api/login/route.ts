@@ -24,7 +24,10 @@ export async function POST(req: Request) {
       return NextResponse.json(error, { status: res.status })
     }
 
-    clogger.info('Login completed successfully')
+    const usermail = responseData.user.email
+
+    clogger.info(`Validation successful — user "${usermail}" logged in`)
+
     return NextResponse.json(responseData)
   } catch (error) {
     console.error('Login error', error)

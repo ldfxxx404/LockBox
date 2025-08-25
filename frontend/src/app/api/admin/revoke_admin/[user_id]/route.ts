@@ -2,6 +2,7 @@ import { REVOKE_ADMIN_URL } from '@/constants/api'
 import { NextResponse, NextRequest } from 'next/server'
 import { clogger } from '@/utils/ColorLogger'
 import { ErrorResponse } from '@/types/errorResponse'
+import { GetData } from '@/utils/GetUserData'
 
 export async function PUT(req: NextRequest) {
   try {
@@ -38,9 +39,19 @@ export async function PUT(req: NextRequest) {
         `API error: ${res.status} - ${data?.message || res.statusText}`
       )
       return NextResponse.json(data, { status: res.status })
+    } else {
+      const user = await GetData(req)
+      if (
+        user &&
+        typeof user === 'object' &&
+        'email' in user &&
+        'name' in user
+      ) {
+        clogger.info(
+          `Admin rights successfully revoked by user: "${user.email}" from the user with UID: ${user_id}.`
+        )
+      }
     }
-
-    clogger.info('Admin rights successfully revoked from the user.')
 
     return NextResponse.json(data)
   } catch (err) {

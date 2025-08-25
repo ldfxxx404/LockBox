@@ -15,7 +15,9 @@ export const DeleteButton = ({ filename, onDelete }: DeleteButtonProps) => {
     e.preventDefault()
     const result = await FileDelete(filename)
     if (result?.error) {
-      alert('Delete file error')
+      alert(
+        'Missing or invalid authorization token, can not delte file. Relogin'
+      )
     } else {
       onDelete?.()
       toast.success(`${filename} deleted`)

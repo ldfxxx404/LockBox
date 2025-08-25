@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { MAKE_ADMIN_URL } from '@/constants/api'
 import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
+import { GetData } from '@/utils/GetUserData'
 
 export async function PUT(req: NextRequest) {
   try {
@@ -37,9 +38,17 @@ export async function PUT(req: NextRequest) {
       )
       return NextResponse.json(data, { status: res.status })
     } else {
-      clogger.info(
-        'The user has been successfully granted administrator rights.'
-      )
+      const user = await GetData(req)
+      if (
+        user &&
+        typeof user === 'object' &&
+        'email' in user &&
+        'name' in user
+      ) {
+        clogger.info(
+          `Admin rights successfully granted by Email: "${user.email}" to the user with UID: ${user_id}.`
+        )
+      }
     }
     return NextResponse.json(data)
   } catch (err) {
