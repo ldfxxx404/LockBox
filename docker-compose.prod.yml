@@ -1,9 +1,9 @@
 services:
   postgres:
-    container_name: lockbox-postgres
+    container_name: ${POSTGRES_NAME} 
     image: postgres:15-alpine
     ports:
-      - '5432'
+      - "${POSTGRES_PORT}"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -27,7 +27,7 @@ services:
       STORAGE_LIMIT: 20
       FIBER_LIMIT_REQ: ${FIBER_LIMIT_REQ}
       JWT_SECRET: ${JWT_SECRET}
-      POSTGRES_URL: ${POSTGRES_URL}
+      POSTGRES_URL: ${DB_CONTAINER_URL}
       MINIO_ENDPOINT: minio:9090
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
