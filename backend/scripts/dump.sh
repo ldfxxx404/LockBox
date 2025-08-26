@@ -1,13 +1,18 @@
 #!/bin/bash
+set -euo pipefail
 
-set -e
+export $(grep -v '^#' .env | xargs)
 
-docker exec -t lockbox-postgres pg_dump \
-  -U postgres \
-  -d lock_box \
+DUMP_FILE="dump_$(date +%Y%m%d_%H%M%S).dump"
+
+docker exec -t "${POSTGRES_NAME}" pg_dump \
+  -U "${POSTGRES_USER}" \
+  -d "${POSTGRES_DB}" \
   -F c \
   -f /tmp/dump.dump
 
-docker cp lockbox-postgres:/tmp/dump.dump dump.dump
+docker cp "${POSTGRES_NAME}:/tmp/dump.dump" "${DUMP_FILE}"
 
-docker exec -t lockbox-postgres rm /tmp/dump.dump
+docker exec -t "${POSTGRES_NAME}" rm /tmp/dump.dump
+
+echo "Backup saved to ${DUMP_FILE}"

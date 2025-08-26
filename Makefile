@@ -1,16 +1,14 @@
 # --- env --- 
+ifneq (,$(wildcard .env))
+    include .env
+    export
+endif
+
 SHELL := /bin/bash
 
 DOCKER_COMPOSE := @docker compose
 
-BACKEND_NAME=lockbox-backend
-FRONTEND_NAME=lockbox-frontend
-POSTGRES_NAME=lockbox-postgres
-MINIO_NAME=lockbox-minio
-
 MIGRATIONS_DIR=migrations
-DB_URL=postgres://postgres:postgres@postgres:5432/lock_box?sslmode=disable
-DB_CONTAINER_URL=postgres://postgres:postgres@${POSTGRES_NAME}:5432/lock_box?sslmode=disable
 
 # --- misc ---
 up:
