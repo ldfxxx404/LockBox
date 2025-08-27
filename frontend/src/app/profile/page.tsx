@@ -63,7 +63,9 @@ export default function UserProfile() {
   const handleDownload = async (filename: string) => {
     const result = await FileDownload(filename)
     if (result?.error) {
-      alert('Missing or invalid authorization token. Cannot download file. Please log in again.')
+      alert(
+        'Missing or invalid authorization token. Cannot download file. Please log in again.'
+      )
       window.location.href = '/login'
     }
   }
