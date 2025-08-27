@@ -17,7 +17,7 @@ export const useUpload = () => {
   const handleSubmit = async (filesToUpload?: File[]) => {
     const files = filesToUpload ?? selectedFiles
     if (files.length === 0) {
-      alert('Files not chosen')
+      alert('No file selected. Please choose a file to upload.')
       return
     }
 
