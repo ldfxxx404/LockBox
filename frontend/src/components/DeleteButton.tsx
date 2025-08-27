@@ -16,8 +16,9 @@ export const DeleteButton = ({ filename, onDelete }: DeleteButtonProps) => {
     const result = await FileDelete(filename)
     if (result?.error) {
       alert(
-        'Missing or invalid authorization token, can not delte file. Relogin'
+        'Missing or invalid authorization token. Cannot delete file. Please log in again.'
       )
+      window.location.href = '/login'
     } else {
       onDelete?.()
       toast.success(`${filename} deleted`)
