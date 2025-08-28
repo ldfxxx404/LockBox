@@ -12,8 +12,11 @@ import { UpdateLimit } from '@/lib/adminUpdateLimit'
 import { UserPayload } from '@/types/userTypes'
 import { adminGetAdmins } from '@/lib/adminGetAdmins'
 import toast, { Toaster } from 'react-hot-toast'
+import { Button } from '@/components/ActionButton'
+import { useRouter } from 'next/navigation'
 
 export default function Admin() {
+  const router = useRouter()
   const [users, setUsers] = useState<UserPayload[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -151,7 +154,7 @@ export default function Admin() {
   )
 
   return (
-    <div className='flex flex-col items-center px-4 py-16 min-h-screen bg-[#282a36] text-white'>
+    <div className='flex flex-col items-center px-4 py-8 min-h-screen bg-[#282a36] text-white'>
       <h1 className='text-4xl font-extrabold mb-8 tracking-wide'>
         Admin Panel
       </h1>
@@ -169,6 +172,7 @@ export default function Admin() {
         <p>Users not found</p>
       ) : (
         <ul className='bg-[#2d2f44] mt-4 px-6 py-6 rounded-2xl shadow-2xl w-full max-w-3xl space-y-4 h-[40rem] overflow-y-auto scrollbar-hidden'>
+          {/*TODO: change bg-color from bg-[#2d2f44] to bg-[#343746] same profile*/}
           {filteredUsers.map((user: UserPayload) => (
             <li
               key={user.id}
@@ -243,6 +247,9 @@ export default function Admin() {
           },
         }}
       />
+      <div className='mt-3 mx-auto'>
+        <Button label='Back to profile' type='button' onClick={() => router.push('/profile')}/>
+      </div>
     </div>
   )
 }

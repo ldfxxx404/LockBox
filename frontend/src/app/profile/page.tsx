@@ -79,7 +79,8 @@ export default function UserProfile() {
 
   return (
     <div className='min-h-screen bg-background flex flex-col items-center py-10'>
-      <div className='bg-[#343746] mt-20 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl max-sm:max-w-full max-sm:mt-0'>
+      <div className='bg-[#343746] mt-20 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl max-sm:max-w-full max-sm:mt-0'> 
+        {/*TODO: change bg-color from bg-[#343746] to bg-[#2d2f44] same dashboard*/}
         {' '}
         <h3 className='dracula-green text-lg font-semibold mb-4'>
           User storage information
