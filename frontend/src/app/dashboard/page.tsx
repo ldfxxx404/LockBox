@@ -248,7 +248,11 @@ export default function Admin() {
         }}
       />
       <div className='mt-3 mx-auto'>
-        <Button label='Back to profile' type='button' onClick={() => router.push('/profile')}/>
+        <Button
+          label='Back to profile'
+          type='button'
+          onClick={() => router.push('/profile')}
+        />
       </div>
     </div>
   )
