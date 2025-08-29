@@ -13,6 +13,8 @@ import { Button } from '@/components/ActionButton'
 import { Sort } from '@/components/SortButton'
 import { UserInput } from '@/components/InputForm'
 import { Toaster } from 'react-hot-toast'
+import { jwtDecode } from 'jwt-decode'
+import { useRouter } from 'next/navigation'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -27,6 +29,8 @@ export default function UserProfile() {
   const [error, setError] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [searchTerm, setSearchTerm] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+  const router = useRouter()
 
   const sortFiles = () => {
     const newOrder = sortOrder === 'asc' ? 'desc' : 'asc'
@@ -60,6 +64,14 @@ export default function UserProfile() {
     fetchProfile()
   }, [])
 
+  useEffect(() => {
+    const token = sessionStorage.getItem('token')
+    if (token) {
+      const payload = jwtDecode<jwtPayload>(token)
+      setIsAdmin(!!payload.is_admin)
+    }
+  }, [])
+
   const handleDownload = async (filename: string) => {
     const result = await FileDownload(filename)
     if (result?.error) {
@@ -75,6 +87,15 @@ export default function UserProfile() {
   )
   if (isChecking || !hasToken) {
     return <Forbidden />
+  }
+
+  interface jwtPayload {
+    is_admin: boolean
+  }
+
+  const token = sessionStorage.getItem('token')
+  if (token) {
+    jwtDecode(token)
   }
 
   return (
@@ -158,6 +179,13 @@ export default function UserProfile() {
           <div className='flex gap-4 w-full justify-center'>
             <Upload onChange={handleChange} />
             <Button label='Logout' type='submit' onClick={handleLogout} />
+            {isAdmin ? (
+              <Button
+                label='Dashboard'
+                type='button'
+                onClick={() => router.push('/dashboard')}
+              />
+            ) : null}
           </div>
         </div>
       </div>
