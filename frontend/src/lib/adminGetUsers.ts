@@ -9,13 +9,12 @@ export async function adminGetUsers() {
         authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
+    const data = await res.json()
 
     if (!res.ok) {
-      const errorData = await res.json()
-      throw new Error(errorData.error || 'Failed to fetch users')
+      throw new Error(data.error || 'Failed to fetch users')
     }
 
-    const data = await res.json()
     return data
   } catch (error) {
     console.error('Error in adminGetUsers:', error)
