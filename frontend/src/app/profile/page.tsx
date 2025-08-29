@@ -20,7 +20,6 @@ export default function UserProfile() {
   const handleLogout = useLogout()
   const { hasToken, isChecking } = useRedirect()
   const { handleChange } = useUpload()
-
   const [files, setFiles] = useState<string[]>([])
   const [limit, setLimit] = useState<number>(0)
   const [used, setUsed] = useState<number>(0)
