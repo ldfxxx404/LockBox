@@ -13,12 +13,13 @@ import { Button } from '@/components/ActionButton'
 import { Sort } from '@/components/SortButton'
 import { UserInput } from '@/components/InputForm'
 import { Toaster } from 'react-hot-toast'
+import { jwtDecode } from 'jwt-decode'
+import { useRouter } from 'next/navigation'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
   const { hasToken, isChecking } = useRedirect()
   const { handleChange } = useUpload()
-
   const [files, setFiles] = useState<string[]>([])
   const [limit, setLimit] = useState<number>(0)
   const [used, setUsed] = useState<number>(0)
@@ -27,6 +28,8 @@ export default function UserProfile() {
   const [error, setError] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [searchTerm, setSearchTerm] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+  const router = useRouter()
 
   const sortFiles = () => {
     const newOrder = sortOrder === 'asc' ? 'desc' : 'asc'
@@ -60,6 +63,14 @@ export default function UserProfile() {
     fetchProfile()
   }, [])
 
+  useEffect(() => {
+    const token = sessionStorage.getItem('token')
+    if (token) {
+      const payload = jwtDecode<jwtPayload>(token)
+      setIsAdmin(!!payload.is_admin)
+    }
+  }, [])
+
   const handleDownload = async (filename: string) => {
     const result = await FileDownload(filename)
     if (result?.error) {
@@ -77,10 +88,19 @@ export default function UserProfile() {
     return <Forbidden />
   }
 
+  interface jwtPayload {
+    is_admin: boolean
+  }
+
+  const token = sessionStorage.getItem('token')
+  if (token) {
+    jwtDecode(token)
+  }
+
   return (
     <div className='min-h-screen bg-background flex flex-col items-center py-10'>
       <div className='bg-[#343746] mt-20 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl max-sm:max-w-full max-sm:mt-0'>
-        {' '}
+        {/*TODO: change bg-color from bg-[#343746] to bg-[#2d2f44] same dashboard*/}{' '}
         <h3 className='dracula-green text-lg font-semibold mb-4'>
           User storage information
         </h3>
@@ -158,6 +178,13 @@ export default function UserProfile() {
           <div className='flex gap-4 w-full justify-center'>
             <Upload onChange={handleChange} />
             <Button label='Logout' type='submit' onClick={handleLogout} />
+            {isAdmin ? (
+              <Button
+                label='Dashboard'
+                type='button'
+                onClick={() => router.push('/dashboard')}
+              />
+            ) : null}
           </div>
         </div>
       </div>
