@@ -160,6 +160,13 @@ export default function Admin() {
       </h1>
 
       <Switcher activeTab={activeTab} setActiveTab={setActiveTab} />
+      <div className='mb-5'>
+        <Button
+          label='Back to profile'
+          type='button'
+          onClick={() => router.push('/profile')}
+        />
+      </div>
 
       <UserInput
         placeholder='Search'
@@ -247,13 +254,6 @@ export default function Admin() {
           },
         }}
       />
-      <div className='mt-3 mx-auto'>
-        <Button
-          label='Back to profile'
-          type='button'
-          onClick={() => router.push('/profile')}
-        />
-      </div>
     </div>
   )
 }
