@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+
 set -euo pipefail
 
 export $(grep -v '^#' .env | xargs)
