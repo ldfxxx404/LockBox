@@ -3,15 +3,17 @@
 :root {
   --background: #282a36;
   --foreground: #f8f8f2;
-  --dracula-selection: #44475a;
-  --dracula-comment: #6272a4;
-  --dracula-cyan: #8be9fd;
-  --dracula-green: #50fa7b;
+  --dracula-white: #ffffff;
+  --dracula-selection: #969dab;
+  --dracula-comment: #2d2f44;
+  --dracula-green: #00a63e;
+  --dracula-green-hover: #008236;
   --dracula-orange: #ffb86c;
-  --dracula-pink: #ff79c6;
-  --dracula-purple: #bd93f9;
-  --dracula-red: #ff5555;
-  --dracula-yellow: #f1fa8c;
+  --dracula-purple: #9810fa;
+  --dracula-purple-hover: #8200db;
+  --dracula-red: #e63c3c;
+  --dracula-red-hover: #e7000b;
+  --dracula-card: #1f2133;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
