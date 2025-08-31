@@ -99,28 +99,27 @@ export default function UserProfile() {
 
   return (
     <div className='min-h-screen bg-background flex flex-col items-center py-10'>
-      <div className='bg-[#343746] mt-20 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl max-sm:max-w-full max-sm:mt-0'>
-        {/*TODO: change bg-color from bg-[#343746] to bg-[#2d2f44] same dashboard*/}{' '}
+      <div className='bg-[var(--dracula-comment)] mt-20 px-8 py-6 rounded-xl shadow-lg w-full max-w-2xl max-sm:max-w-full max-sm:mt-0'>
         <h3 className='dracula-green text-lg font-semibold mb-4'>
           User storage information
         </h3>
-        <div className='mb-2 text-white'>
+        <div className='mb-2 text-[var(--dracula-white)]'>
           <span className='font-semibold'>User:</span> {userName}
         </div>
         <div className='mb-4'>
           <div>
             <span className='font-semibold'>Usage:</span> {used} / {limit} MiB
           </div>
-          <div className='w-full bg-[#282a36] rounded h-3 mt-2'>
+          <div className='w-full bg-[var(--background)] rounded h-3 mt-2'>
             <div
-              className='bg-[#bd93f9] h-3 rounded'
+              className='bg-[var(--dracula-bar)] h-3 rounded'
               style={{ width: limit ? `${(used / limit) * 100}%` : '0%' }}
             ></div>
           </div>
         </div>
         <div className='overflow-y-auto h-96 scrollbar-hidden max-sm:h-[60vh]'>
           <div
-            className='flex justify-between items-center sticky top-0 bg-[#343746] 
+            className='flex justify-between items-center sticky top-0 bg-[var(--dracula-comment)] 
     max-sm:flex-col max-sm:items-stretch max-sm:gap-2 max-sm:p-2'
           >
             <h2 className='text-lg font-semibold max-sm:text-lg'>Files:</h2>
@@ -130,9 +129,9 @@ export default function UserProfile() {
                 placeholder='Search'
                 type='text'
                 onChange={e => setSearchTerm(e.target.value)}
-                className='mt-0.5 w-full px-4 py-2 rounded-lg bg-[#2d2f44] text-white 
-       placeholder-gray-400 focus:outline-none focus:ring-2 
-       focus:ring-purple-500 transition'
+                className='mt-0.5 w-full px-4 py-2 rounded-lg bg-[var(--dracula-comment)] text-[var(--dracula-white)] 
+       placeholder-[var(--dracula-selection)] focus:outline-none focus:ring-2 
+       focus:ring-[var(--dracula-purple-hover)] ring-2 ring-[var(--dracula-bar)] transition'
               />
             </div>
             <Sort
@@ -141,11 +140,13 @@ export default function UserProfile() {
             />
           </div>
           {loading && <div>Loading...</div>}
-          {error && <div className='text-red-500 mb-4'>{error}</div>}
+          {error && (
+            <div className='text-[var(--dracula-red)] mb-4'>{error}</div>
+          )}
           {!loading && !error && (
             <>
               {files.length === 0 ? (
-                <div className='text-gray-500'>No files</div>
+                <div className='text-[var(--dracula-selection)]'>No files</div>
               ) : (
                 <ul className='list-disc pl-5'>
                   {filteredFiles.map((file, idx) => (
@@ -155,7 +156,7 @@ export default function UserProfile() {
                     >
                       <a
                         href='#'
-                        className='text-indigo-400 hover:underline'
+                        className='text-[var(--dracula-indigo)] hover:underline'
                         onClick={e => {
                           e.preventDefault()
                           handleDownload(file)
