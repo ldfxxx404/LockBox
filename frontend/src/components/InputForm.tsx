@@ -23,7 +23,7 @@ export const UserInput = ({
       type={type}
       required={required}
       placeholder={placeholder}
-      className='bg-[#44475a] text-foreground border-none rounded-lg py-3 px-4 text-base outline-none'
+      className='bg-[var(--dracula-selection-light)] text-foreground border-none rounded-lg py-3 px-4 text-base outline-none'
       {...props}
     />
   )

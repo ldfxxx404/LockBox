@@ -25,7 +25,7 @@ export default function RegisterPage() {
 
   return (
     <main className='min-h-screen flex items-center justify-center bg-background'>
-      <div className='bg-[#343746] px-10 py-8 rounded-xl shadow-[0_2px_16px_0_#0002] min-w-[400px] max-w-[90vw] flex flex-col items-center max-sm:min-w-0'>
+      <div className='bg-[var(--dracula-comment)] px-10 py-8 rounded-xl shadow-[0_2px_16px_0_#0002] min-w-[400px] max-w-[90vw] flex flex-col items-center max-sm:min-w-0'>
         <h1 className='text-foreground text-[32px] mb-8'>Registration</h1>
         <form
           className='w-full flex flex-col gap-[18px]'
@@ -54,6 +54,8 @@ export default function RegisterPage() {
 
           <Button label='Sign Up' type='submit' />
         </form>
+        {/* <div className='mt-[18px] text-[13px] text-[#bcbcbc] text-center'></div> */}
+        {/* TODO: add 'No account? Register' */}
       </div>
       <Toaster
         position='top-center'
