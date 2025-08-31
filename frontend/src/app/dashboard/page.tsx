@@ -19,16 +19,14 @@ export default function Admin() {
   const router = useRouter()
   const [users, setUsers] = useState<UserPayload[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const { hasToken, isChecking } = useRedirect()
   const [searchTerm, setSearchTerm] = useState('')
   const [activeTab, setActiveTab] = useState('Users')
   const [admins, setAdmins] = useState<UserPayload[]>([])
+  const { hasToken, isChecking } = useRedirect()
 
   const [limitInputs, setLimitInputs] = useState<Record<number, number | ''>>(
     {}
   )
-  const [limitMessages, setLimitMessages] = useState<Record<number, string>>({})
 
   const handleLimitChange = (userId: number, value: number | '') => {
     setLimitInputs(prev => ({ ...prev, [userId]: value }))
@@ -38,7 +36,6 @@ export default function Admin() {
     const limit = limitInputs[userId]
 
     if (limit === '' || isNaN(Number(limit))) {
-      setLimitMessages(prev => ({ ...prev, [userId]: '' }))
       toast.error('Please, insert limit value')
       return
     }
@@ -46,13 +43,8 @@ export default function Admin() {
     const res = await UpdateLimit(userId, Number(limit))
 
     if (res?.error) {
-      setLimitMessages(prev => ({ ...prev, [userId]: '' }))
       toast.error('Error updating limit. Incorrect value entered.')
     } else {
-      setLimitMessages(prev => ({
-        ...prev,
-        [userId]: '',
-      }))
       toast.success('Limit successfuly updated')
     }
   }
@@ -74,34 +66,17 @@ export default function Admin() {
     }
   }
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (!hasToken) return
-
-      setIsLoading(true)
-      setError(null)
-
-      try {
-        const usersData = await adminGetUsers()
-        setUsers(usersData)
-      } catch (err) {
-        console.error('Failed to fetch users:', err)
-        setError(err instanceof Error ? err.message : 'Unknown error')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchUsers()
-  }, [hasToken])
+  const filteredUsers = (activeTab === 'Users' ? users : admins).filter(
+    user =>
+      (activeTab === 'Users' ? !user.is_admin : user.is_admin) &&
+      (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()))
+  )
 
   useEffect(() => {
     const fetchData = async () => {
       if (!hasToken) return
-
-      setIsLoading(true)
       setError(null)
-
       try {
         if (activeTab === 'Users') {
           const usersData = await adminGetUsers()
@@ -113,48 +88,20 @@ export default function Admin() {
       } catch (err) {
         console.error('Failed to fetch data:', err)
         setError(err instanceof Error ? err.message : 'Unknown error')
-      } finally {
-        setIsLoading(false)
       }
     }
-
     fetchData()
   }, [hasToken, activeTab])
 
-  if (isChecking) {
+  if (isChecking || !hasToken || error) {
+    if (error) {
+      router.push('/403')
+    }
     return <Forbidden />
   }
-
-  if (!hasToken) {
-    return <Forbidden />
-  }
-
-  if (isLoading) {
-    return (
-      <div className='flex flex-col items-center py-20'>
-        <h1 className='text-2xl font-bold mb-6'>Loading...</h1>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className='flex flex-col items-center py-20'>
-        <h1 className='text-2xl font-bold mb-6'>Error</h1>
-        <p className='text-red-500'>{error}</p>
-      </div>
-    )
-  }
-
-  const filteredUsers = (activeTab === 'Users' ? users : admins).filter(
-    user =>
-      (activeTab === 'Users' ? !user.is_admin : user.is_admin) &&
-      (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()))
-  )
 
   return (
-    <div className='flex flex-col items-center px-4 py-8 min-h-screen bg-[#282a36] text-white'>
+    <div className='flex flex-col items-center px-4 py-8 min-h-screen bg-[var(--background)] text-[var(--dracula-white)]'>
       <h1 className='text-4xl font-extrabold mb-8 tracking-wide'>
         Admin Panel
       </h1>
@@ -172,18 +119,17 @@ export default function Admin() {
         placeholder='Search'
         type='text'
         onChange={e => setSearchTerm(e.target.value)}
-        className='mb-6 w-full max-w-md px-4 py-2 rounded-lg bg-[#2d2f44] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition'
+        className='mb-6 w-full max-w-md px-4 py-2 rounded-lg bg-[var(--dracula-comment)] text-[var(--dracula-white)] placeholder-[var(--dracula-selection)] focus:outline-none focus:ring-2 focus:ring-[var(--dracula-purple)] transition'
       />
 
       {filteredUsers.length === 0 ? (
         <p>Users not found</p>
       ) : (
-        <ul className='bg-[#2d2f44] mt-4 px-6 py-6 rounded-2xl shadow-2xl w-full max-w-3xl space-y-4 h-[40rem] overflow-y-auto scrollbar-hidden'>
-          {/*TODO: change bg-color from bg-[#2d2f44] to bg-[#343746] same profile*/}
+        <ul className='bg-[var(--dracula-comment)] mt-4 px-6 py-6 rounded-2xl shadow-2xl w-full max-w-3xl space-y-4 h-[40rem] overflow-y-auto scrollbar-hidden'>
           {filteredUsers.map((user: UserPayload) => (
             <li
               key={user.id}
-              className='bg-[#1f2133] border border-[#3c3f5e] p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 relative max-sm:p-4 max-sm:text-sm'
+              className='bg-[var(--dracula-card)] p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 relative max-sm:p-4 max-sm:text-sm'
             >
               <div className='flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4'>
                 <div className='flex-1 space-y-1'>
@@ -209,32 +155,26 @@ export default function Admin() {
                       handleLimitChange(user.id, Number(e.target.value))
                     }
                     placeholder='New limit (MB)'
-                    className='w-full bg-[#3c3f5e] text-white border-none rounded-lg py-2 px-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition'
+                    className='w-full bg-[var(--dracula-comment)] text-[var(--dracula-white)] border-none rounded-lg py-2 px-3 text-sm placeholder-[var(--dracula-selection)] focus:outline-none focus:ring-2 focus:ring-[var(--dracula-purple)] transition'
                   />
 
                   <button
                     onClick={() => handleLimitUpdate(user.id)}
                     type='button'
-                    className='w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-1.5 px-2 rounded-md transition duration-200'
+                    className='w-full bg-[var(--dracula-purple)] hover:bg-[var(--dracula-purple-hover)] text-[var(--dracula-white)] text-sm font-medium py-1.5 px-2 rounded-md transition duration-200'
                   >
                     Update Limit
                   </button>
-
-                  {limitMessages[user.id] && (
-                    <p className='text-xs text-gray-300 italic'>
-                      {limitMessages[user.id]}
-                    </p>
-                  )}
 
                   <button
                     onClick={() =>
                       user.is_admin ? revokeAdmin(user.id) : makeAdmin(user.id)
                     }
                     type='button'
-                    className={`w-full text-white text-sm font-medium py-1.5 px-2 rounded-md transition duration-200 ${
+                    className={`w-full text-[var(--dracula-white)] text-sm font-medium py-1.5 px-2 rounded-md transition duration-200 ${
                       user.is_admin
-                        ? 'bg-red-500 hover:bg-red-600'
-                        : 'bg-green-600 hover:bg-green-700'
+                        ? 'bg-[var(--dracula-red)] hover:bg-[var(--dracula-red-hover)]'
+                        : 'bg-[var(--dracula-green)] hover:bg-[var(--dracula-green-hover)]'
                     }`}
                   >
                     {user.is_admin ? 'Revoke admin' : 'Make admin'}
