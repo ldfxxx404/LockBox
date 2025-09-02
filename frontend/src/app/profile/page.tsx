@@ -15,6 +15,7 @@ import { UserInput } from '@/components/InputForm'
 import { Toaster } from 'react-hot-toast'
 import { jwtDecode } from 'jwt-decode'
 import { useRouter } from 'next/navigation'
+import { PreviewButton } from '@/components/Preview'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -164,10 +165,13 @@ export default function UserProfile() {
                       >
                         {file}
                       </a>
+                      <div className='max-sm: flex'>
+                      <PreviewButton filename={file}/>
                       <DeleteButton
                         filename={file}
                         onDelete={() => setFiles(files.filter(f => f !== file))}
-                      />
+                        />
+                        </div>
                     </li>
                   ))}
                 </ul>
