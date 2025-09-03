@@ -1,4 +1,4 @@
-import { FilePreview } from "@/lib/clientFilePreview"
+import { FilePreview } from '@/lib/clientFilePreview'
 
 export const PreviewButton = ({ filename }: { filename: string }) => {
   const handleClick = async () => {
