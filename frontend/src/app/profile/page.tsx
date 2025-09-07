@@ -16,6 +16,8 @@ import { Toaster } from 'react-hot-toast'
 import { jwtDecode } from 'jwt-decode'
 import { useRouter } from 'next/navigation'
 import { PreviewButton } from '@/components/Preview'
+import { allowedExtensions } from '@/constants/allowedExtensions'
+import path from 'path'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
@@ -166,7 +168,7 @@ export default function UserProfile() {
                         {file}
                       </a>
                       <div className='max-sm: flex'>
-                        <PreviewButton filename={file} />
+                        {allowedExtensions.includes(path.extname(file).toLocaleLowerCase()) ? <PreviewButton filename={file}/> : null}
                         <DeleteButton
                           filename={file}
                           onDelete={() =>
