@@ -167,7 +167,9 @@ export default function UserProfile() {
                         {file}
                       </a>
                       <div className='max-sm: flex'>
-                        {isAllowed(file) ? <PreviewButton filename={file}/> : null}
+                        {isAllowed(file) ? (
+                          <PreviewButton filename={file} />
+                        ) : null}
                         <DeleteButton
                           filename={file}
                           onDelete={() =>
