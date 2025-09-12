@@ -11,31 +11,31 @@ class ColorLogger {
 
   fatal(message: string | undefined) {
     console.error(
-      `${this.red}[FATAL]: ${this.reset} [${this.getTimestamp()}] ${this.reset} ${message}`
+      `${this.red}[FATAL]: ${this.reset} [${this.getTimestamp()}]${this.reset} ${message}`
     )
   }
 
   info(message: string) {
     console.info(
-      `${this.green}[INFO]: ${this.reset} [${this.getTimestamp()}], ${this.reset} ${message}`
+      `${this.green}[INFO]:${this.reset} [${this.getTimestamp()}]${this.reset} ${message}`
     )
   }
 
   error(message: string) {
     console.error(
-      `${this.red}[ERROR]: ${this.reset} [${this.getTimestamp()}]}, ${this.reset} ${message}`
+      `${this.red}[ERROR]: ${this.reset} [${this.getTimestamp()}]}${this.reset} ${message}`
     )
   }
 
   debug(message: string) {
     console.debug(
-      `${this.blue}[DEBUG]: ${this.reset} [${this.getTimestamp()}], ${this.reset} ${message}`
+      `${this.blue}[DEBUG]: ${this.reset} [${this.getTimestamp()}]${this.reset} ${message}`
     )
   }
 
   warning(message: string) {
     console.info(
-      `${this.yellow}[WARNING]: ${this.reset} [${this.getTimestamp()}], ${this.reset} ${message}`
+      `${this.yellow}[WARNING]: ${this.reset} [${this.getTimestamp()}]${this.reset} ${message}`
     )
   }
 }
