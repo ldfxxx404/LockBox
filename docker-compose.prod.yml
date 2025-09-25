@@ -2,8 +2,6 @@ services:
   postgres:
     container_name: ${POSTGRES_NAME} 
     image: postgres:15-alpine
-    ports:
-      - "${POSTGRES_PORT}"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -19,8 +17,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - '5000'
     environment:
       SERVER_PORT: 0.0.0.0:5000
       BODY_LIMIT_MB: ${BODY_LIMIT_MB}
@@ -64,7 +60,6 @@ services:
     container_name: lockbox-minio
     image: minio/minio:latest
     ports:
-      - '9090'
       - '9091:9091'
     volumes:
       - ./data/minio:/data:z
