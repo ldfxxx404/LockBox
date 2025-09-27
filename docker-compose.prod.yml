@@ -18,17 +18,17 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      SERVER_PORT: 0.0.0.0:5000
+      SERVER_PORT: ${SERVER_PORT}
       BODY_LIMIT_MB: ${BODY_LIMIT_MB}
-      STORAGE_LIMIT: 20
+      STORAGE_LIMIT: ${STORAGE_LIMIT}
       FIBER_LIMIT_REQ: ${FIBER_LIMIT_REQ}
       JWT_SECRET: ${JWT_SECRET}
       POSTGRES_URL: ${DB_CONTAINER_URL}
-      MINIO_ENDPOINT: minio:9090
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-      MINIO_BUCKET: uploads
-      LOG_LEVEL: info
+      MINIO_BUCKET: {MINIO_BUCKET}
+      LOG_LEVEL: ${LOG_LEVEL}
       BACK_LOG_FILE: ${BACK_LOG_FILE}
     volumes:
       - ./data/logs/backend:/app/logs/:z
@@ -48,7 +48,7 @@ services:
     ports:
       - '80:3000'
     environment:
-      NEXT_PUBLIC_SERVER: http://lockbox-backend:5000
+      NEXT_PUBLIC_SERVER: ${NEXT_PUBLIC_SERVER}
       NODE_ENV: ${NODE_ENV}
     depends_on:
       - backend
