@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { UserLogin } from '@/lib/clientLogin'
 import { Button } from '@/components/ActionButton'
 import { UserInput } from '@/components/InputForm'
+import {AuthSwitchButton } from '@/components/AuthSwitchButton'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -46,12 +47,7 @@ export default function LoginPage() {
 
           <Button label='Sign In' type='submit' />
         </form>
-        <div
-          className='mt-[18px] text-[13px] text-[#bcbcbc] text-center cursor-pointer'
-          onClick={() => router.push('/register')}
-        >
-          Don’t have an account? Register
-        </div>
+        <AuthSwitchButton onClick={() => router.push('/register')} placeholder='Don’t have an account? Register'/>
       </div>
     </main>
   )

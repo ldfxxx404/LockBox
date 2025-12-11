@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ActionButton'
 import { UserInput } from '@/components/InputForm'
 import toast, { Toaster } from 'react-hot-toast'
+import { AuthSwitchButton } from '@/components/AuthSwitchButton'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -54,14 +55,13 @@ export default function RegisterPage() {
 
           <Button label='Sign Up' type='submit' />
         </form>
-        <div
-          className='mt-[18px] text-[13px] text-[#bcbcbc] text-center cursor-pointer'
+
+        <AuthSwitchButton
           onClick={() => router.push('/login')}
-        >
-          Already have an account? Log in
-        </div>
+          placeholder='Already have an account? Log in'
+        />
       </div>
-      <Toaster
+      <Toaster // TODO: move to anonther file. This toast show error when user try to reg with exist credendtials
         position='top-center'
         toastOptions={{
           style: {
