@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { UPDATE_LIMIT_URL } from '@/constants/api'
+import { UPDATE_LIMIT_URL } from '@/constants/apiEndpoints'
 import { ErrorResponse } from '@/types/errorResponse'
 import { UpdateStoragePayload } from '@/types/userTypes'
 import { clogger } from '@/utils/ColorLogger'

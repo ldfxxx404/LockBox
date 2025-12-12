@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { MAKE_ADMIN_URL } from '@/constants/api'
+import { MAKE_ADMIN_URL } from '@/constants/apiEndpoints'
 import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
 import { GetData } from '@/utils/GetUserData'

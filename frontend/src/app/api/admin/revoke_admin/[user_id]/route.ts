@@ -1,4 +1,4 @@
-import { REVOKE_ADMIN_URL } from '@/constants/api'
+import { REVOKE_ADMIN_URL } from '@/constants/apiEndpoints'
 import { NextResponse, NextRequest } from 'next/server'
 import { clogger } from '@/utils/ColorLogger'
 import { ErrorResponse } from '@/types/errorResponse'

@@ -1,4 +1,4 @@
-import { DOWNLOAD_URL } from '@/constants/api'
+import { DOWNLOAD_URL } from '@/constants/apiEndpoints'
 import { NextResponse } from 'next/server'
 import { ErrorResponse } from '@/types/errorResponse'
 import { clogger } from '@/utils/ColorLogger'
