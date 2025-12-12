@@ -1,5 +1,5 @@
-import { allowedExtensions } from '@/constants/allowedExtensions'
+import { allowedFileExtensions } from '@/constants/allowedFileExtensions'
 import path from 'path'
 
 export const isAllowed = (file: string) =>
-  allowedExtensions.includes(path.extname(file).toLowerCase())
+  allowedFileExtensions.includes(path.extname(file).toLowerCase())
