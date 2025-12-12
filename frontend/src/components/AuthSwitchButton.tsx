@@ -1,8 +1,9 @@
 import { ButtonHTMLAttributes } from 'react'
+import { ReactNode } from 'react'
 
 interface AuthSwitchButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: () => void
-  children?: string
+  children?: ReactNode
   placeholder?: string
 }
 
