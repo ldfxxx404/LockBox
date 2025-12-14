@@ -3,15 +3,6 @@ import { clogger } from './ColorLogger'
 import { ErrorResponse } from '@/types/errorResponse'
 import { NextResponse } from 'next/server'
 
-interface UserData {
-  email: string
-  name: string
-  id: number
-}
-interface ProfileResponse {
-  userData: UserData
-}
-
 export async function GetData(req: Request) {
   try {
     const authHeader = req.headers.get('authorization')
@@ -37,10 +28,11 @@ export async function GetData(req: Request) {
       return null
     }
 
-    const data: ProfileResponse = await res.json()
-    if (!data.userData) {
-      clogger.error('No user data found in profile response')
-    }
+    const data = await res.json()
+    const email = <string>data.user.email
+    const name = <string>data.user.name
+    const id = <number>data.user.id
+    return { email, name, id }
   } catch (error) {
     console.error('Profile API error:', error)
     const response: ErrorResponse = {
