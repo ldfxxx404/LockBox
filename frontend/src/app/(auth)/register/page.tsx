@@ -1,28 +1,17 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
-import { UserRegister } from '@/lib/clientRegister'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ActionButton'
 import { UserInput } from '@/components/InputForm'
-import toast, { Toaster } from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
 import { AuthSwitchButton } from '@/components/AuthSwitchButton'
+import { useHandleSubmitRegistration } from '@/hooks/useHandleSubmitRegistration'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
 
-  const handleSubmitRegistration = async (ev: FormEvent) => {
-    ev.preventDefault()
-    try {
-      await UserRegister({ email, name, password })
-      router.push('/login')
-    } catch {
-      toast.error('User with this email already exists')
-    }
-  }
+  const { setEmail, setName, setPassword, handleSubmitRegistration } =
+    useHandleSubmitRegistration()
 
   return (
     <main className='min-h-screen flex items-center justify-center bg-background'>
