@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { UPDATE_LIMIT_URL } from '@/constants/apiEndpoints'
 import { ErrorResponse } from '@/types/errorResponse'
-import { UpdateStoragePayload } from '@/types/userTypes'
+import { UpdateStoragePayload } from '@/types/apiTypes'
 import { clogger } from '@/utils/ColorLogger'
 import { GetData } from '@/utils/GetUserData'
 

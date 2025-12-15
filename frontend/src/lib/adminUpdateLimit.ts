@@ -1,6 +1,6 @@
 'use client'
 
-import { UpdateStoragePayload } from '@/types/userTypes'
+import { UpdateStoragePayload } from '@/types/apiTypes'
 
 export async function UpdateLimit(userId: number, newLimit: number) {
   try {

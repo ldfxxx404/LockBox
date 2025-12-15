@@ -9,7 +9,7 @@ import { adminMakeAdmin } from '@/lib/adminMakeAdmin'
 import { Switcher } from '@/components/Switcher'
 import { adminRevokeAdmin } from '@/lib/adminRevokeAdmin'
 import { UpdateLimit } from '@/lib/adminUpdateLimit'
-import { UserPayload } from '@/types/userTypes'
+import { UserPayload } from '@/types/apiTypes'
 import { adminGetAdmins } from '@/lib/adminGetAdmins'
 import toast, { Toaster } from 'react-hot-toast'
 import { Button } from '@/components/ActionButton'
@@ -185,7 +185,7 @@ export default function Admin() {
           ))}
         </ul>
       )}
-      <Toaster
+      <Toaster // // TODO: move this toast to anonther file
         position='top-center'
         toastOptions={{
           style: {

@@ -1,6 +1,6 @@
 'use client'
 
-import { LoginPayload } from '@/types/userTypes'
+import { LoginPayload } from '@/types/apiTypes'
 import { ErrorResponse } from '@/types/errorResponse'
 
 export async function UserLogin(loginPayload: LoginPayload) {

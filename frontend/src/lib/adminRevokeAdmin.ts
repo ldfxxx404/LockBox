@@ -1,7 +1,7 @@
 'use client'
 
 import { ErrorResponse } from '@/types/errorResponse'
-import { AdminActionPayload } from '@/types/userTypes'
+import { AdminActionPayload } from '@/types/apiTypes'
 
 export async function adminRevokeAdmin(param: AdminActionPayload) {
   try {
