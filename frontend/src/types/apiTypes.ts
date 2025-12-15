@@ -25,3 +25,7 @@ export interface UpdateStoragePayload {
 export interface AdminActionPayload {
   user_id: number
 }
+
+export interface JwtPayload {
+  is_admin: boolean
+}
