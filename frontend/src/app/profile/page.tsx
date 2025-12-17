@@ -17,34 +17,25 @@ import { jwtDecode } from 'jwt-decode'
 import { useRouter } from 'next/navigation'
 import { PreviewButton } from '@/components/Preview'
 import { isAllowed } from '@/utils/checkExtension'
+import { useSortFiles } from '@/hooks/useSortFiles'
+// import { getToken } from '@/utils/getToken' // TODO: implement function for getting token
+import { useIsAdmin } from '@/hooks/useIsAdmin'
 
 export default function UserProfile() {
   const handleLogout = useLogout()
   const { hasToken, isChecking } = useRedirect()
+  const { sortOrder, setFiles, sortFiles, files, } = useSortFiles()
   const { handleChange } = useUpload()
-  const [files, setFiles] = useState<string[]>([])
   const [limit, setLimit] = useState<number>(0)
   const [used, setUsed] = useState<number>(0)
   const [userName, setUserName] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [searchTerm, setSearchTerm] = useState('')
-  const [isAdmin, setIsAdmin] = useState(false)
   const router = useRouter()
+  const isAdmin = useIsAdmin()
 
-  const sortFiles = () => {
-    const newOrder = sortOrder === 'asc' ? 'desc' : 'asc'
-    setSortOrder(newOrder)
-
-    setFiles(prevFiles => {
-      const sorted = [...prevFiles].sort((a, b) => {
-        return newOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a)
-      })
-      return sorted
-    })
-  }
-
+  // TODO: move to sep function or hook for fetching user profile
   useEffect(() => {
     async function fetchProfile() {
       setLoading(true)
@@ -65,14 +56,8 @@ export default function UserProfile() {
     fetchProfile()
   }, [])
 
-  useEffect(() => {
-    const token = sessionStorage.getItem('token')
-    if (token) {
-      const payload = jwtDecode<jwtPayload>(token)
-      setIsAdmin(!!payload.is_admin)
-    }
-  }, [])
 
+  // TODO: move this code to hook for downloading files e.g useHandleDownload.ts
   const handleDownload = async (filename: string) => {
     const result = await FileDownload(filename)
     if (result?.error) {
@@ -83,6 +68,8 @@ export default function UserProfile() {
     }
   }
 
+
+  // TODO: move fucntion
   const filteredFiles = files.filter(filename =>
     filename.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -90,10 +77,7 @@ export default function UserProfile() {
     return <Forbidden />
   }
 
-  interface jwtPayload {
-    is_admin: boolean
-  }
-
+  // TODO: same to another file
   const token = sessionStorage.getItem('token')
   if (token) {
     jwtDecode(token)
@@ -109,15 +93,17 @@ export default function UserProfile() {
           <span className='font-semibold'>User:</span> {userName}
         </div>
         <div className='mb-4'>
+          {/* ======================= */}
           <div>
             <span className='font-semibold'>Usage:</span> {used} / {limit} MiB
           </div>
           <div className='w-full bg-[var(--background)] rounded h-3 mt-2'>
-            <div
+            <div  // TODO: move to separate component for calculating space usage
               className='bg-[var(--dracula-bar)] h-3 rounded'
               style={{ width: limit ? `${(used / limit) * 100}%` : '0%' }}
             ></div>
           </div>
+          {/* ======================= */}
         </div>
         <div className='overflow-y-auto h-96 scrollbar-hidden max-sm:h-[60vh]'>
           <div
