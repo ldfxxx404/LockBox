@@ -54,8 +54,12 @@ export default function RegisterPage() {
 
           <Button label='Sign Up' type='submit' />
         </form>
-        {/* <div className='mt-[18px] text-[13px] text-[#bcbcbc] text-center'></div> */}
-        {/* TODO: add 'No account? Register' */}
+        <div
+          className='mt-[18px] text-[13px] text-[#bcbcbc] text-center cursor-pointer'
+          onClick={() => router.push('/login')}
+        >
+          Already have an account? Log in
+        </div>
       </div>
       <Toaster
         position='top-center'

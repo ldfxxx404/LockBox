@@ -46,8 +46,12 @@ export default function LoginPage() {
 
           <Button label='Sign In' type='submit' />
         </form>
-        {/* <div className='mt-[18px] text-[13px] text-[#bcbcbc] text-center'></div> */}
-        {/* TODO: add 'No account? Register' */}
+        <div
+          className='mt-[18px] text-[13px] text-[#bcbcbc] text-center cursor-pointer'
+          onClick={() => router.push('/register')}
+        >
+          Don’t have an account? Register
+        </div>
       </div>
     </main>
   )
