@@ -1,12 +1,14 @@
 'use client'
 
+import { getToken } from "@/utils/getToken"
+
 export async function adminGetUsers() {
   try {
     const res = await fetch('/api/admin/users', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Bearer ${sessionStorage.getItem('token')}`,
+        authorization: `Bearer ${getToken()}`,
       },
     })
     const data = await res.json()

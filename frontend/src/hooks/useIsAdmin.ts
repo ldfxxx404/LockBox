@@ -1,12 +1,13 @@
 import { jwtDecode } from 'jwt-decode'
 import { JwtPayload } from '@/types/apiTypes'
 import { useEffect, useState } from 'react'
+import { getToken } from '@/utils/getToken'
 
 export const useIsAdmin = () => {
   const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
-    const token = sessionStorage.getItem('token')
+    const token = getToken()
     if (!token) return
 
     try {

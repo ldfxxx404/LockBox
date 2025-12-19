@@ -1,6 +1,7 @@
 'use client'
 
 import toast from 'react-hot-toast'
+import { getToken } from '@/utils/getToken'
 
 export async function FileUploader(file: File) {
   const uploadForm = new FormData()
@@ -11,7 +12,7 @@ export async function FileUploader(file: File) {
       method: 'POST',
       body: uploadForm,
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     })
     if (!response.ok) {

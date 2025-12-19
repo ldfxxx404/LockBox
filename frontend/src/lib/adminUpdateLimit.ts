@@ -1,6 +1,7 @@
 'use client'
 
 import { UpdateStoragePayload } from '@/types/apiTypes'
+import { getToken } from '@/utils/getToken'
 
 export async function UpdateLimit(userId: number, newLimit: number) {
   try {
@@ -13,7 +14,7 @@ export async function UpdateLimit(userId: number, newLimit: number) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Bearer ${sessionStorage.getItem('token')}`,
+        authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(payload),
     })

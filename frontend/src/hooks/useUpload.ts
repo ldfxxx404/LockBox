@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { FileUploader } from '@/lib/clientUpload'
 import toast from 'react-hot-toast'
+import { getToken } from '@/utils/getToken'
 
 export const useUpload = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
@@ -22,7 +23,7 @@ export const useUpload = () => {
     }
 
     try {
-      if (!sessionStorage.getItem('token')) {
+      if (!getToken()) {
         toast.error('Error uploading file, unauthorized')
       } else {
         await Promise.all(files.map(file => FileUploader(file)))

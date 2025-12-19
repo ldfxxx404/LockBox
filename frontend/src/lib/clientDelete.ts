@@ -1,10 +1,12 @@
 'use client'
 
+import { getToken } from "@/utils/getToken";
+
 export async function FileDelete(
   filename: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const token = sessionStorage.getItem('token')
+    const token = getToken()
     if (!token) {
       return { success: false, error: 'Unauthorized' }
     }

@@ -1,5 +1,6 @@
 'use client'
 
+import { getToken } from '@/utils/getToken'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -11,7 +12,7 @@ export const useRedirect = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return
 
-    const token = sessionStorage.getItem('token')
+    const token = getToken()
     setHasToken(!!token)
     setIsChecking(false)
 

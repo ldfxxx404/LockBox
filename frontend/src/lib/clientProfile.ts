@@ -1,11 +1,13 @@
 'use client'
 
+import { getToken } from "@/utils/getToken"
+
 export async function getProfile() {
   const response = await fetch('/api/profile', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   })
   const data = await response.json()

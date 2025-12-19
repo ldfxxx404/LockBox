@@ -1,6 +1,7 @@
 'use client'
 
 import { ErrorResponse } from '@/types/errorResponse'
+import { getToken } from '@/utils/getToken'
 
 interface Payload {
   user_id: number
@@ -12,7 +13,7 @@ export async function adminMakeAdmin(param: Payload) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Bearer ${sessionStorage.getItem('token')}`,
+        authorization: `Bearer ${getToken()}`,
       },
     })
 

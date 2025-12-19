@@ -1,5 +1,7 @@
 'use client'
 
+import { getToken } from "@/utils/getToken"
+
 export async function FilePreview(filename: string) {
   try {
     const response = await fetch(
@@ -7,7 +9,7 @@ export async function FilePreview(filename: string) {
       {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+          Authorization: `Bearer ${getToken()}`,
         },
       }
     )

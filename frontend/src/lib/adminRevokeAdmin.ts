@@ -2,6 +2,7 @@
 
 import { ErrorResponse } from '@/types/errorResponse'
 import { AdminActionPayload } from '@/types/apiTypes'
+import { getToken } from '@/utils/getToken'
 
 export async function adminRevokeAdmin(param: AdminActionPayload) {
   try {
@@ -9,7 +10,7 @@ export async function adminRevokeAdmin(param: AdminActionPayload) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        authorization: `Bearer ${sessionStorage.getItem('token')}`,
+        authorization: `Bearer ${getToken()}`,
       },
     })
 
