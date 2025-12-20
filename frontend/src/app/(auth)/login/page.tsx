@@ -1,26 +1,13 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { UserLogin } from '@/lib/clientLogin'
 import { Button } from '@/components/ActionButton'
 import { UserInput } from '@/components/InputForm'
-import {AuthSwitchButton } from '@/components/AuthSwitchButton'
+import { AuthSwitchButton } from '@/components/AuthSwitchButton'
+import { useHandleSubmitLogin } from '@/hooks/useHandleSubmitLogin'
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
-  const handleSubmitLogin = async (ev: FormEvent) => {
-    ev.preventDefault()
-    try {
-      await UserLogin({ email, password })
-      router.push('/profile')
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  const { handleSubmitLogin, email, setEmail, password, setPassword, router } =
+    useHandleSubmitLogin()
 
   return (
     <main className='min-h-screen flex items-center justify-center bg-background'>
@@ -47,7 +34,10 @@ export default function LoginPage() {
 
           <Button label='Sign In' type='submit' />
         </form>
-        <AuthSwitchButton onClick={() => router.push('/register')} placeholder='Don’t have an account? Register'/>
+        <AuthSwitchButton
+          onClick={() => router.push('/register')}
+          placeholder='Don’t have an account? Register'
+        />
       </div>
     </main>
   )

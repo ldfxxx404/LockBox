@@ -1,6 +1,6 @@
 'use client'
 
-import { getToken } from "@/utils/getToken"
+import { getToken } from '@/utils/getToken'
 
 export async function FileDownload(filename: string) {
   try {

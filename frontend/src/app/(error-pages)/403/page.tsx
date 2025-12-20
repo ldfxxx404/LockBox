@@ -13,7 +13,11 @@ export default function NotFound() {
       <h2 className='text-4xl max-sm:text-2xl max-sm:mb-55 text-[var(--dracula-orange)] mb-8'>
         Access denied
       </h2>
-      <Button label='Go back' type='submit' onClick={() => router.push('/profile')}/>
+      <Button
+        label='Go back'
+        type='submit'
+        onClick={() => router.push('/profile')}
+      />
     </div>
   )
 }

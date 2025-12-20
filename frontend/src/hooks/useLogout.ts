@@ -4,7 +4,7 @@ import logout from '@/lib/clientLogout'
 export const useLogout = () => {
   const router = useRouter()
   const handleLogout = async () => {
-  const result = await logout()
+    const result = await logout()
 
     if (result) {
       router.push('/')

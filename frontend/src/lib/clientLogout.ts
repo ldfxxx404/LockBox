@@ -1,4 +1,4 @@
-import { getToken } from "@/utils/getToken"
+import { getToken } from '@/utils/getToken'
 
 export default async function logout() {
   try {
