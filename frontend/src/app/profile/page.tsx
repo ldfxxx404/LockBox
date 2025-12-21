@@ -1,86 +1,46 @@
 'use client'
 
 import { useLogout } from '@/hooks/useLogout'
-import Forbidden from '@/app/preloader/page'
 import { useRedirect } from '@/hooks/useRedirect'
 import { useUpload } from '@/hooks/useUpload'
-import { useEffect, useState } from 'react'
-import { getProfile } from '@/lib/clientProfile'
-import { FileDownload } from '@/lib/clientDownload'
 import { DeleteButton } from '@/components/DeleteButton'
 import { Upload } from '@/components/UploadFile'
 import { Button } from '@/components/ActionButton'
 import { Sort } from '@/components/SortButton'
 import { UserInput } from '@/components/InputForm'
 import { Toaster } from 'react-hot-toast'
-import { jwtDecode } from 'jwt-decode'
 import { useRouter } from 'next/navigation'
 import { PreviewButton } from '@/components/Preview'
 import { isAllowed } from '@/utils/checkExtension'
-import { useSortFiles } from '@/hooks/useSortFiles'
-// import { getToken } from '@/utils/getToken' // TODO: implement function for getting token
 import { useIsAdmin } from '@/hooks/useIsAdmin'
+import { StorageUsage } from '@/components/StorageUsage'
+import { useFetchProfile } from '@/hooks/useFetchProfile'
+import { useHandleDownload } from '@/hooks/useHandleDownload'
+import { useFilterFiles } from '@/hooks/useFilterFiles'
+import Forbidden from '@/app/preloader/page'
 
 export default function UserProfile() {
+  const {
+    limit,
+    used,
+    userName,
+    loading,
+    error,
+    files,
+    setFiles,
+    sortOrder,
+    sortFiles,
+  } = useFetchProfile()
+  const { setSearchTerm, filteredFiles } = useFilterFiles(files)
   const handleLogout = useLogout()
-  const { hasToken, isChecking } = useRedirect()
-  const { sortOrder, setFiles, sortFiles, files, } = useSortFiles()
-  const { handleChange } = useUpload()
-  const [limit, setLimit] = useState<number>(0)
-  const [used, setUsed] = useState<number>(0)
-  const [userName, setUserName] = useState<string>('')
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
   const router = useRouter()
   const isAdmin = useIsAdmin()
+  const { hasToken, isChecking } = useRedirect()
+  const { handleChange } = useUpload()
+  const { handleDownload } = useHandleDownload()
 
-  // TODO: move to sep function or hook for fetching user profile
-  useEffect(() => {
-    async function fetchProfile() {
-      setLoading(true)
-      setError(null)
-      try {
-        const data = await getProfile()
-        setFiles(data.files || [])
-        setLimit(data.storage?.limit || 0)
-        setUsed(data.storage?.used || 0)
-        setUserName(data.user?.name || '')
-      } catch (error) {
-        const err = error as Error
-        setError(err?.message || 'Profile Error')
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchProfile()
-  }, [])
-
-
-  // TODO: move this code to hook for downloading files e.g useHandleDownload.ts
-  const handleDownload = async (filename: string) => {
-    const result = await FileDownload(filename)
-    if (result?.error) {
-      alert(
-        'Missing or invalid authorization token. Cannot download file. Please log in again.'
-      )
-      window.location.href = '/login'
-    }
-  }
-
-
-  // TODO: move fucntion
-  const filteredFiles = files.filter(filename =>
-    filename.toLowerCase().includes(searchTerm.toLowerCase())
-  )
   if (isChecking || !hasToken) {
     return <Forbidden />
-  }
-
-  // TODO: same to another file
-  const token = sessionStorage.getItem('token')
-  if (token) {
-    jwtDecode(token)
   }
 
   return (
@@ -93,17 +53,7 @@ export default function UserProfile() {
           <span className='font-semibold'>User:</span> {userName}
         </div>
         <div className='mb-4'>
-          {/* ======================= */}
-          <div>
-            <span className='font-semibold'>Usage:</span> {used} / {limit} MiB
-          </div>
-          <div className='w-full bg-[var(--background)] rounded h-3 mt-2'>
-            <div  // TODO: move to separate component for calculating space usage
-              className='bg-[var(--dracula-bar)] h-3 rounded'
-              style={{ width: limit ? `${(used / limit) * 100}%` : '0%' }}
-            ></div>
-          </div>
-          {/* ======================= */}
+          <StorageUsage used={used} limit={limit} />
         </div>
         <div className='overflow-y-auto h-96 scrollbar-hidden max-sm:h-[60vh]'>
           <div
