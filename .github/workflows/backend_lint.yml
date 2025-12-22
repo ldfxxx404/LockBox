@@ -5,6 +5,11 @@ on:
     branches-ignore:
       - main
       - dev
+      - chore/**
+      - fix/**
+      - feat/**
+      - refactor/**
+      - docs/**
 
 jobs:
   lint:
