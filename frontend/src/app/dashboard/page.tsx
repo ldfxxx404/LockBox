@@ -119,7 +119,9 @@ export default function Admin() {
         placeholder='Search'
         type='text'
         onChange={e => setSearchTerm(e.target.value)}
-        className='mb-6 w-full max-w-md px-4 py-2 rounded-lg bg-[var(--dracula-comment)] text-[var(--dracula-white)] placeholder-[var(--dracula-selection)] focus:outline-none focus:ring-2 focus:ring-[var(--dracula-purple)] transition'
+        className='mb-6 w-full max-w-md px-4 py-2 rounded-lg bg-[var(--dracula-comment)] text-[var(--dracula-white)] 
+       placeholder-[var(--dracula-selection)] focus:outline-none focus:ring-2 
+       focus:ring-[var(--dracula-purple-hover)] ring-2 ring-[var(--dracula-bar)] transition'
       />
 
       {filteredUsers.length === 0 ? (
