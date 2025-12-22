@@ -28,7 +28,7 @@ export const useFetchProfile = () => {
       }
     }
     fetchProfile()
-  }, [])
+  }, [setFiles])
   return {
     loading,
     error,
