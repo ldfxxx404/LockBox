@@ -9,7 +9,7 @@ export const Sort = ({ onClick, label, ...props }: SortButtonProps) => {
   return (
     <button
       onClick={onClick}
-      className='bg-[#6272a4] hover:bg-[#5861a0] text-white px-3 py-1 rounded text-sm mr-2 cursor-pointer'
+      className='bg-[var(--dracula-button-bright)] hover:bg-[var(--dracula-button-bright-hover)] text-white px-3 py-1 rounded text-sm mr-2 cursor-pointer'
       {...props}
     >
       {label}
