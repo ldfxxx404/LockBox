@@ -1,8 +1,7 @@
 FROM node:current-alpine
 
 WORKDIR /app
-
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash && npm install -g yarn
 
 COPY package.json yarn.lock ./
 
