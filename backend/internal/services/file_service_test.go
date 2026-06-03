@@ -10,7 +10,6 @@ import (
 	"testing"
 )
 
-// MockFileRepo мок для FileRepoInterface
 type MockFileRepo struct {
 	createFunc func(file *models.File) error
 	getFunc    func(userID int) ([]models.File, error)
@@ -46,7 +45,6 @@ func (m *MockFileRepo) Exists(userID int, filename string) (bool, error) {
 	return false, nil
 }
 
-// MockUserRepo мок для UserRepoInterface
 type MockUserRepo struct {
 	getByIDFunc func(id int) (*models.User, error)
 }
@@ -85,7 +83,6 @@ func (m *MockUserRepo) UpdateAdmin(userID int, isAdmin bool) error {
 	return nil
 }
 
-// MockStorageClient мок для storage.StorageClient
 type MockStorageClient struct {
 	putObjectFunc    func(ctx context.Context, bucket, objectName string, reader io.Reader, objectSize int64, contentType string) (string, error)
 	getObjectFunc    func(ctx context.Context, bucket, objectName string) (io.ReadCloser, error)
@@ -139,7 +136,6 @@ func (m *MockStorageClient) MakeBucket(ctx context.Context, bucket string) error
 	return nil
 }
 
-// TestListFiles проверяет список файлов
 func TestListFiles(t *testing.T) {
 	tests := []struct {
 		name       string
@@ -149,22 +145,22 @@ func TestListFiles(t *testing.T) {
 		errorMsg   string
 	}{
 		{
-			name:      "список файлов пользователя",
+			name:      "user file list",
 			userID:    1,
 			fileCount: 3,
 		},
 		{
-			name:      "пользователь без файлов",
+			name:      "user without files",
 			userID:    2,
 			fileCount: 0,
 		},
 		{
-			name:      "большое количество файлов",
+			name:      "large number of files",
 			userID:    3,
 			fileCount: 100,
 		},
 		{
-			name:       "ошибка при получении файлов",
+			name:       "error while fetching files",
 			userID:     99,
 			shouldFail: true,
 			errorMsg:   "database connection failed",
@@ -201,21 +197,21 @@ func TestListFiles(t *testing.T) {
 
 			if tt.shouldFail {
 				if err == nil {
-					t.Errorf("ожидалась ошибка: %s, но получен успех", tt.errorMsg)
+					t.Errorf("expected error: %s, but got success", tt.errorMsg)
 				}
 			} else {
 				if err != nil {
-					t.Errorf("не ожидалась ошибка: %v", err)
+					t.Errorf("unexpected error: %v", err)
 				}
 				if len(files) != tt.fileCount {
-					t.Errorf("неправильное количество файлов: ожидали %d, получили %d", tt.fileCount, len(files))
+					t.Errorf("wrong file count: expected %d, got %d", tt.fileCount, len(files))
 				}
 			}
 		})
 	}
 }
 
-// TestGetFile проверяет получение файла
+// TestGetFile checks file retrieval
 func TestGetFile(t *testing.T) {
 	tests := []struct {
 		name       string
@@ -226,19 +222,19 @@ func TestGetFile(t *testing.T) {
 		errorMsg   string
 	}{
 		{
-			name:     "успешное получение файла",
+			name:     "successful file retrieval",
 			userID:   1,
 			filename: "document.txt",
 			data:     "file content here",
 		},
 		{
-			name:     "получение большого файла",
+			name:     "large file retrieval",
 			userID:   1,
 			filename: "large.bin",
 			data:     strings.Repeat("x", 10000),
 		},
 		{
-			name:       "файл не найден",
+			name:       "file not found",
 			userID:     1,
 			filename:   "nonexistent.txt",
 			shouldFail: true,
@@ -268,21 +264,21 @@ func TestGetFile(t *testing.T) {
 
 			if tt.shouldFail {
 				if err == nil {
-					t.Errorf("ожидалась ошибка: %s, но получен успех", tt.errorMsg)
+					t.Errorf("expected error: %s, but got success", tt.errorMsg)
 				}
 			} else {
 				if err != nil {
-					t.Errorf("не ожидалась ошибка: %v", err)
+					t.Errorf("unexpected error: %v", err)
 				}
 				if string(data) != tt.data {
-					t.Errorf("неправильные данные: ожидали %q, получили %q", tt.data, string(data))
+					t.Errorf("wrong data: expected %q, got %q", tt.data, string(data))
 				}
 			}
 		})
 	}
 }
 
-// TestDeleteFile проверяет удаление файла
+// TestDeleteFile checks file deletion
 func TestDeleteFile(t *testing.T) {
 	tests := []struct {
 		name       string
@@ -292,19 +288,19 @@ func TestDeleteFile(t *testing.T) {
 		errorMsg   string
 	}{
 		{
-			name:     "успешное удаление файла",
+			name:     "successful file deletion",
 			userID:   1,
 			filename: "document.txt",
 		},
 		{
-			name:       "файл не найден в БД",
+			name:       "file not found in DB",
 			userID:     1,
 			filename:   "db-missing.txt",
 			shouldFail: true,
 			errorMsg:   "database error",
 		},
 		{
-			name:       "файл не найден в storage",
+			name:       "file not found in storage",
 			userID:     1,
 			filename:   "storage-missing.txt",
 			shouldFail: true,
@@ -343,18 +339,18 @@ func TestDeleteFile(t *testing.T) {
 
 			if tt.shouldFail {
 				if err == nil {
-					t.Errorf("ожидалась ошибка: %s, но получен успех", tt.errorMsg)
+					t.Errorf("expected error: %s, but got success", tt.errorMsg)
 				}
 			} else {
 				if err != nil {
-					t.Errorf("не ожидалась ошибка: %v", err)
+					t.Errorf("unexpected error: %v", err)
 				}
 			}
 		})
 	}
 }
 
-// TestGetStorageInfo проверяет информацию о хранилище
+// TestGetStorageInfo checks storage information
 func TestGetStorageInfo(t *testing.T) {
 	tests := []struct {
 		name         string
@@ -366,21 +362,21 @@ func TestGetStorageInfo(t *testing.T) {
 		errorMsg     string
 	}{
 		{
-			name:         "получение информации о хранилище",
+			name:         "storage info retrieval",
 			userID:       1,
 			storageLimit: 20,
 			objectCount:  3,
-			totalSize:    5242880, // 5 MB
+			totalSize:    5242880,
 		},
 		{
-			name:         "хранилище пусто",
+			name:         "empty storage",
 			userID:       2,
 			storageLimit: 20,
 			objectCount:  0,
 			totalSize:    0,
 		},
 		{
-			name:       "пользователь не найден",
+			name:       "user not found",
 			userID:     99,
 			shouldFail: true,
 			errorMsg:   "user not found",
@@ -434,24 +430,24 @@ func TestGetStorageInfo(t *testing.T) {
 
 			if tt.shouldFail {
 				if err == nil {
-					t.Errorf("ожидалась ошибка: %s, но получен успех", tt.errorMsg)
+					t.Errorf("expected error: %s, but got success", tt.errorMsg)
 				}
 			} else {
 				if err != nil {
-					t.Errorf("не ожидалась ошибка: %v", err)
+					t.Errorf("unexpected error: %v", err)
 				}
 				if limit != tt.storageLimit {
-					t.Errorf("неправильный лимит: ожидали %d, получили %d", tt.storageLimit, limit)
+					t.Errorf("wrong limit: expected %d, got %d", tt.storageLimit, limit)
 				}
 				if used < 0 {
-					t.Errorf("используемое пространство не может быть отрицательным: %d", used)
+					t.Errorf("used storage cannot be negative: %d", used)
 				}
 			}
 		})
 	}
 }
 
-// TestFileServiceInitialization проверяет инициализацию сервиса
+// TestFileServiceInitialization checks service initialization
 func TestFileServiceInitialization(t *testing.T) {
 	fileService := &FileService{
 		FileRepo: &MockFileRepo{},
@@ -461,22 +457,22 @@ func TestFileServiceInitialization(t *testing.T) {
 	}
 
 	if fileService.FileRepo == nil {
-		t.Error("FileRepo не должен быть nil")
+		t.Error("FileRepo must not be nil")
 	}
 	if fileService.UserRepo == nil {
-		t.Error("UserRepo не должен быть nil")
+		t.Error("UserRepo must not be nil")
 	}
 	if fileService.Storage == nil {
-		t.Error("Storage не должен быть nil")
+		t.Error("Storage must not be nil")
 	}
 	if fileService.Bucket != "test-bucket" {
-		t.Errorf("неправильный bucket: ожидали test-bucket, получили %s", fileService.Bucket)
+		t.Errorf("wrong bucket: expected test-bucket, got %s", fileService.Bucket)
 	}
 }
 
-// TestRepositoryIntegration проверяет интеграцию с репозиториями
+// TestRepositoryIntegration checks repository integration
 func TestRepositoryIntegration(t *testing.T) {
-	t.Run("файл repo вызывается при листинге", func(t *testing.T) {
+	t.Run("file repo is called on listing", func(t *testing.T) {
 		called := false
 		fileRepo := &MockFileRepo{
 			getFunc: func(userID int) ([]models.File, error) {
@@ -494,11 +490,11 @@ func TestRepositoryIntegration(t *testing.T) {
 
 		_, _ = fileService.ListFiles(1)
 		if !called {
-			t.Error("FileRepo.GetFilesByUser должен быть вызван")
+			t.Error("FileRepo.GetFilesByUser must be called")
 		}
 	})
 
-	t.Run("user repo вызывается при получении инфо о хранилище", func(t *testing.T) {
+	t.Run("user repo is called on storage info", func(t *testing.T) {
 		called := false
 		userRepo := &MockUserRepo{
 			getByIDFunc: func(id int) (*models.User, error) {
@@ -516,11 +512,11 @@ func TestRepositoryIntegration(t *testing.T) {
 
 		_, _, _ = fileService.GetStorageInfo(1)
 		if !called {
-			t.Error("UserRepo.GetByID должен быть вызван")
+			t.Error("UserRepo.GetByID must be called")
 		}
 	})
 
-	t.Run("файл repo вызывается при удалении", func(t *testing.T) {
+	t.Run("file repo is called on delete", func(t *testing.T) {
 		called := false
 		fileRepo := &MockFileRepo{
 			deleteFunc: func(userID int, filename string) error {
@@ -538,11 +534,11 @@ func TestRepositoryIntegration(t *testing.T) {
 
 		_ = fileService.DeleteFile(1, "file.txt")
 		if !called {
-			t.Error("FileRepo.DeleteFile должен быть вызван")
+			t.Error("FileRepo.DeleteFile must be called")
 		}
 	})
 
-	t.Run("storage client вызывается при получении файла", func(t *testing.T) {
+	t.Run("storage client is called on file fetch", func(t *testing.T) {
 		called := false
 		storageClient := &MockStorageClient{
 			getObjectFunc: func(ctx context.Context, bucket, objectName string) (io.ReadCloser, error) {
@@ -560,14 +556,14 @@ func TestRepositoryIntegration(t *testing.T) {
 
 		_, _ = fileService.GetFile(1, "file.txt")
 		if !called {
-			t.Error("Storage.GetObject должен быть вызван")
+			t.Error("Storage.GetObject must be called")
 		}
 	})
 }
 
-// TestErrorHandling проверяет обработку ошибок репозиториев
+// TestErrorHandling checks repository error handling
 func TestErrorHandling(t *testing.T) {
-	t.Run("ошибка при листинге файлов", func(t *testing.T) {
+	t.Run("error on file listing", func(t *testing.T) {
 		fileRepo := &MockFileRepo{
 			getFunc: func(userID int) ([]models.File, error) {
 				return nil, errors.New("database error")
@@ -583,14 +579,14 @@ func TestErrorHandling(t *testing.T) {
 
 		_, err := fileService.ListFiles(1)
 		if err == nil {
-			t.Error("должна быть ошибка")
+			t.Error("error expected")
 		}
 		if !strings.Contains(err.Error(), "database error") {
-			t.Errorf("ошибка должна содержать 'database error', получена: %v", err)
+			t.Errorf("error should contain 'database error', got: %v", err)
 		}
 	})
 
-	t.Run("ошибка при получении инфо о хранилище", func(t *testing.T) {
+	t.Run("error on storage info", func(t *testing.T) {
 		userRepo := &MockUserRepo{
 			getByIDFunc: func(id int) (*models.User, error) {
 				return nil, errors.New("user not found")
@@ -606,11 +602,11 @@ func TestErrorHandling(t *testing.T) {
 
 		_, _, err := fileService.GetStorageInfo(1)
 		if err == nil {
-			t.Error("должна быть ошибка")
+			t.Error("error expected")
 		}
 	})
 
-	t.Run("ошибка при удалении файла", func(t *testing.T) {
+	t.Run("error on file delete", func(t *testing.T) {
 		fileRepo := &MockFileRepo{
 			deleteFunc: func(userID int, filename string) error {
 				return errors.New("delete failed")
@@ -626,11 +622,11 @@ func TestErrorHandling(t *testing.T) {
 
 		err := fileService.DeleteFile(1, "file.txt")
 		if err == nil {
-			t.Error("должна быть ошибка")
+			t.Error("error expected")
 		}
 	})
 
-	t.Run("ошибка при получении файла из storage", func(t *testing.T) {
+	t.Run("error on storage get object", func(t *testing.T) {
 		storageClient := &MockStorageClient{
 			getObjectFunc: func(ctx context.Context, bucket, objectName string) (io.ReadCloser, error) {
 				return nil, errors.New("connection error")
@@ -646,12 +642,12 @@ func TestErrorHandling(t *testing.T) {
 
 		_, err := fileService.GetFile(1, "file.txt")
 		if err == nil {
-			t.Error("должна быть ошибка")
+			t.Error("error expected")
 		}
 	})
 }
 
-// BenchmarkListFiles бенчмарк листинга файлов
+// BenchmarkListFiles benchmarks file listing
 func BenchmarkListFiles(b *testing.B) {
 	files := make([]models.File, 100)
 	for i := 0; i < 100; i++ {
@@ -679,7 +675,7 @@ func BenchmarkListFiles(b *testing.B) {
 	}
 }
 
-// BenchmarkGetFile бенчмарк получения файла
+// BenchmarkGetFile benchmarks file retrieval
 func BenchmarkGetFile(b *testing.B) {
 	fileService := &FileService{
 		FileRepo: &MockFileRepo{},

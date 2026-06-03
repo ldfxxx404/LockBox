@@ -61,15 +61,22 @@ func (s *FileService) incrementNewName(fileHeader *multipart.FileHeader, userID 
 	ext := filepath.Ext(fileHeader.Filename)
 
 	newName := fileHeader.Filename
-	counter := 1
-	for {
-		exists, _ := s.FileRepo.Exists(userID, newName)
+
+	for counter := 1; ; counter++ {
+		exists, err := s.FileRepo.Exists(userID, newName)
+		if err != nil {
+			log.Error("Exists check failed:", err)
+			newName = fmt.Sprintf("%s(%d)%s", base, counter, ext)
+			continue
+		}
+
 		if !exists {
 			break
 		}
+
 		newName = fmt.Sprintf("%s(%d)%s", base, counter, ext)
-		counter++
 	}
+
 	return fmt.Sprintf("%d/%s", userID, newName), newName
 }
 
@@ -82,24 +89,33 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 		return err
 	}
 	defer func() {
-		if err := file.Close(); err != nil {
-			log.Error("Failed to close file:", err)
+		if cerr := file.Close(); cerr != nil {
+			log.Error("Failed to close file:", cerr)
 		}
 	}()
 
 	objectName, newName := s.incrementNewName(fileHeader, userID)
-	contentType := fileHeader.Header.Get("Content-Type")
 
-	etag, err := s.Storage.PutObject(context.Background(),
+	contentType := fileHeader.Header.Get("Content-Type")
+	if contentType == "" {
+		contentType = "application/octet-stream"
+	}
+
+	ctx := context.Background()
+
+	etag, err := s.Storage.PutObject(
+		ctx,
 		s.Bucket,
 		objectName,
 		file,
 		fileHeader.Size,
-		contentType)
+		contentType,
+	)
 	if err != nil {
 		log.Error("Storage PutObject error:", err)
 		return err
 	}
+
 	log.Info("File uploaded to storage:", "etag", etag)
 
 	meta := &models.File{
@@ -109,11 +125,13 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 		Size:         fileHeader.Size,
 		MimeType:     contentType,
 	}
+
 	if err := s.FileRepo.Create(meta); err != nil {
 		log.Error("Failed to save file metadata to DB:", err)
 		return err
 	}
-	log.Info("File metadata saved:", "user_id", userID, "filename", fileHeader.Filename)
+
+	log.Info("File metadata saved:", "user_id", userID)
 
 	return nil
 }
@@ -170,23 +188,26 @@ func (s *FileService) GetStorageInfo(userID int) (usedMB int64, limitMB int, err
 
 	prefix := fmt.Sprintf("%d/", userID)
 	var totalSize int64
-	for objInfo := range s.Storage.ListObjects(context.Background(), s.Bucket, prefix, true) {
+
+	ctx := context.Background()
+
+	for objInfo := range s.Storage.ListObjects(ctx, s.Bucket, prefix, true) {
 		if objInfo.Err != nil {
 			log.Error("Failed to list object:", objInfo.Err)
 			return 0, 0, objInfo.Err
 		}
 		totalSize += objInfo.Size
 	}
+
 	usedMB = totalSize / (1024 * 1024)
-	log.Info("Used storage:", "user_id", userID, "usedMB", usedMB)
 
 	user, err := s.UserRepo.GetByID(userID)
 	if err != nil {
 		log.Error("Failed to fetch user data:", err)
 		return 0, 0, err
 	}
+
 	limitMB = user.StorageLimit
-	log.Info("Storage info:", "user_id", userID, "limitMB", limitMB)
 
 	return usedMB, limitMB, nil
 }
