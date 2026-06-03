@@ -3,6 +3,7 @@ package services
 import (
 	"back/internal/models"
 	"back/internal/repositories"
+	"back/internal/storage"
 	"context"
 	"errors"
 	"fmt"
@@ -12,15 +13,12 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2/log"
-
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
 type FileService struct {
 	FileRepo repositories.FileRepoInterface
 	UserRepo repositories.UserRepoInterface
-	Minio    *minio.Client
+	Storage  storage.StorageClient
 	Bucket   string
 }
 
@@ -30,23 +28,20 @@ func NewFileService(
 	endpoint, accessKey, secretKey, bucket string,
 	useSSL bool,
 ) (*FileService, error) {
-	minioClient, err := minio.New(endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
-		Secure: useSSL,
-	})
+	storageClient, err := storage.NewMinIOAdapter(endpoint, accessKey, secretKey, useSSL)
 	if err != nil {
-		log.Error("minio openssl connect err:", err)
+		log.Error("storage client initialization error:", err)
 		return nil, err
 	}
 
 	ctx := context.Background()
-	exists, err := minioClient.BucketExists(ctx, bucket)
+	exists, err := storageClient.BucketExists(ctx, bucket)
 	if err != nil {
 		log.Error("bucket exist check error:", err)
 		return nil, err
 	}
 	if !exists {
-		err = minioClient.MakeBucket(ctx, bucket, minio.MakeBucketOptions{})
+		err = storageClient.MakeBucket(ctx, bucket)
 		if err != nil {
 			log.Error("make bucket error:", err)
 			return nil, err
@@ -56,7 +51,7 @@ func NewFileService(
 	return &FileService{
 		FileRepo: fileRepo,
 		UserRepo: userRepo,
-		Minio:    minioClient,
+		Storage:  storageClient,
 		Bucket:   bucket,
 	}, nil
 }
@@ -66,15 +61,22 @@ func (s *FileService) incrementNewName(fileHeader *multipart.FileHeader, userID 
 	ext := filepath.Ext(fileHeader.Filename)
 
 	newName := fileHeader.Filename
-	counter := 1
-	for {
-		exists, _ := s.FileRepo.Exists(userID, newName)
+
+	for counter := 1; ; counter++ {
+		exists, err := s.FileRepo.Exists(userID, newName)
+		if err != nil {
+			log.Error("Exists check failed:", err)
+			newName = fmt.Sprintf("%s(%d)%s", base, counter, ext)
+			continue
+		}
+
 		if !exists {
 			break
 		}
+
 		newName = fmt.Sprintf("%s(%d)%s", base, counter, ext)
-		counter++
 	}
+
 	return fmt.Sprintf("%d/%s", userID, newName), newName
 }
 
@@ -87,27 +89,34 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 		return err
 	}
 	defer func() {
-		if err := file.Close(); err != nil {
-			log.Error("Failed to close file:", err)
+		if cerr := file.Close(); cerr != nil {
+			log.Error("Failed to close file:", cerr)
 		}
 	}()
 
 	objectName, newName := s.incrementNewName(fileHeader, userID)
-	contentType := fileHeader.Header.Get("Content-Type")
 
-	uploadInfo, err := s.Minio.PutObject(context.Background(),
+	contentType := fileHeader.Header.Get("Content-Type")
+	if contentType == "" {
+		contentType = "application/octet-stream"
+	}
+
+	ctx := context.Background()
+
+	etag, err := s.Storage.PutObject(
+		ctx,
 		s.Bucket,
 		objectName,
 		file,
 		fileHeader.Size,
-		minio.PutObjectOptions{
-			ContentType: contentType,
-		})
+		contentType,
+	)
 	if err != nil {
-		log.Error("MinIO PutObject error:", err)
+		log.Error("Storage PutObject error:", err)
 		return err
 	}
-	log.Info("File uploaded to MinIO:", "location", uploadInfo.Location, "etag", uploadInfo.ETag)
+
+	log.Info("File uploaded to storage:", "etag", etag)
 
 	meta := &models.File{
 		UserID:       userID,
@@ -116,11 +125,13 @@ func (s *FileService) UploadFile(userID int, fileHeader *multipart.FileHeader) e
 		Size:         fileHeader.Size,
 		MimeType:     contentType,
 	}
+
 	if err := s.FileRepo.Create(meta); err != nil {
 		log.Error("Failed to save file metadata to DB:", err)
 		return err
 	}
-	log.Info("File metadata saved:", "user_id", userID, "filename", fileHeader.Filename)
+
+	log.Info("File metadata saved:", "user_id", userID)
 
 	return nil
 }
@@ -140,12 +151,9 @@ func (s *FileService) GetFile(userID int, filename string) ([]byte, error) {
 	objectName := fmt.Sprintf("%d/%s", userID, filename)
 	log.Info("Fetching file:", "user_id", userID, "filename", filename)
 
-	obj, err := s.Minio.GetObject(context.Background(),
-		s.Bucket,
-		objectName,
-		minio.GetObjectOptions{})
+	obj, err := s.Storage.GetObject(context.Background(), s.Bucket, objectName)
 	if err != nil {
-		log.Error("Failed to get object from MinIO:", err)
+		log.Error("Failed to get object from storage:", err)
 		return nil, fmt.Errorf("get object error: %w", err)
 	}
 	defer func() { _ = obj.Close() }()
@@ -163,11 +171,8 @@ func (s *FileService) DeleteFile(userID int, filename string) error {
 	objectName := fmt.Sprintf("%d/%s", userID, filename)
 	log.Info("Deleting file:", "user_id", userID, "filename", filename)
 
-	if err := s.Minio.RemoveObject(context.Background(),
-		s.Bucket,
-		objectName,
-		minio.RemoveObjectOptions{}); err != nil {
-		log.Error("Failed to delete file from MinIO:", err)
+	if err := s.Storage.RemoveObject(context.Background(), s.Bucket, objectName); err != nil {
+		log.Error("Failed to delete file from storage:", err)
 		return errors.New("failed to delete file")
 	}
 	if err := s.FileRepo.DeleteFile(userID, filename); err != nil {
@@ -182,26 +187,27 @@ func (s *FileService) GetStorageInfo(userID int) (usedMB int64, limitMB int, err
 	log.Info("Fetching storage info for user_id:", userID)
 
 	prefix := fmt.Sprintf("%d/", userID)
-	opts := minio.ListObjectsOptions{Prefix: prefix, Recursive: true}
-
 	var totalSize int64
-	for object := range s.Minio.ListObjects(context.Background(), s.Bucket, opts) {
-		if object.Err != nil {
-			log.Error("Failed to list object:", object.Err)
-			return 0, 0, object.Err
+
+	ctx := context.Background()
+
+	for objInfo := range s.Storage.ListObjects(ctx, s.Bucket, prefix, true) {
+		if objInfo.Err != nil {
+			log.Error("Failed to list object:", objInfo.Err)
+			return 0, 0, objInfo.Err
 		}
-		totalSize += object.Size
+		totalSize += objInfo.Size
 	}
+
 	usedMB = totalSize / (1024 * 1024)
-	log.Info("Used storage:", "user_id", userID, "usedMB", usedMB)
 
 	user, err := s.UserRepo.GetByID(userID)
 	if err != nil {
 		log.Error("Failed to fetch user data:", err)
 		return 0, 0, err
 	}
+
 	limitMB = user.StorageLimit
-	log.Info("Storage info:", "user_id", userID, "limitMB", limitMB)
 
 	return usedMB, limitMB, nil
 }
