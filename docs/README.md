@@ -19,19 +19,24 @@ make init_prod
 ```bash
 make init
 ```
+
 #### Develop misc info
+
 - [Backend info](BackendArch.md)
 - [Log manifest](LogManifets.md)
 
-## Project deps 
-- docker 
-- docker compose 
-- gmake/make 
+## Project deps
+
+- docker
+- docker compose
+- gmake/make
 - linux machine
 
 ## Connect
-connect to frontend 
+
+connect to frontend
 `http://localhost:3000`
 
-## License 
+## License
+
 [LICENSE](../LICENSE)

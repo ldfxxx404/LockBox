@@ -21,4 +21,3 @@
 - Time format: `UTC ISO8601 with milliseconds`.
 - No logging of **passwords, secrets, tokens, sensitive user data**.
 - Messages must help understand the system months later.
-

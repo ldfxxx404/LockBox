@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: ${POSTGRES_NAME} 
+    container_name: ${POSTGRES_NAME}
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -46,7 +46,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - '80:3000'
+      - "80:3000"
     environment:
       NEXT_PUBLIC_SERVER: ${NEXT_PUBLIC_SERVER}
       NODE_ENV: ${NODE_ENV}
@@ -60,7 +60,7 @@ services:
     container_name: lockbox-minio
     image: minio/minio:latest
     ports:
-      - '9091:9091'
+      - "9091:9091"
     volumes:
       - ./data/minio:/data:z
     environment:
